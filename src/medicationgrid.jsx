@@ -27,8 +27,8 @@ class MedicationGrid2 extends Component {
       <div>
         <DataTable value={this.state.drugs}>
           <Column field="drug" header="Medication" />
-          <Column field="dose" header="Dose" />
           <Column field="unit" header="Unit" />
+          <Column field="dose" header="Dose" />
           <Column field="time" header="Time" />
         </DataTable>
       </div>

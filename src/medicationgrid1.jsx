@@ -9,18 +9,19 @@ const divStyle = {
 };
 
 const columns = [
-  { key: "title", name: "Medication" },
-  { key: "dose1", name: "1500" },
-  { key: "dose2", name: "1505" },
-  { key: "dose3", name: "1510" },
-  { key: "dose4", name: "1515" },
+  { key: "drug", name: "Medication" },
+  { key: "unit", name: "Units" },
+  { key: "dose", name: "Dose" },
+  { key: "time", name: "Time" },
+  { key: "timespan", name: "Timespan" },
 ];
 
 const rows = [
-  { id: 0, title: "Propofol" },
-  { id: 1, title: "Fentanyl" },
-  { id: 2, title: "Rocuronium" },
-  { id: 3, title: "Lidocaine" },
+  { drug: "Propofol", dose: 150, unit: "mg", time: 1500 },
+  { drug: "Fentanyl", dose: 75, unit: "mcg", time: 1500 },
+  { drug: "Rocuronium", dose: 50, unit: "mg", time: 1505 },
+  { drug: "Lidocaine", dose: 100, unit: "mg", time: 1500 },
+  { drug: "Ringers", dose: 60, unit: "ml/hr", time: 1500, timespan: 60 },
 ];
 
 class MedicationGrid extends React.Component {

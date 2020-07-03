@@ -2,13 +2,13 @@ import React, { Component } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 import AnaesthesiaChart from "./anaesthchart.jsx";
-import MedicationGrid2 from "./medicationgrid.jsx";
+import MedicationGrid from "./medicationgrid1.jsx";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <MedicationGrid2 />
+        <MedicationGrid />
         <AnaesthesiaChart />
       </div>
     );
