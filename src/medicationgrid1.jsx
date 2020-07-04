@@ -9,10 +9,10 @@ const divStyle = {
 };
 
 const columns = [
+  { key: "time", name: "Time" },
   { key: "drug", name: "Medication" },
   { key: "unit", name: "Units" },
   { key: "dose", name: "Dose" },
-  { key: "time", name: "Time" },
   { key: "timespan", name: "Timespan" },
 ];
 
@@ -43,6 +43,7 @@ class MedicationGrid extends React.Component {
           rows={this.state.rowsdata}
           rowsCount={10}
           enableCellSelect={true}
+          subHeader={true}
         />
       </div>
     );
