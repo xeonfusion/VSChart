@@ -16,14 +16,6 @@ const columns = [
   { key: "timespan", name: "Timespan" },
 ];
 
-const rows = [
-  { drug: "Propofol", dose: 150, unit: "mg", time: 1500 },
-  { drug: "Fentanyl", dose: 75, unit: "mcg", time: 1500 },
-  { drug: "Rocuronium", dose: 50, unit: "mg", time: 1505 },
-  { drug: "Lidocaine", dose: 100, unit: "mg", time: 1500 },
-  { drug: "Ringers", dose: 60, unit: "ml/hr", time: 1500, timespan: 60 },
-];
-
 class MedicationGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +40,7 @@ class MedicationGrid extends React.Component {
       <div style={divStyle}>
         <ReactDataGrid
           columns={columns}
-          rows={rows}
+          rows={this.state.rowsdata}
           rowsCount={10}
           enableCellSelect={true}
         />
