@@ -72,21 +72,32 @@ class MedicationGrid3 extends Component {
           groups={groups}
           items={items}
           defaultTimeStart={moment().add(0, "s")}
-          defaultTimeEnd={moment().add(3000, "s")}
+          defaultTimeEnd={moment().add(300, "s")}
+          sidebarWidth={150}
           rightSidebarWidth={150}
           showCursorLine
         >
           <TimelineHeaders className="sticky">
             <SidebarHeader>
               {({ getRootProps }) => {
-                return <div {...getRootProps()}>Medications</div>;
+                const sideStyles = {
+                  ...getRootProps(),
+                  backgroundColor: "white",
+                  width: 150,
+                };
+                return <div style={sideStyles}>Medications</div>;
               }}
             </SidebarHeader>
             <DateHeader unit="hour" />
             <DateHeader />
             <SidebarHeader variant="right">
               {({ getRootProps }) => {
-                return <div {...getRootProps()}>Totals</div>;
+                const sideStyles = {
+                  ...getRootProps(),
+                  backgroundColor: "white",
+                  width: 150,
+                };
+                return <div style={sideStyles}>Totals</div>;
               }}
             </SidebarHeader>
           </TimelineHeaders>
