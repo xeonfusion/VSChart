@@ -1,9 +1,16 @@
-import Timeline from "react-calendar-timeline";
+//import Timeline, { TodayMarker } from "react-calendar-timeline";
 // make sure you include the timeline stylesheet or the timeline will not be styled
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { Component } from "react";
 import React from "react";
+import Timeline, {
+  TimelineHeaders,
+  SidebarHeader,
+  DateHeader,
+  TimelineMarkers,
+  TodayMarker,
+} from "react-calendar-timeline/lib";
 
 const groups = [
   { id: 1, title: "Propofol" },
@@ -20,6 +27,7 @@ const items = [
     title: "150 mg",
     start_time: moment().add(0.5, "m"),
     end_time: moment().add(1, "m"),
+    rightTitle: "",
   },
   {
     id: 2,
@@ -63,9 +71,39 @@ class MedicationGrid3 extends Component {
         <Timeline
           groups={groups}
           items={items}
-          defaultTimeStart={moment().add(-30, "s")}
-          defaultTimeEnd={moment().add(120, "s")}
-        />
+          defaultTimeStart={moment().add(0, "s")}
+          defaultTimeEnd={moment().add(3000, "s")}
+          rightSidebarWidth={150}
+          showCursorLine
+        >
+          <TimelineHeaders className="sticky">
+            <SidebarHeader>
+              {({ getRootProps }) => {
+                return <div {...getRootProps()}>Medications</div>;
+              }}
+            </SidebarHeader>
+            <DateHeader unit="hour" />
+            <DateHeader />
+            <SidebarHeader variant="right">
+              {({ getRootProps }) => {
+                return <div {...getRootProps()}>Totals</div>;
+              }}
+            </SidebarHeader>
+          </TimelineHeaders>
+          <TimelineMarkers>
+            <TodayMarker interval={10000} />
+            <TodayMarker>
+              {({ styles, date }) => {
+                const customStyles = {
+                  ...styles,
+                  backgroundColor: "red",
+                  width: "2px",
+                };
+                return <div style={customStyles} />;
+              }}
+            </TodayMarker>
+          </TimelineMarkers>
+        </Timeline>
       </div>
     );
   }
