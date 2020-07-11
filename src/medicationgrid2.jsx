@@ -72,7 +72,7 @@ class MedicationGrid3 extends Component {
           groups={groups}
           items={items}
           defaultTimeStart={moment().add(0, "s")}
-          defaultTimeEnd={moment().add(300, "s")}
+          defaultTimeEnd={moment().add(600, "s")}
           sidebarWidth={150}
           rightSidebarWidth={150}
           showCursorLine
@@ -82,7 +82,7 @@ class MedicationGrid3 extends Component {
               {({ getRootProps }) => {
                 const sideStyles = {
                   ...getRootProps(),
-                  backgroundColor: "white",
+                  backgroundColor: "#F0F0F0",
                   width: 150,
                 };
                 return <div style={sideStyles}>Medications</div>;
@@ -94,7 +94,7 @@ class MedicationGrid3 extends Component {
               {({ getRootProps }) => {
                 const sideStyles = {
                   ...getRootProps(),
-                  backgroundColor: "white",
+                  backgroundColor: "#F0F0F0",
                   width: 150,
                 };
                 return <div style={sideStyles}>Totals</div>;
