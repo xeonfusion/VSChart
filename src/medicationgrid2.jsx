@@ -18,6 +18,8 @@ const groups = [
   { id: 3, title: "Lidocaine" },
   { id: 4, title: "Rocuronium" },
   { id: 5, title: "Ringers" },
+  { id: 6, title: "" },
+  { id: 7, title: "" },
 ];
 
 const items = [
