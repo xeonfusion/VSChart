@@ -1,3 +1,6 @@
+import Button from "react-bootstrap/Button";
+import MedicationDlg from "./medicationdialog.jsx";
+
 import React from "react";
 var Chart = require("chart.js");
 let myChart;
@@ -295,9 +298,10 @@ class AnaesthesiaChart extends React.PureComponent {
   render() {
     return (
       <div>
-        <button type="button" onClick={this.loadChartData}>
+        <Button variant="primary" onClick={this.loadChartData}>
           Load Chart
-        </button>
+        </Button>
+        <MedicationDlg isMedDisplayed={true} />
         <canvas
           style={divStyle}
           ref={this.chartRef}
