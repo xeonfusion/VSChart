@@ -1,17 +1,21 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Modal from "react-bootstrap/Modal";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Dropdown from "react-bootstrap/Dropdown";
-import ListGroup from "react-bootstrap/ListGroup";
-import ListGroupItem from "react-bootstrap/ListGroupItem";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+
 import MomentUtils from "@date-io/moment";
+import Grid from "@material-ui/core/Grid";
+import NumPad from "react-numpad";
 
 import {
   KeyboardDateTimePicker,
@@ -38,57 +42,100 @@ function MedModal() {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="contained" color="primary" onClick={handleShow}>
         Add Medication
       </Button>
 
-      <Modal show={show} onHide={handleClose} size={"lg"}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Medication</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Container>
-            <Row>
-              <Col>
-                Selected Medications
-                <ListGroup>
-                  <ListGroupItem active>Midazolam</ListGroupItem>
-                  <ListGroupItem>Fentanyl</ListGroupItem>
-                  <ListGroupItem>Rocuronium</ListGroupItem>
-                  <ListGroupItem>Dexamethasone</ListGroupItem>
-                  <ListGroupItem>Ondansetron</ListGroupItem>
-                </ListGroup>
-              </Col>
-              <Col>
-                <ButtonGroup aria-label="Basic example">
-                  <Button variant="secondary">Left</Button>
-                  <Button variant="secondary">Middle</Button>
-                  <Button variant="secondary">Right</Button>
-                </ButtonGroup>
-              </Col>
-              <Col></Col>
-            </Row>
-            <Row>
-              <Col>
-                Add Medication
-                <InputGroup className="mb-3">
-                  <DropdownButton
-                    as={InputGroup.Prepend}
-                    title="Add"
-                    id="input-group-dropdown-1"
+      <Dialog open={show} onClose={handleClose} maxWidth={"md"}>
+        <DialogTitle id="simple-dialog-title">Add Medication</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} direction="row">
+            <Grid item xs>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                justify="space-between"
+                alignItems="flex-start"
+              >
+                <Grid item xs>
+                  Selected Medications
+                  <List dense={true}>
+                    <ListItem button selected>
+                      <ListItemText>Midazolam</ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemText>Fentanyl</ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemText>Rocuronium</ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemText>Dexamethasone</ListItemText>
+                    </ListItem>
+                    <ListItem button>
+                      <ListItemText>Ondansetron</ListItemText>
+                    </ListItem>
+                  </List>
+                </Grid>
+                <Grid item xs>
+                  Add Medication
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id="Add-entry"
+                    select
+                    label="Select"
+                    helperText="Add Medication"
                   >
-                    <Dropdown.Item href="#">Propofol</Dropdown.Item>
-                    <Dropdown.Item href="#">Lidocaine</Dropdown.Item>
-                    <Dropdown.Item href="#">Fentanyl</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item href="#">Rocuronium</Dropdown.Item>
-                  </DropdownButton>
-                  <FormControl aria-describedby="basic-addon1" />
-                </InputGroup>
-              </Col>
-              <Col>
-                <Row>Timestamp</Row>
-                <Row>
+                    <MenuItem>Propofol</MenuItem>
+                    <MenuItem>Lidocaine</MenuItem>
+                    <MenuItem>Fentanyl</MenuItem>
+                    <MenuItem>Rocuronium</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <Grid
+                container
+                spacing={3}
+                direction="column"
+                justify="space-between"
+                alignItems="stretch"
+              >
+                <Grid item xs>
+                  Dose entry
+                </Grid>
+                <Grid item xs>
+                  <NumPad.Number
+                    onChange={(value) => {
+                      console.log("value", value);
+                    }}
+                    label={""}
+                    placeholder={"Number Pad"}
+                    value={0}
+                    decimal={2}
+                    negative={false}
+                    inline={false}
+                  />
+                </Grid>
+                <Grid item xs>
+                  Last Doses
+                  <ButtonGroup aria-label="Last doses">
+                    <Button variant="outlined" color="default" size="small">
+                      Dose1
+                    </Button>
+                    <Button variant="outlined" color="default" size="small">
+                      Dose2
+                    </Button>
+                    <Button variant="outlined" color="default" size="small">
+                      Dose3
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
+                <Grid item xs>
+                  Timestamp
                   <MuiPickersUtilsProvider utils={MomentUtils}>
                     <KeyboardDateTimePicker
                       value={selectedDate}
@@ -98,24 +145,88 @@ function MedModal() {
                       variant="dialog"
                     />
                   </MuiPickersUtilsProvider>
-                </Row>
-              </Col>
-              <Col>
-                <Row>Duration</Row>
-                <Row>Input</Row>
-              </Col>
-            </Row>
-          </Container>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                justify="flex-start"
+                alignItems="stretch"
+              >
+                <Grid item xs>
+                  Dose unit
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id="dose-unit"
+                    select
+                    label="Select"
+                    helperText="Dose unit"
+                  >
+                    <MenuItem>mg</MenuItem>
+                    <MenuItem>mcg</MenuItem>
+                    <MenuItem>mcg/kg/min</MenuItem>
+                    <MenuItem>ml/hr</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                justify="flex-start"
+                alignItems="stretch"
+              >
+                <Grid item xs>
+                  Duration
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id="duration-entry"
+                    select
+                    label="Select"
+                    helperText="Duration"
+                  >
+                    <MenuItem>bolus</MenuItem>
+                    <MenuItem>min</MenuItem>
+                    <MenuItem>sec</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs>
+                  Event timing
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id="event-timing"
+                    select
+                    label="Select"
+                    helperText="Event timing"
+                  >
+                    <MenuItem>Induction</MenuItem>
+                    <MenuItem>Intubation</MenuItem>
+                    <MenuItem>Maintenance</MenuItem>
+                    <MenuItem>Extubation</MenuItem>
+                    <MenuItem>Other</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button color="primary" onClick={handleClose}>
             Save Changes
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
