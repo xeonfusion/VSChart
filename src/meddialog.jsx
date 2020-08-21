@@ -22,7 +22,7 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 
-export class MedicationDlg extends React.Component {
+export class MedDlg extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,41 +30,24 @@ export class MedicationDlg extends React.Component {
   }
 
   render() {
-    return this.props.isMedDisplayed ? (
-      <MedModal
-        isMedDisplayed={this.props.isMedDisplayed}
-        showMedDialog={this.props.showMedDialog}
-      />
-    ) : null;
+    return <MedModal showMedDialog={this.props.showMedDialog} />;
   }
 }
 
 function MedModal(props) {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = React.useState(props.showMedDialog);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  //const handleShow = () => setShow(true);
 
   const [selectedDate, handleDateChange] = React.useState(new Date());
-  const [medDisplayed, setMedDisplayed] = React.useState({
-    ...props.isMedDisplayed,
-  });
-  const [showMedDialog, setMedDialog] = React.useState({
-    ...props.showMedDialog,
-  });
 
   React.useEffect(() => {
-    setMedDisplayed(medDisplayed);
-    setMedDialog(showMedDialog);
-    if (showMedDialog === true) setShow(true);
-    else setShow(false);
-  }, [medDisplayed, showMedDialog]);
+    setShow(props.showMedDialog);
+  }, [props.showMedDialog]);
+  console.log(show);
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleShow}>
-        Add Medication
-      </Button>
-
       <Dialog open={show} onClose={handleClose} maxWidth={"md"}>
         <DialogTitle id="simple-dialog-title">Add Medication</DialogTitle>
         <DialogContent>
@@ -250,4 +233,4 @@ function MedModal(props) {
   );
 }
 
-export default MedicationDlg;
+export default MedDlg;

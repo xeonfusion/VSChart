@@ -1,5 +1,3 @@
-//import Timeline, { TodayMarker } from "react-calendar-timeline";
-// make sure you include the timeline stylesheet or the timeline will not be styled
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { Component } from "react";
@@ -11,6 +9,8 @@ import Timeline, {
   TimelineMarkers,
   TodayMarker,
 } from "react-calendar-timeline/lib";
+
+import MedDlg from "./meddialog.jsx";
 
 const groups = [
   { id: 1, title: "Propofol" },
@@ -61,65 +61,97 @@ const items = [
   },
 ];
 
-class MedicationGrid3 extends Component {
+export class MedicationGrid2 extends Component {
   constructor() {
     super();
-    this.state = {};
+
+    const defaultTimeStart = moment().startOf("day").toDate();
+    const defaultTimeEnd = moment().startOf("day").add(1, "day").toDate();
+
+    this.state = {
+      groups,
+      items,
+      defaultTimeStart,
+      defaultTimeEnd,
+    };
   }
 
   render() {
     return (
       <div>
-        <Timeline
-          groups={groups}
-          items={items}
-          defaultTimeStart={moment().add(0, "s")}
-          defaultTimeEnd={moment().add(600, "s")}
-          sidebarWidth={150}
-          rightSidebarWidth={150}
-          showCursorLine
-        >
-          <TimelineHeaders className="sticky">
-            <SidebarHeader>
-              {({ getRootProps }) => {
-                const sideStyles = {
-                  ...getRootProps(),
-                  backgroundColor: "#F0F0F0",
-                  width: 150,
-                };
-                return <div style={sideStyles}>Medications</div>;
-              }}
-            </SidebarHeader>
-            <DateHeader unit="hour" />
-            <DateHeader />
-            <SidebarHeader variant="right">
-              {({ getRootProps }) => {
-                const sideStyles = {
-                  ...getRootProps(),
-                  backgroundColor: "#F0F0F0",
-                  width: 150,
-                };
-                return <div style={sideStyles}>Totals</div>;
-              }}
-            </SidebarHeader>
-          </TimelineHeaders>
-          <TimelineMarkers>
-            <TodayMarker interval={10000} />
-            <TodayMarker>
-              {({ styles, date }) => {
-                const customStyles = {
-                  ...styles,
-                  backgroundColor: "red",
-                  width: "2px",
-                };
-                return <div style={customStyles} />;
-              }}
-            </TodayMarker>
-          </TimelineMarkers>
-        </Timeline>
+        <MedGrid />
       </div>
     );
   }
 }
 
-export default MedicationGrid3;
+function MedGrid() {
+  const [show, setShow] = React.useState(false);
+
+  const handleItemDoubleClick = (itemId, e, time) => {
+    console.log("double clicked", itemId, time);
+    setShow(true);
+  };
+
+  const handleItemResize = (itemId, time, edge) => {
+    console.log("Resized", itemId, time, edge);
+  };
+
+  return (
+    <>
+      <MedDlg showMedDialog={show} />
+      <Timeline
+        groups={groups}
+        items={items}
+        defaultTimeStart={moment().add(0, "s")}
+        defaultTimeEnd={moment().add(600, "s")}
+        sidebarWidth={150}
+        rightSidebarWidth={150}
+        showCursorLine
+        canResize={true}
+        onItemDoubleClick={handleItemDoubleClick}
+        onItemResize={handleItemResize}
+      >
+        <TimelineHeaders className="sticky">
+          <SidebarHeader>
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#F0F0F0",
+                width: 150,
+              };
+              return <div style={sideStyles}>Medications</div>;
+            }}
+          </SidebarHeader>
+          <DateHeader unit="hour" />
+          <DateHeader />
+          <SidebarHeader variant="right">
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#F0F0F0",
+                width: 150,
+              };
+              return <div style={sideStyles}>Totals</div>;
+            }}
+          </SidebarHeader>
+        </TimelineHeaders>
+        <TimelineMarkers>
+          <TodayMarker interval={10000} />
+          <TodayMarker>
+            {({ styles, date }) => {
+              const customStyles = {
+                ...styles,
+                backgroundColor: "red",
+                width: "2px",
+              };
+              return <div style={customStyles} />;
+            }}
+          </TodayMarker>
+        </TimelineMarkers>
+      </Timeline>
+    </>
+  );
+}
+
+export default MedicationGrid2;

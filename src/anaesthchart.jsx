@@ -286,7 +286,7 @@ const NewChart = () => {
       <Button variant="contained" color="primary" onClick={onButtonClick}>
         Load Chart
       </Button>
-      <MedicationDlg isMedDisplayed={true} />
+      <MedicationDlg isMedDisplayed={true} showMedDialog={false} />
       <canvas
         style={divStyle}
         ref={chartContainer}
