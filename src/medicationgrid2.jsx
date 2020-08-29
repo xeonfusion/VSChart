@@ -10,7 +10,7 @@ import Timeline, {
   TodayMarker,
 } from "react-calendar-timeline/lib";
 
-import MedDlg from "./meddialog.jsx";
+import MedModal from "./meddialog.jsx";
 
 const groups = [
   { id: 1, title: "Propofol" },
@@ -97,9 +97,13 @@ function MedGrid() {
     console.log("Resized", itemId, time, edge);
   };
 
+  const handleChildState = (childstate) => {
+    setShow(childstate);
+  };
+
   return (
     <>
-      <MedDlg showMedDialog={show} />
+      <MedModal showMedDialog={show} childState={handleChildState} />
       <Timeline
         groups={groups}
         items={items}

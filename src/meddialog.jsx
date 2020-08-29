@@ -22,33 +22,29 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 
-export class MedDlg extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    //this.inputRef = React.createRef();
-  }
-
-  render() {
-    return <MedModal showMedDialog={this.props.showMedDialog} />;
-  }
-}
-
-function MedModal(props) {
-  const [show, setShow] = React.useState(props.showMedDialog);
-  const handleClose = () => setShow(false);
-  //const handleShow = () => setShow(true);
+const MedModal = ({ showMedDialog, childState }) => {
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => {
+    setShow(false);
+    childState(false);
+  };
 
   const [selectedDate, handleDateChange] = React.useState(new Date());
 
   React.useEffect(() => {
-    setShow(props.showMedDialog);
-  }, [props.showMedDialog]);
-  console.log(show);
+    setShow(showMedDialog);
+  }, [showMedDialog]);
+  //console.log(show);
 
   return (
     <>
-      <Dialog open={show} onClose={handleClose} maxWidth={"md"}>
+      <Dialog
+        open={show}
+        onClose={() => {
+          handleClose();
+        }}
+        maxWidth={"md"}
+      >
         <DialogTitle id="simple-dialog-title">Add Medication</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} direction="row">
@@ -231,6 +227,6 @@ function MedModal(props) {
       </Dialog>
     </>
   );
-}
+};
 
-export default MedDlg;
+export default MedModal;

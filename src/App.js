@@ -4,9 +4,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import AnaesthesiaChart from "./anaesthchart.jsx";
 import MedicationGrid2 from "./medicationgrid2.jsx";
-//import MedDlg from "./meddialog.jsx";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   render() {
     return (
       <div className="App" id="App">
