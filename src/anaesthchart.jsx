@@ -1,5 +1,5 @@
 import Button from "@material-ui/core/Button";
-import MedicationDlg from "./medicationdialog.jsx";
+import MedModal from "./meddialog.jsx";
 
 import React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -281,12 +281,22 @@ const NewChart = () => {
       });
   };
 
+  const [show, setShow] = React.useState(false);
+  const handleShow = () => setShow(true);
+
+  const handleChildState = (childstate) => {
+    setShow(childstate);
+  };
+
   return (
     <div>
       <Button variant="contained" color="primary" onClick={onButtonClick}>
         Load Chart
       </Button>
-      <MedicationDlg isMedDisplayed={true} showMedDialog={false} />
+      <Button variant="contained" color="primary" onClick={handleShow}>
+        Add Medication
+      </Button>
+      <MedModal showMedDialog={show} childState={handleChildState} />
       <canvas
         style={divStyle}
         ref={chartContainer}
