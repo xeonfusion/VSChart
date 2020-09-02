@@ -22,19 +22,38 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 
-const MedModal = ({ showMedDialog, childState }) => {
+const MedModal = ({ showMedDialog, childState, selectedMeds }) => {
   const [show, setShow] = React.useState(false);
   const handleClose = () => {
     setShow(false);
-    childState(false);
+    childState(false, listItems);
   };
 
   const [selectedDate, handleDateChange] = React.useState(new Date());
 
   React.useEffect(() => {
     setShow(showMedDialog);
-  }, [showMedDialog]);
-  //console.log(show);
+    setListItems(selectedMeds);
+  }, [showMedDialog, selectedMeds]);
+
+  const medGroups = [
+    { id: 1, title: "Propofol" },
+    { id: 2, title: "Fentanyl" },
+    { id: 3, title: "Lidocaine" },
+    { id: 4, title: "Rocuronium" },
+    { id: 5, title: "Ringers" },
+    { id: 6, title: "Midazolam" },
+  ];
+
+  const [listItems, setListItems] = React.useState(medGroups);
+
+  const MedListItems = ({ list }) => (
+    <List dense={true}>
+      {(list || []).map((listitem) => (
+        <ListItem button>{listitem.title}</ListItem>
+      ))}
+    </List>
+  );
 
   return (
     <>
@@ -58,23 +77,7 @@ const MedModal = ({ showMedDialog, childState }) => {
               >
                 <Grid item xs>
                   Selected Medications
-                  <List dense={true}>
-                    <ListItem button selected>
-                      <ListItemText>Midazolam</ListItemText>
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemText>Fentanyl</ListItemText>
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemText>Rocuronium</ListItemText>
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemText>Dexamethasone</ListItemText>
-                    </ListItem>
-                    <ListItem button>
-                      <ListItemText>Ondansetron</ListItemText>
-                    </ListItem>
-                  </List>
+                  <MedListItems list={listItems} />
                 </Grid>
                 <Grid item xs>
                   Add Medication

@@ -87,9 +87,23 @@ export class MedicationGrid2 extends Component {
 
 function MedGrid() {
   const [show, setShow] = React.useState(false);
+  const [allitems, setItem] = React.useState(items);
+  const [allgroups, setGroup] = React.useState(groups);
 
   const handleItemDoubleClick = (itemId, e, time) => {
     console.log("double clicked", itemId, time);
+
+    var item = allitems.filter((e) => e.id === itemId);
+
+    var groupid = item[0].group;
+    var group = allgroups.filter((e) => e.id === groupid);
+
+    console.log(
+      group[0].title,
+      item[0].title,
+      item[0].start_time.toDate(),
+      item[0].end_time.toDate()
+    );
     setShow(true);
   };
 
@@ -97,13 +111,18 @@ function MedGrid() {
     console.log("Resized", itemId, time, edge);
   };
 
-  const handleChildState = (childstate) => {
+  const handleChildState = (childstate, selectedMeds) => {
     setShow(childstate);
+    setGroup(selectedMeds);
   };
 
   return (
     <>
-      <MedModal showMedDialog={show} childState={handleChildState} />
+      <MedModal
+        showMedDialog={show}
+        childState={handleChildState}
+        selectedMeds={allgroups}
+      />
       <Timeline
         groups={groups}
         items={items}

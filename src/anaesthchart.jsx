@@ -284,9 +284,21 @@ const NewChart = () => {
   const [show, setShow] = React.useState(false);
   const handleShow = () => setShow(true);
 
-  const handleChildState = (childstate) => {
+  const handleChildState = (childstate, selectedMeds) => {
     setShow(childstate);
+    setGroup(selectedMeds);
   };
+
+  const medGroups = [
+    { id: 1, title: "Propofol" },
+    { id: 2, title: "Fentanyl" },
+    { id: 3, title: "Lidocaine" },
+    { id: 4, title: "Rocuronium" },
+    { id: 5, title: "Ringers" },
+    { id: 6, title: "Midazolam" },
+  ];
+
+  const [allgroups, setGroup] = React.useState(medGroups);
 
   return (
     <div>
@@ -296,7 +308,11 @@ const NewChart = () => {
       <Button variant="contained" color="primary" onClick={handleShow}>
         Add Medication
       </Button>
-      <MedModal showMedDialog={show} childState={handleChildState} />
+      <MedModal
+        showMedDialog={show}
+        childState={handleChildState}
+        selectedMeds={allgroups}
+      />
       <canvas
         style={divStyle}
         ref={chartContainer}
