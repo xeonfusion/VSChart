@@ -13,11 +13,11 @@ import Timeline, {
 import MedModal from "./meddialog.jsx";
 
 const groups = [
-  { id: 1, title: "Propofol" },
-  { id: 2, title: "Fentanyl" },
-  { id: 3, title: "Lidocaine" },
-  { id: 4, title: "Rocuronium" },
-  { id: 5, title: "Ringers" },
+  { id: 1, title: "Propofol", type: "hypnotic", color: "yellow" },
+  { id: 2, title: "Fentanyl", type: "opioid", color: "deepskyblue" },
+  { id: 3, title: "Lidocaine", type: "localanaesthetic", color: "grey" },
+  { id: 4, title: "Rocuronium", type: "nmbd", color: "red" },
+  { id: 5, title: "Ringers", type: "ivfluid", color: "white" },
   { id: 6, title: "" },
   { id: 7, title: "" },
 ];

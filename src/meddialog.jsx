@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles } from "@material-ui/styles";
 
 import MomentUtils from "@date-io/moment";
 import Grid from "@material-ui/core/Grid";
@@ -37,20 +38,55 @@ const MedModal = ({ showMedDialog, childState, selectedMeds }) => {
   }, [showMedDialog, selectedMeds]);
 
   const medGroups = [
-    { id: 1, title: "Propofol" },
-    { id: 2, title: "Fentanyl" },
-    { id: 3, title: "Lidocaine" },
-    { id: 4, title: "Rocuronium" },
-    { id: 5, title: "Ringers" },
-    { id: 6, title: "Midazolam" },
+    { id: 1, title: "Propofol", type: "hypnotic", color: "yellow" },
+    { id: 2, title: "Fentanyl", type: "opioid", color: "deepskyblue" },
+    { id: 3, title: "Lidocaine", type: "localanaesthetic", color: "grey" },
+    { id: 4, title: "Rocuronium", type: "nmbd", color: "red" },
+    { id: 5, title: "Ringers", type: "ivfluid", color: "white" },
+    { id: 6, title: "Midazolam", type: "hypnotic", color: "orange" },
   ];
+
+  const StyledListItem = ({ itemcolor, itemtitle }) => {
+    const useStyles = makeStyles({
+      root: {
+        background: itemcolor,
+        borderRadius: 3,
+        border: 0,
+        color: "black",
+        height: 48,
+        padding: "0 30px",
+        boxShadow: "0 3px 5px 2px rgba(144, 144, 144, .5)",
+      },
+      label: {
+        textTransform: "capitalize",
+      },
+    });
+
+    function MyListItem() {
+      const classes = useStyles();
+      return (
+        <ListItem
+          classes={{ root: classes.root, label: classes.label }}
+          button
+          divider={true}
+        >
+          <ListItemText>{itemtitle}</ListItemText>
+        </ListItem>
+      );
+    }
+
+    return <MyListItem></MyListItem>;
+  };
 
   const [listItems, setListItems] = React.useState(medGroups);
 
   const MedListItems = ({ list }) => (
     <List dense={true}>
       {(list || []).map((listitem) => (
-        <ListItem button>{listitem.title}</ListItem>
+        <StyledListItem
+          itemcolor={listitem.color}
+          itemtitle={listitem.title}
+        ></StyledListItem>
       ))}
     </List>
   );
@@ -76,7 +112,7 @@ const MedModal = ({ showMedDialog, childState, selectedMeds }) => {
                 alignItems="flex-start"
               >
                 <Grid item xs>
-                  Selected Medications
+                  Medications
                   <MedListItems list={listItems} />
                 </Grid>
                 <Grid item xs>
