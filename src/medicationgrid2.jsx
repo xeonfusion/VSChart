@@ -89,6 +89,7 @@ function MedGrid() {
   const [show, setShow] = React.useState(false);
   const [allitems, setItem] = React.useState(items);
   const [allgroups, setGroup] = React.useState(groups);
+  const [selectedItem, setSelItem] = React.useState(items[0]);
 
   const handleItemDoubleClick = (itemId, e, time) => {
     console.log("double clicked", itemId, time);
@@ -104,6 +105,8 @@ function MedGrid() {
       item[0].start_time.toDate(),
       item[0].end_time.toDate()
     );
+
+    setSelItem(item);
     setShow(true);
   };
 
@@ -122,6 +125,7 @@ function MedGrid() {
         showMedDialog={show}
         childState={handleChildState}
         selectedMeds={allgroups}
+        selectedItem={selectedItem}
       />
       <Timeline
         groups={groups}
