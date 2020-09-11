@@ -24,13 +24,18 @@ import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-import { IndexKind } from "typescript";
 
 const MedModal = ({
   showMedDialog,
   childState,
   selectedMeds,
   selectedItem,
+  selectedDose,
+  selectedUnit,
+  selectedRoute,
+  selectedItemTime,
+  selectedDuration,
+  selectedDurationUnit,
 }) => {
   const [show, setShow] = React.useState(false);
   const handleClose = () => {
@@ -44,7 +49,23 @@ const MedModal = ({
     setShow(showMedDialog);
     setListItems(selectedMeds);
     setSelItem(selectedItem);
-  }, [showMedDialog, selectedMeds, selectedItem]);
+    setSelDose(selectedDose);
+    setSelUnit(selectedUnit);
+    setSelRoute(selectedRoute);
+    setSelDurationUnit(selectedDurationUnit);
+    setSelDuration(selectedDuration);
+    handleDateChange(selectedItemTime);
+  }, [
+    showMedDialog,
+    selectedMeds,
+    selectedItem,
+    selectedDose,
+    selectedUnit,
+    selectedRoute,
+    selectedDuration,
+    selectedItemTime,
+    selectedDurationUnit,
+  ]);
 
   const medGroups = [
     { id: 1, title: "Propofol", type: "hypnotic", color: "yellow" },
@@ -119,16 +140,36 @@ const MedModal = ({
   );
 
   const [selectItem, setSelItem] = React.useState(selectedItem);
-  const [selectUnit, setSelUnit] = React.useState("mg");
 
-  const handleSelectedDose = () => {
-    var dose = parseInt(selectItem[0].title);
-    console.log(selectItem[0]);
-    return dose;
+  const [selectDose, setSelDose] = React.useState(0);
+  const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
+  const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
+  const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
+  const [selectEvent, setSelEvent] = React.useState(eventtimes[0]);
+  const [selectDuration, setSelDuration] = React.useState(0);
+
+  const handleDoseChange = (event) => {
+    setSelDose(event.target.value);
+  };
+
+  const handleDurationChange = (event) => {
+    setSelDuration(event.target.value);
   };
 
   const handleUnitChange = (event) => {
     setSelUnit(event.target.value);
+  };
+
+  const handleRouteChange = (event) => {
+    setSelRoute(event.target.value);
+  };
+
+  const handleDurationUnitChange = (event) => {
+    setSelDurationUnit(event.target.value);
+  };
+
+  const handleEventChange = (event) => {
+    setSelEvent(event.target.value);
   };
 
   return (
@@ -194,8 +235,25 @@ const MedModal = ({
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    value={selectDose}
+                    onChange={handleDoseChange}
+                  />
+                </Grid>
+                <Grid item xs>
+                  Duration entry
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id="outlined-duration"
+                    label="Duration"
+                    type="number"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     defaultValue={0}
-                    value={handleSelectedDose}
+                    value={selectDuration}
+                    onChange={handleDurationChange}
                   />
                 </Grid>
                 <Grid item xs>
@@ -211,6 +269,51 @@ const MedModal = ({
                       Dose3
                     </Button>
                   </ButtonGroup>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <Grid
+                container
+                spacing={3}
+                direction="column"
+                justify="flex-start"
+                alignItems="stretch"
+              >
+                <Grid item xs>
+                  Dose unit
+                </Grid>
+                <Grid item xs>
+                  <Select
+                    id="dose-unit"
+                    labelId="Dose unit"
+                    variant="outlined"
+                    fullWidth
+                    value={selectUnit}
+                    onChange={handleUnitChange}
+                  >
+                    {doseunits.map((item) => (
+                      <MenuItem value={item}>{item}</MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid item xs>
+                  Duration unit
+                </Grid>
+                <Grid item xs>
+                  <Select
+                    id="duration-entry"
+                    labelId="Duration"
+                    variant="outlined"
+                    fullWidth
+                    defaultValue={durations[0]}
+                    value={selectDurationUnit}
+                    onChange={handleDurationUnitChange}
+                  >
+                    {durations.map((item) => (
+                      <MenuItem value={item}>{item}</MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
                 <Grid item xs>
                   Timestamp
@@ -235,24 +338,6 @@ const MedModal = ({
                 alignItems="stretch"
               >
                 <Grid item xs>
-                  Dose unit
-                </Grid>
-                <Grid item xs>
-                  <Select
-                    id="dose-unit"
-                    labelId="Dose unit"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={doseunits[0]}
-                    value={selectUnit}
-                    onChange={handleUnitChange}
-                  >
-                    {doseunits.map((item) => (
-                      <MenuItem value={item}>{item}</MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid item xs>
                   Route
                 </Grid>
                 <Grid item xs>
@@ -262,34 +347,10 @@ const MedModal = ({
                     variant="outlined"
                     fullWidth
                     defaultValue={doseroutes[0]}
+                    value={selectRoute}
+                    onChange={handleRouteChange}
                   >
                     {doseroutes.map((item) => (
-                      <MenuItem value={item}>{item}</MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs>
-              <Grid
-                container
-                spacing={3}
-                direction="column"
-                justify="flex-start"
-                alignItems="stretch"
-              >
-                <Grid item xs>
-                  Duration
-                </Grid>
-                <Grid item xs>
-                  <Select
-                    id="duration-entry"
-                    labelId="Duration"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={durations[0]}
-                  >
-                    {durations.map((item) => (
                       <MenuItem value={item}>{item}</MenuItem>
                     ))}
                   </Select>
@@ -304,6 +365,8 @@ const MedModal = ({
                     variant="outlined"
                     fullWidth
                     defaultValue={eventtimes[0]}
+                    value={selectEvent}
+                    onChange={handleEventChange}
                   >
                     {eventtimes.map((item) => (
                       <MenuItem value={item}>{item}</MenuItem>
