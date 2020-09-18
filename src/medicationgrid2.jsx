@@ -18,7 +18,7 @@ const groups = [
     title: "Propofol",
     unit: "mg",
     route: "Intravenous",
-    durationunit: "bolus",
+    durationunit: "bolus (sec)",
     type: "hypnotic",
     color: "yellow",
   },
@@ -27,7 +27,7 @@ const groups = [
     title: "Fentanyl",
     unit: "mcg",
     route: "Intravenous",
-    durationunit: "bolus",
+    durationunit: "bolus (sec)",
     type: "opioid",
     color: "deepskyblue",
   },
@@ -36,7 +36,7 @@ const groups = [
     title: "Lidocaine",
     unit: "mg",
     route: "Subcutaneous",
-    durationunit: "bolus",
+    durationunit: "bolus (sec)",
     type: "localanaesthetic",
     color: "grey",
   },
@@ -45,7 +45,7 @@ const groups = [
     title: "Rocuronium",
     unit: "mg",
     route: "Intravenous",
-    durationunit: "bolus",
+    durationunit: "bolus (sec)",
     type: "nmbd",
     color: "red",
   },
@@ -127,8 +127,10 @@ export class MedicationGrid2 extends Component {
 
 function MedGrid() {
   const [show, setShow] = React.useState(false);
-  const [allitems, setItem] = React.useState(items);
-  const [allgroups, setGroup] = React.useState(groups);
+  const [allitems, setItems] = React.useState(items);
+  const [allgroups, setGroups] = React.useState(groups);
+
+  const [selectedGroup, setSelGroup] = React.useState(groups[0]);
   const [selectedItem, setSelItem] = React.useState(items[0]);
   const [selectedDose, setSelDose] = React.useState(0);
   const [selectedUnit, setSelUnit] = React.useState("mg");
@@ -138,8 +140,6 @@ function MedGrid() {
   const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
 
   const handleItemDoubleClick = (itemId, e, time) => {
-    //console.log("double clicked", itemId, time);
-
     var item = allitems.filter((e) => e.id === itemId);
 
     var groupid = item[0].group;
@@ -153,13 +153,15 @@ function MedGrid() {
     );*/
 
     setSelItem(item);
+    setSelGroup(group);
+
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
     var route = group[0].route;
     var start_time = item[0].start_time;
     var end_time = item[0].end_time;
-    var duration = end_time.diff(start_time, "seconds");
     var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
 
     setSelDose(dose);
     setSelUnit(unit);
@@ -171,14 +173,44 @@ function MedGrid() {
     setShow(true);
   };
 
+  const convertDurationUnit = (duration) => {
+    var durationconverted;
+    switch (duration) {
+      case "bolus (sec)":
+        durationconverted = "s";
+        break;
+      case "min":
+        durationconverted = "m";
+        break;
+      default:
+        durationconverted = "s";
+        break;
+    }
+    return durationconverted;
+  };
+
+  const handleItemClick = (itemId, e, time) => {};
+
+  const handleItemSelect = (itemId, e, time) => {};
+
   const handleItemResize = (itemId, time, edge) => {
     console.log("Resized", itemId, time, edge);
   };
 
-  const handleChildState = (childstate, selectedMeds) => {
+  const handleChildState = (childstate, selectedMeds, selectedItems) => {
+    setGroups(selectedMeds);
+    setItems(selectedItems);
+    console.log(items);
+    console.log(selectedItems);
     setShow(childstate);
-    setGroup(selectedMeds);
   };
+
+  /*React.useEffect(() => {
+    setSelItem(selectedItem);
+    setSelGroup(selectedGroup);
+    setGroups(allgroups);
+    setItems(allitems);
+  }, [selectedItem, selectedGroup, allgroups, allitems]);*/
 
   return (
     <>
@@ -186,6 +218,8 @@ function MedGrid() {
         showMedDialog={show}
         childState={handleChildState}
         selectedMeds={allgroups}
+        selectedItems={allitems}
+        selectedGroup={selectedGroup}
         selectedItem={selectedItem}
         selectedDose={selectedDose}
         selectedUnit={selectedUnit}
@@ -195,8 +229,8 @@ function MedGrid() {
         selectedDurationUnit={selectedDurationUnit}
       />
       <Timeline
-        groups={groups}
-        items={items}
+        groups={allgroups}
+        items={allitems}
         defaultTimeStart={moment().add(0, "s")}
         defaultTimeEnd={moment().add(600, "s")}
         sidebarWidth={150}
@@ -248,4 +282,5 @@ function MedGrid() {
   );
 }
 
-export default MedicationGrid2;
+//export default MedicationGrid2;
+export default MedGrid;
