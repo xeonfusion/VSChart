@@ -41,38 +41,14 @@ const MedModal = ({
 }) => {
   const [show, setShow] = React.useState(false);
   const handleClose = () => {
-    setShow(false);
     var finalallItems = handleAllItemsChange();
-    childState(false, allGroups, finalallItems);
+    var finalallGroups = handleAllGroupsChange();
+
+    setShow(false);
+    childState(false, finalallGroups, finalallItems, selectItem);
   };
 
   const [selectedDate, handleDateChange] = React.useState(new Date());
-
-  React.useEffect(() => {
-    setShow(showMedDialog);
-    setAllGroups(selectedMeds);
-    setAllItems(selectedItems);
-    setSelGroup(selectedGroup);
-    setSelItem(selectedItem);
-    setSelDose(selectedDose);
-    setSelUnit(selectedUnit);
-    setSelRoute(selectedRoute);
-    setSelDurationUnit(selectedDurationUnit);
-    setSelDuration(selectedDuration);
-    handleDateChange(selectedItemTime);
-  }, [
-    showMedDialog,
-    selectedMeds,
-    selectedItems,
-    selectedGroup,
-    selectedItem,
-    selectedDose,
-    selectedUnit,
-    selectedRoute,
-    selectedDuration,
-    selectedItemTime,
-    selectedDurationUnit,
-  ]);
 
   const medGroups = [
     {
@@ -245,6 +221,36 @@ const MedModal = ({
   const [selectEvent, setSelEvent] = React.useState(eventtimes[0]);
   const [selectDuration, setSelDuration] = React.useState(0);
 
+  React.useEffect(() => {
+    //setAllGroups(selectedMeds);
+    //setAllItems(selectedItems);
+    setAllGroups(allGroups);
+    setAllItems(allItems);
+    setSelGroup(selectedGroup);
+    setSelItem(selectedItem);
+    setSelDose(selectedDose);
+    setSelUnit(selectedUnit);
+    setSelRoute(selectedRoute);
+    setSelDurationUnit(selectedDurationUnit);
+    setSelDuration(selectedDuration);
+    handleDateChange(selectedItemTime);
+    setShow(showMedDialog);
+  }, [
+    allGroups,
+    allItems,
+    //selectedMeds,
+    //selectedItems,
+    selectedGroup,
+    selectedItem,
+    selectedDose,
+    selectedUnit,
+    selectedRoute,
+    selectedDuration,
+    selectedItemTime,
+    selectedDurationUnit,
+    showMedDialog,
+  ]);
+
   const handleMedListClick = (index) => {
     console.log(index);
     var group = allGroups.filter((e) => e.id === index).map((group) => group);
@@ -272,20 +278,37 @@ const MedModal = ({
   };
 
   const handleAllItemsChange = () => {
-    var itemId = selectItem[0].id;
+    if (selectItem[0] != null) {
+      var itemId = selectItem[0].id;
 
-    var items = allItems.map((item) =>
-      item.id === itemId
-        ? Object.assign({}, item, {
-            title: selectItem[0].title,
-            start_time: selectItem[0].start_time,
-            end_time: selectItem[0].end_time,
-          })
-        : item
-    );
-    setAllItems(items);
-    //console.log(items);
-    return items;
+      var items = allItems.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              title: selectItem[0].title,
+              start_time: selectItem[0].start_time,
+              end_time: selectItem[0].end_time,
+            })
+          : item
+      );
+      setAllItems(items);
+      //console.log(items);
+      return items;
+    } else return selectedItems;
+  };
+
+  const handleAllGroupsChange = () => {
+    if (selectGroup[0] != null) {
+      var groupId = selectGroup[0].id;
+      var groups = allGroups.map((group) =>
+        group.id === groupId
+          ? Object.assign({}, group, {
+              title: selectGroup[0].title,
+            })
+          : group
+      );
+      setAllGroups(groups);
+      return groups;
+    } else return selectedMeds;
   };
 
   const handleDoseChange = (event) => {

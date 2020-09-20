@@ -11,6 +11,7 @@ import Timeline, {
 } from "react-calendar-timeline/lib";
 
 import MedModal from "./meddialog.jsx";
+import Button from "@material-ui/core/Button";
 
 const groups = [
   {
@@ -100,6 +101,18 @@ const items = [
     end_time: moment().add(10, "m"),
   },
 ];
+
+var keys = {
+  groupIdKey: "id",
+  groupTitleKey: "title",
+  groupRightTitleKey: "rightTitle",
+  itemIdKey: "id",
+  itemTitleKey: "title", // key for item div content
+  itemDivTitleKey: "title", // key for item div title (<div title="text"/>)
+  itemGroupKey: "group",
+  itemTimeStartKey: "start_time",
+  itemTimeEndKey: "end_time",
+};
 
 export class MedicationGrid2 extends Component {
   constructor() {
@@ -197,20 +210,78 @@ function MedGrid() {
     console.log("Resized", itemId, time, edge);
   };
 
-  const handleChildState = (childstate, selectedMeds, selectedItems) => {
-    setGroups(selectedMeds);
-    setItems(selectedItems);
-    console.log(items);
+  const handleCanvasDoubleClick = (groupId, e, time) => {
+    var group = allgroups.filter((e) => e.id === groupId);
+    var item = allitems.filter((e) => e.group === groupId);
+
+    setSelItem(item);
+    setSelGroup(group);
+
+    var dose = parseInt(item[0].title);
+    var unit = group[0].unit;
+    var route = group[0].route;
+    //var start_time = item[0].start_time;
+    //var end_time = item[0].end_time;
+    var start_time = moment(time);
+    var end_time = moment(time).clone().add(0.5, "m");
+    var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+
+    setSelDose(dose);
+    setSelUnit(unit);
+    setSelRoute(route);
+    setSelItemTime(start_time);
+    setSelDuration(duration);
+    setSelDurationUnit(durationunit);
+
+    setShow(true);
+  };
+
+  const handleChildState = (
+    childstate,
+    selectedMeds,
+    selectedItems,
+    selectedItem
+  ) => {
+    var updatedgroups = selectedMeds.map((item) =>
+      Object.assign({}, item, {
+        title: item.title,
+        unit: item.unit,
+        route: item.route,
+      })
+    );
+    var updateditems = selectedItems.map((item) =>
+      Object.assign({}, item, {
+        title: item.title,
+        start_time: item.start_time,
+        end_time: item.end_time,
+      })
+    );
+    setGroups(updatedgroups);
+    setItems(updateditems);
+    console.log(updateditems);
     console.log(selectedItems);
+
+    if (selectedItem[0] != null) {
+      var dose = parseInt(selectedItem[0].title);
+      console.log(dose);
+      setSelDose(dose);
+    }
+
     setShow(childstate);
   };
 
   /*React.useEffect(() => {
-    setSelItem(selectedItem);
-    setSelGroup(selectedGroup);
-    setGroups(allgroups);
-    setItems(allitems);
-  }, [selectedItem, selectedGroup, allgroups, allitems]);*/
+    //setSelItem(selectedItem);
+    //setSelGroup(selectedGroup);
+    //setGroups(allgroups);
+    //setItems(allitems);
+    //setSelDose(selectedDose);
+  }, [selectedItem, selectedGroup, allgroups, allitems, selectedDose]);
+  //}, [selectedItem, selectedGroup, updatedgroups, updateditems]);
+  //}, [updatedgroups, updateditems]);*/
+
+  const handleShowMed = () => setShow(true);
 
   return (
     <>
@@ -229,6 +300,7 @@ function MedGrid() {
         selectedDurationUnit={selectedDurationUnit}
       />
       <Timeline
+        key={keys}
         groups={allgroups}
         items={allitems}
         defaultTimeStart={moment().add(0, "s")}
@@ -239,6 +311,7 @@ function MedGrid() {
         canResize={true}
         onItemDoubleClick={handleItemDoubleClick}
         onItemResize={handleItemResize}
+        onCanvasDoubleClick={handleCanvasDoubleClick}
       >
         <TimelineHeaders className="sticky">
           <SidebarHeader>
@@ -278,9 +351,11 @@ function MedGrid() {
           </TodayMarker>
         </TimelineMarkers>
       </Timeline>
+      <Button variant="contained" color="primary" onClick={handleShowMed}>
+        Add Medication
+      </Button>
     </>
   );
 }
 
-//export default MedicationGrid2;
 export default MedGrid;

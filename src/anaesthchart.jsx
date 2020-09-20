@@ -1,6 +1,4 @@
 import Button from "@material-ui/core/Button";
-import MedModal from "./meddialog.jsx";
-import moment from "moment";
 
 import React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -282,157 +280,11 @@ const NewChart = () => {
       });
   };
 
-  const [show, setShow] = React.useState(false);
-  const handleShow = () => setShow(true);
-
-  const handleChildState = (childstate, selectedMeds, selectedItems) => {
-    setShow(childstate);
-    setGroup(selectedMeds);
-    setItem(selectedItems);
-  };
-
-  const medGroups = [
-    {
-      id: 1,
-      title: "Propofol",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "hypnotic",
-      color: "yellow",
-    },
-    {
-      id: 2,
-      title: "Fentanyl",
-      unit: "mcg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "opioid",
-      color: "deepskyblue",
-    },
-    {
-      id: 3,
-      title: "Lidocaine",
-      unit: "mg",
-      route: "Subcutaneous",
-      durationunit: "bolus (sec)",
-      type: "localanaesthetic",
-      color: "grey",
-    },
-    {
-      id: 4,
-      title: "Rocuronium",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "nmbd",
-      color: "red",
-    },
-    {
-      id: 5,
-      title: "Ringers",
-      unit: "ml/hr",
-      route: "Intravenous",
-      durationunit: "min",
-      type: "ivfluid",
-      color: "white",
-    },
-    {
-      id: 6,
-      title: "Midazolam",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "hypnotic",
-      color: "orange",
-    },
-  ];
-
-  const medItems = [
-    {
-      id: 1,
-      group: 1,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-    {
-      id: 2,
-      group: 2,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-    {
-      id: 3,
-      group: 3,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-    {
-      id: 4,
-      group: 4,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-    {
-      id: 5,
-      group: 5,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-    {
-      id: 6,
-      group: 6,
-      title: "0",
-      start_time: moment(),
-      end_time: moment(),
-      rightTitle: "",
-    },
-  ];
-
-  const [allgroups, setGroup] = React.useState(medGroups);
-  const [allitems, setItem] = React.useState(medItems);
-
-  const [selectedGroup, setSelGroup] = React.useState(medGroups[0]);
-  const [selectedItem, setSelItem] = React.useState(medItems[0]);
-  const [selectedDose, setSelDose] = React.useState(0);
-  const [selectedUnit, setSelUnit] = React.useState("mg");
-  const [selectedRoute, setSelRoute] = React.useState("Intravenous");
-  const [selectedItemTime, setSelItemTime] = React.useState(0);
-  const [selectedDuration, setSelDuration] = React.useState(0);
-  const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
-
   return (
     <div>
       <Button variant="contained" color="primary" onClick={onButtonClick}>
         Load Chart
       </Button>
-      <Button variant="contained" color="primary" onClick={handleShow}>
-        Add Medication
-      </Button>
-      <MedModal
-        showMedDialog={show}
-        childState={handleChildState}
-        selectedMeds={allgroups}
-        selectedItems={allitems}
-        selectedGroup={selectedGroup}
-        selectedItem={selectedItem}
-        selectedDose={selectedDose}
-        selectedUnit={selectedUnit}
-        selectedRoute={selectedRoute}
-        selectedItemTime={selectedItemTime}
-        selectedDuration={selectedDuration}
-        selectedDurationUnit={selectedDurationUnit}
-      />
       <canvas
         style={divStyle}
         ref={chartContainer}
