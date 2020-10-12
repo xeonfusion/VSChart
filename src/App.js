@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import AnaesthesiaChart from "./anaesthchart.jsx";
+//import MedicationGrid from "./medicationgrid1.jsx";
 import MedicationGrid2 from "./medicationgrid2.jsx";
 
 class App extends Component {

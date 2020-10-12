@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDataGrid from "react-data-grid";
-import "react-data-grid/dist/react-data-grid.css";
+import Chart from "react-google-charts";
+import moment from "moment";
 
 const divStyle = {
   //position: "relative",
@@ -9,11 +9,43 @@ const divStyle = {
 };
 
 const columns = [
-  { key: "time", name: "Time" },
-  { key: "drug", name: "Medication" },
-  { key: "unit", name: "Units" },
-  { key: "dose", name: "Dose" },
-  { key: "timespan", name: "Timespan" },
+  { type: "string", label: "medication" },
+  { type: "string", label: "title" },
+  { type: "date", label: "start_time" },
+  { type: "date", label: "end_time" },
+];
+
+const rows = [
+  [
+    "Propofol",
+    "150 mg",
+    moment(moment().add(0.5, "m").format()).toDate(),
+    moment(moment().add(1, "m").format()).toDate(),
+  ],
+  [
+    "Fentanyl",
+    "75 mcg",
+    moment(moment().add(0, "m").format()).toDate(),
+    moment(moment().add(0.5, "m").format()).toDate(),
+  ],
+  [
+    "Lidocaine",
+    "100 mg",
+    moment(moment().add(0, "m").format()).toDate(),
+    moment(moment().add(0.5, "m").format()).toDate(),
+  ],
+  [
+    "Rocuronium",
+    "50 mg",
+    moment(moment().add(1, "m").format()).toDate(),
+    moment(moment().add(1.5, "m").format()).toDate(),
+  ],
+  [
+    "Ringers",
+    "60 ml/hr",
+    moment(moment().add(0, "m").format()).toDate(),
+    moment(moment().add(10, "m").format()).toDate(),
+  ],
 ];
 
 class MedicationGrid extends React.Component {
@@ -24,26 +56,26 @@ class MedicationGrid extends React.Component {
     };
   }
 
-  componentDidMount() {
-    var data = [
-      { drug: "Propofol", dose: 150, unit: "mg", time: 1500 },
-      { drug: "Fentanyl", dose: 75, unit: "mcg", time: 1500 },
-      { drug: "Rocuronium", dose: 50, unit: "mg", time: 1505 },
-      { drug: "Lidocaine", dose: 100, unit: "mg", time: 1500 },
-      { drug: "Ringers", dose: 60, unit: "ml/hr", time: 1500, timespan: 60 },
-    ];
-    this.setState({ rowsdata: data });
-  }
-
   render() {
     return (
       <div style={divStyle}>
-        <ReactDataGrid
-          columns={columns}
-          rows={this.state.rowsdata}
-          rowsCount={10}
-          enableCellSelect={true}
-          subHeader={true}
+        <Chart
+          chartType="Timeline"
+          data={[columns, ...rows]}
+          width="100%"
+          height="300px"
+          rootProps={{ "data-testid": "2" }}
+          options={{
+            timeline: {
+              //singleColor: "#4d84f1",
+            },
+            hAxis: {
+              title: "Timestamp",
+              format: "hh:mm a",
+              minValue: moment(moment().format()).toDate(),
+              maxValue: moment(moment().add(15, "m").format()).toDate(),
+            },
+          }}
         />
       </div>
     );

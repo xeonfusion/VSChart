@@ -32,6 +32,7 @@ const MedModal = ({
   selectedItems,
   selectedItem,
   selectedGroup,
+  selectedItemIndex,
   selectedDose,
   selectedUnit,
   selectedRoute,
@@ -168,12 +169,17 @@ const MedModal = ({
 
   const addmeds = ["Suxamethonium", "Morphine", "Cisatracurium", "Thiopentone"];
 
-  const StyledListItem = ({ itemcolor, itemtitle, itemindex }) => {
+  const StyledListItem = ({
+    itemcolor,
+    itemtitle,
+    itemindex,
+    itemselected,
+  }) => {
     const useStyles = makeStyles({
       root: {
         background: itemcolor,
         borderRadius: 3,
-        border: 0,
+        border: (itemselected === true ? "solid 6px rgba(144, 144, 144, 1)" : "0"),
         color: "black",
         height: 48,
         padding: "0 30px",
@@ -197,22 +203,27 @@ const MedModal = ({
     );
   };
 
-  const MedListItems = ({ list }) => (
+  const MedListItems = ({ list, itemselected }) => (
     <List dense={true}>
       {(list || []).map((listitem, index) => (
         <StyledListItem
           itemcolor={listitem.color}
           itemtitle={listitem.title}
           itemindex={listitem.id}
+          itemselected={listitem.id === itemselected[0].group ? true : false}
+          
         ></StyledListItem>
-      ))}
+        ))}
     </List>
+    
   );
 
   const [allGroups, setAllGroups] = React.useState(medGroups);
   const [allItems, setAllItems] = React.useState(medItems);
   const [selectGroup, setSelGroup] = React.useState(medGroups[0]);
   const [selectItem, setSelItem] = React.useState(medItems[0]);
+  const [selectItemIndex, setSelItemIndex] = React.useState(0);
+  const [selectGroupIndex, setSelGroupIndex] = React.useState(0);
 
   const [selectDose, setSelDose] = React.useState(0);
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
@@ -222,12 +233,14 @@ const MedModal = ({
   const [selectDuration, setSelDuration] = React.useState(0);
 
   React.useEffect(() => {
-    //setAllGroups(selectedMeds);
-    //setAllItems(selectedItems);
-    setAllGroups(allGroups);
-    setAllItems(allItems);
+    setAllGroups(selectedMeds);
+    setAllItems(selectedItems);
+    //setAllGroups(allGroups);
+    //setAllItems(allItems);
     setSelGroup(selectedGroup);
     setSelItem(selectedItem);
+    setSelItemIndex(selectedItemIndex);
+
     setSelDose(selectedDose);
     setSelUnit(selectedUnit);
     setSelRoute(selectedRoute);
@@ -236,13 +249,14 @@ const MedModal = ({
     handleDateChange(selectedItemTime);
     setShow(showMedDialog);
   }, [
-    allGroups,
-    allItems,
-    //selectedMeds,
-    //selectedItems,
+    //allGroups,
+    //allItems,
+    selectedMeds,
+    selectedItems,
     selectedGroup,
     selectedItem,
     selectedDose,
+    selectedItemIndex,
     selectedUnit,
     selectedRoute,
     selectedDuration,
@@ -252,14 +266,24 @@ const MedModal = ({
   ]);
 
   const handleMedListClick = (index) => {
-    console.log(index);
+    handleAllItemsChange();
+    handleAllGroupsChange();
+    if (index === 0) return;
+    //console.log(index);
     var group = allGroups.filter((e) => e.id === index).map((group) => group);
-    var item = allItems.filter((e) => e.id === index).map((item) => item);
+    //var item = allItems.filter((e) => e.id === index).map((item) => item);
+    var items = allItems.filter((e) => e.group === index).map((item) => item);
+    //select last item
+    var item = items.slice(-1);
+
     setSelGroup(group);
     setSelItem(item);
 
-    console.log(group);
-    console.log(item);
+    setSelItemIndex(item.id);
+    setSelGroupIndex(index);
+
+    //console.log(group);
+    //console.log(item);
 
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
@@ -280,6 +304,7 @@ const MedModal = ({
   const handleAllItemsChange = () => {
     if (selectItem[0] != null) {
       var itemId = selectItem[0].id;
+      //var itemId = selectItemIndex;
 
       var items = allItems.map((item) =>
         item.id === itemId
@@ -298,11 +323,16 @@ const MedModal = ({
 
   const handleAllGroupsChange = () => {
     if (selectGroup[0] != null) {
-      var groupId = selectGroup[0].id;
+      //var groupId = selectGroup[0].id;
+      var groupId = selectGroupIndex;
+
       var groups = allGroups.map((group) =>
         group.id === groupId
           ? Object.assign({}, group, {
               title: selectGroup[0].title,
+              unit: selectGroup[0].unit,
+              route: selectGroup[0].route,
+              durationunit: selectGroup[0].durationunit,
             })
           : group
       );
@@ -368,6 +398,17 @@ const MedModal = ({
 
   const handleUnitChange = (event) => {
     setSelUnit(event.target.value);
+
+    var groupId = selectGroup[0].id;
+
+    var group = selectGroup.map((group) =>
+      group.id === groupId
+        ? Object.assign({}, group, {
+            unit: event.target.value,
+          })
+        : group
+    );
+    setSelGroup(group);
   };
 
   const handleRouteChange = (event) => {
@@ -404,7 +445,7 @@ const MedModal = ({
               >
                 <Grid item xs>
                   Medications
-                  <MedListItems list={allGroups} />
+                  <MedListItems list={allGroups} itemselected={selectItem} />
                 </Grid>
                 <Grid item xs>
                   Add Medication

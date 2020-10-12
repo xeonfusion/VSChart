@@ -59,8 +59,8 @@ const groups = [
     type: "ivfluid",
     color: "white",
   },
-  { id: 6, title: "" },
-  { id: 7, title: "" },
+  { id: 6, title: "", unit: "" },
+  { id: 7, title: "", unit: "" },
 ];
 
 const items = [
@@ -74,27 +74,36 @@ const items = [
   },
   {
     id: 2,
+    group: 1,
+    title: "50 mg",
+    start_time: moment().add(1.5, "m"),
+    end_time: moment().add(2, "m"),
+    rightTitle: "",
+  },
+
+  {
+    id: 3,
     group: 2,
     title: "75 mcg",
     start_time: moment().add(0, "m"),
     end_time: moment().add(0.5, "m"),
   },
   {
-    id: 3,
+    id: 4,
     group: 3,
     title: "100 mg",
     start_time: moment().add(0, "m"),
     end_time: moment().add(0.5, "m"),
   },
   {
-    id: 4,
+    id: 5,
     group: 4,
     title: "50 mg",
     start_time: moment().add(1, "m"),
     end_time: moment().add(1.5, "m"),
   },
   {
-    id: 5,
+    id: 6,
     group: 5,
     title: "60 ml/hr",
     start_time: moment().add(0, "m"),
@@ -145,6 +154,8 @@ function MedGrid() {
 
   const [selectedGroup, setSelGroup] = React.useState(groups[0]);
   const [selectedItem, setSelItem] = React.useState(items[0]);
+  const [selectedItemIndex, setSelItemIndex] = React.useState(0);
+
   const [selectedDose, setSelDose] = React.useState(0);
   const [selectedUnit, setSelUnit] = React.useState("mg");
   const [selectedRoute, setSelRoute] = React.useState("Intravenous");
@@ -158,15 +169,9 @@ function MedGrid() {
     var groupid = item[0].group;
     var group = allgroups.filter((e) => e.id === groupid);
 
-    /*console.log(
-      group[0].title,
-      item[0].title,
-      item[0].start_time.toDate(),
-      item[0].end_time.toDate()
-    );*/
-
     setSelItem(item);
     setSelGroup(group);
+    setSelItemIndex(itemId);
 
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
@@ -202,9 +207,9 @@ function MedGrid() {
     return durationconverted;
   };
 
-  const handleItemClick = (itemId, e, time) => {};
+  //const handleItemClick = (itemId, e, time) => {};
 
-  const handleItemSelect = (itemId, e, time) => {};
+  //const handleItemSelect = (itemId, e, time) => {};
 
   const handleItemResize = (itemId, time, edge) => {
     console.log("Resized", itemId, time, edge);
@@ -237,49 +242,89 @@ function MedGrid() {
     setShow(true);
   };
 
+  const groupRenderer = ({ group, isRightSidebar }) => {
+    if (group.title !== "" && !isRightSidebar) {
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>{group.title + " (" + group.unit + ")"}</td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    } else return null;
+  };
+
+  const [showItemInfo, setShowItemInfo] = React.useState(false);
+
+  const itemRenderer = ({
+    item,
+    timelineContext,
+    itemContext,
+    getItemProps,
+    getResizeProps,
+  }) => {
+    return (
+      <div
+        {...getItemProps({
+          style: {
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderRadius: 4,
+            borderLeftWidth: itemContext.selected ? 3 : 1,
+            borderRightWidth: itemContext.selected ? 3 : 1,
+          },
+          onMouseEnter: () => {
+            setShowItemInfo(true);
+          },
+          onMouseLeave: () => {
+            setShowItemInfo(false);
+          },
+          onClick: () => {
+            setShowItemInfo(false);
+          },
+          onDoubleClick: () => {
+            setShowItemInfo(false);
+          },
+        })}
+      >
+        <div
+          style={{
+            height: itemContext.dimensions.height,
+            overflow: "hidden",
+            paddingLeft: 3,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {item.title}
+        </div>
+      </div>
+    );
+  };
+
   const handleChildState = (
     childstate,
     selectedMeds,
     selectedItems,
     selectedItem
   ) => {
-    var updatedgroups = selectedMeds.map((item) =>
-      Object.assign({}, item, {
-        title: item.title,
-        unit: item.unit,
-        route: item.route,
-      })
-    );
-    var updateditems = selectedItems.map((item) =>
-      Object.assign({}, item, {
-        title: item.title,
-        start_time: item.start_time,
-        end_time: item.end_time,
-      })
-    );
-    setGroups(updatedgroups);
-    setItems(updateditems);
-    console.log(updateditems);
-    console.log(selectedItems);
+    setGroups(selectedMeds);
+    setItems(selectedItems);
+    
+    setSelItem(selectedItems);
 
-    if (selectedItem[0] != null) {
-      var dose = parseInt(selectedItem[0].title);
-      console.log(dose);
-      setSelDose(dose);
-    }
+    console.log(selectedMeds);
+    console.log(selectedItems);
 
     setShow(childstate);
   };
 
   /*React.useEffect(() => {
-    //setSelItem(selectedItem);
-    //setSelGroup(selectedGroup);
     //setGroups(allgroups);
     //setItems(allitems);
-    //setSelDose(selectedDose);
-  }, [selectedItem, selectedGroup, allgroups, allitems, selectedDose]);
-  //}, [selectedItem, selectedGroup, updatedgroups, updateditems]);
-  //}, [updatedgroups, updateditems]);*/
+  }, [allgroups, allitems]);*/
 
   const handleShowMed = () => setShow(true);
 
@@ -292,6 +337,7 @@ function MedGrid() {
         selectedItems={allitems}
         selectedGroup={selectedGroup}
         selectedItem={selectedItem}
+        selectedItemIndex={selectedItemIndex}
         selectedDose={selectedDose}
         selectedUnit={selectedUnit}
         selectedRoute={selectedRoute}
@@ -312,6 +358,8 @@ function MedGrid() {
         onItemDoubleClick={handleItemDoubleClick}
         onItemResize={handleItemResize}
         onCanvasDoubleClick={handleCanvasDoubleClick}
+        groupRenderer={groupRenderer}
+        itemRenderer={itemRenderer}
       >
         <TimelineHeaders className="sticky">
           <SidebarHeader>
