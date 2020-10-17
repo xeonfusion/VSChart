@@ -159,9 +159,16 @@ function MedGrid() {
   const [selectedDose, setSelDose] = React.useState(0);
   const [selectedUnit, setSelUnit] = React.useState("mg");
   const [selectedRoute, setSelRoute] = React.useState("Intravenous");
-  const [selectedItemTime, setSelItemTime] = React.useState(0);
+  const [selectedItemTime, setSelItemTime] = React.useState(moment());
   const [selectedDuration, setSelDuration] = React.useState(0);
   const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
+
+  const [selectedTimeSteps, setSelTimeSteps] = React.useState({minute: 1});
+  const [timeStepCount, setTimeStepCount] = React.useState(0);
+  const [selTimeStart, setSelTimeStart] = React.useState(moment().add(0, "s"));
+  const [selTimeEnd, setSelTimeEnd] = React.useState(moment().add(600, "s"));
+  
+
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -328,6 +335,40 @@ function MedGrid() {
 
   const handleShowMed = () => setShow(true);
 
+  const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
+    setSelTimeStart(visibleTimeStart);
+    setSelTimeEnd(visibleTimeEnd);
+  };
+
+  const handleTimeSteps = () =>{
+
+    var count = timeStepCount !== 3 ? setTimeStepCount(timeStepCount + 1) : setTimeStepCount(0);
+  
+    switch(timeStepCount){
+      case 0:
+        setSelTimeSteps({minute: 1});
+        setSelTimeStart(moment().add(0, "s"));
+        setSelTimeEnd(moment().add(1200, "s"));
+        break;
+      case 1:
+        setSelTimeSteps({minute: 5});
+        setSelTimeStart(moment().add(0, "s"));
+        setSelTimeEnd(moment().add(3600, "s"));
+        break;
+      case 2:
+        setSelTimeSteps({minute: 15});
+        setSelTimeStart(moment().add(0, "s"));
+        setSelTimeEnd(moment().add(3600, "s"));
+        break;
+      default:
+        setSelTimeSteps({minute: 1});
+        setSelTimeStart(moment().add(0, "s"));
+        setSelTimeEnd(moment().add(1200, "s"));
+        break;
+    }
+ 
+  };
+
   return (
     <>
       <MedModal
@@ -360,6 +401,10 @@ function MedGrid() {
         onCanvasDoubleClick={handleCanvasDoubleClick}
         groupRenderer={groupRenderer}
         itemRenderer={itemRenderer}
+        timeSteps={selectedTimeSteps}
+        visibleTimeStart={selTimeStart}
+        visibleTimeEnd={selTimeEnd}
+        onTimeChange={handleTimeChange}
       >
         <TimelineHeaders className="sticky">
           <SidebarHeader>
@@ -372,8 +417,7 @@ function MedGrid() {
               return <div style={sideStyles}>Medications</div>;
             }}
           </SidebarHeader>
-          <DateHeader unit="hour" />
-          <DateHeader />
+          <DateHeader unit="minute" labelFormat="HH:mm"/>
           <SidebarHeader variant="right">
             {({ getRootProps }) => {
               const sideStyles = {
@@ -401,6 +445,9 @@ function MedGrid() {
       </Timeline>
       <Button variant="contained" color="primary" onClick={handleShowMed}>
         Add Medication
+      </Button>
+      <Button variant="contained" color="primary" onClick={handleTimeSteps}>
+        Change Timesteps
       </Button>
     </>
   );

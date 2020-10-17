@@ -204,14 +204,14 @@ const MedModal = ({
   };
 
   const MedListItems = ({ list, itemselected }) => (
+
     <List dense={true}>
       {(list || []).map((listitem, index) => (
         <StyledListItem
           itemcolor={listitem.color}
           itemtitle={listitem.title}
           itemindex={listitem.id}
-          itemselected={listitem.id === itemselected[0].group ? true : false}
-          
+          itemselected={typeof itemselected[0] === 'undefined'? false: (itemselected[0].group === listitem.id ? true : false)}
         ></StyledListItem>
         ))}
     </List>
@@ -221,7 +221,8 @@ const MedModal = ({
   const [allGroups, setAllGroups] = React.useState(medGroups);
   const [allItems, setAllItems] = React.useState(medItems);
   const [selectGroup, setSelGroup] = React.useState(medGroups[0]);
-  const [selectItem, setSelItem] = React.useState(medItems[0]);
+  //const [selectItem, setSelItem] = React.useState(medItems[0]);
+  const [selectItem, setSelItem] = React.useState(selectedItem[0]);
   const [selectItemIndex, setSelItemIndex] = React.useState(0);
   const [selectGroupIndex, setSelGroupIndex] = React.useState(0);
 
