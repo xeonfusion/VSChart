@@ -49,8 +49,6 @@ const MedModal = ({
     childState(false, finalallGroups, finalallItems, selectItem);
   };
 
-  const [selectedDate, handleDateChange] = React.useState(new Date());
-
   const medGroups = [
     {
       id: 1,
@@ -147,6 +145,14 @@ const MedModal = ({
     },
   ];
 
+  const medItem = [{
+    id: 1,
+    group: 1,
+    title: "",
+    start_time: moment().add(0.5, "m"),
+    end_time: moment().add(1, "m"),
+  }];
+
   const doseunits = ["mg", "mcg", "mcg/kg/min", "ml/hr"];
 
   const doseroutes = [
@@ -167,7 +173,7 @@ const MedModal = ({
 
   const durations = ["bolus (sec)", "min", "sec"];
 
-  const addmeds = ["Suxamethonium", "Morphine", "Cisatracurium", "Thiopentone"];
+  const addmeds = ["Midazolam","Suxamethonium", "Morphine", "Cisatracurium", "Thiopentone"];
 
   const StyledListItem = ({
     itemcolor,
@@ -232,6 +238,9 @@ const MedModal = ({
   const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
   const [selectEvent, setSelEvent] = React.useState(eventtimes[0]);
   const [selectDuration, setSelDuration] = React.useState(0);
+  const [selectAddMeds, setSelAddMeds] = React.useState("");
+  const [selectedDate, setSelDateChange] = React.useState(new Date());
+
 
   React.useEffect(() => {
     setAllGroups(selectedMeds);
@@ -247,11 +256,11 @@ const MedModal = ({
     setSelRoute(selectedRoute);
     setSelDurationUnit(selectedDurationUnit);
     setSelDuration(selectedDuration);
-    handleDateChange(selectedItemTime);
+    setSelDateChange(selectedItemTime);
     setShow(showMedDialog);
   }, [
-    //allGroups,
-    //allItems,
+    allGroups,
+    allItems,
     selectedMeds,
     selectedItems,
     selectedGroup,
@@ -297,7 +306,7 @@ const MedModal = ({
     setSelDose(dose);
     setSelUnit(unit);
     setSelRoute(route);
-    handleDateChange(start_time);
+    setSelDateChange(start_time);
     setSelDuration(duration);
     setSelDurationUnit(durationunit);
   };
@@ -363,17 +372,14 @@ const MedModal = ({
 
     var itemId = selectItem[0].id;
     var start_time = moment(selectItem[0].start_time);
-    var duration = event.target.value;
     var durationunit = convertDurationUnit(selectDurationUnit);
-
-    var end_time = start_time.add(duration, durationunit);
-    //console.log(start_time);
-    //console.log(end_time);
-
+    var duration = moment.duration().add(event.target.value, durationunit);
+    var end_time = moment(start_time).add(duration);
+   
     var item = selectItem.map((item) =>
       item.id === itemId
         ? Object.assign({}, item, {
-            start_time: selectItem[0].start_time,
+            start_time: start_time,
             end_time: end_time,
           })
         : item
@@ -395,6 +401,29 @@ const MedModal = ({
         break;
     }
     return durationconverted;
+  };
+
+  const handleDateChange = (value) => {
+    setSelDateChange(value);
+
+    var itemId = selectItem[0].id;
+    var start_time = moment(selectItem[0].start_time);
+    var end_time = moment(selectItem[0].end_time);
+    var duration = moment.duration(end_time.diff(start_time));
+    
+    var final_start_time = moment(value);
+    var final_end_time = moment(value).add(duration);
+    
+    var item = selectItem.map((item) =>
+      item.id === itemId
+        ? Object.assign({}, item, {
+            start_time: final_start_time,
+            end_time: final_end_time,
+          })
+        : item
+    );
+    setSelItem(item);
+    
   };
 
   const handleUnitChange = (event) => {
@@ -422,6 +451,48 @@ const MedModal = ({
 
   const handleEventChange = (event) => {
     setSelEvent(event.target.value);
+  };
+
+  const handleMedSelChange = (event) =>{
+    setSelAddMeds(event.target.value);
+  };
+
+  const handleAddMeds = () =>{
+
+    var selgroup = medGroups.filter((e) => e.title === selectAddMeds).map((group) => group);
+    
+    allGroups.push(selgroup[0]);
+    var selgroupindex = 0;
+    var selitemindex = 0;
+    
+    allItems.push(medItem[0]);
+    
+    var groups = allGroups.map((group, index) =>
+        group.title !== selgroup[0].title
+          ? group : Object.assign({}, group, {
+            id: selgroupindex = index+1,
+            })
+          
+      );
+
+      var items = allItems.map((item, index) =>
+        item.group !== selgroup[0].id
+          ? item : Object.assign({}, item, {
+            id: selitemindex = index+1,
+            })
+          
+      );
+    
+    setSelGroup(selgroup[0]);
+    setSelGroupIndex(selgroupindex);
+    setSelItem(items[selitemindex]);
+    setSelItemIndex(selitemindex);
+    
+    setAllGroups(groups);
+    setAllItems(items);
+    //console.log(selgroup[0]);
+    //console.log(groups);
+
   };
 
   return (
@@ -459,11 +530,17 @@ const MedModal = ({
                     helperText="Add Medication"
                     variant="outlined"
                     fullWidth
+                    onChange={handleMedSelChange}
                   >
                     {addmeds.map((item) => (
                       <MenuItem value={item}>{item}</MenuItem>
                     ))}
                   </TextField>
+                </Grid>
+                <Grid item xs>
+                <Button variant="outlined" color="default" size="large" onClick={handleAddMeds}>
+                  Add Meds
+                </Button>
                 </Grid>
               </Grid>
             </Grid>

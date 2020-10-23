@@ -59,8 +59,6 @@ const groups = [
     type: "ivfluid",
     color: "white",
   },
-  { id: 6, title: "", unit: "" },
-  { id: 7, title: "", unit: "" },
 ];
 
 const items = [
@@ -348,7 +346,7 @@ function MedGrid() {
       case 0:
         setSelTimeSteps({minute: 1});
         setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(1200, "s"));
+        setSelTimeEnd(moment().add(600, "s"));
         break;
       case 1:
         setSelTimeSteps({minute: 5});
@@ -363,7 +361,7 @@ function MedGrid() {
       default:
         setSelTimeSteps({minute: 1});
         setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(1200, "s"));
+        setSelTimeEnd(moment().add(600, "s"));
         break;
     }
  
@@ -395,6 +393,7 @@ function MedGrid() {
         sidebarWidth={150}
         rightSidebarWidth={150}
         showCursorLine
+        stackItems={true}
         canResize={true}
         onItemDoubleClick={handleItemDoubleClick}
         onItemResize={handleItemResize}
