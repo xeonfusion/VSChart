@@ -33,6 +33,7 @@ const MedModal = ({
   selectedItem,
   selectedGroup,
   selectedItemIndex,
+  selectedGroupIndex,
   selectedDose,
   selectedUnit,
   selectedRoute,
@@ -46,7 +47,21 @@ const MedModal = ({
     var finalallGroups = handleAllGroupsChange();
 
     setShow(false);
-    childState(false, finalallGroups, finalallItems, selectItem);
+    childState(
+      false,
+      finalallGroups,
+      finalallItems,
+      selectItem,
+      selectGroup,
+      selectedItemIndex,
+      selectGroupIndex,
+      selectDose,
+      selectUnit,
+      selectRoute,
+      selectedDate,
+      selectDuration,
+      selectDurationUnit
+    );
   };
 
   const medGroups = [
@@ -104,6 +119,51 @@ const MedModal = ({
       type: "hypnotic",
       color: "orange",
     },
+    {
+      id: 6,
+      title: "Suxamethonium",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "nmbd",
+      color: "red",
+    },
+    {
+      id: 7,
+      title: "Morphine",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "opioid",
+      color: "deepskyblue",
+    },
+    {
+      id: 8,
+      title: "Cisatracurium",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "nmbd",
+      color: "red",
+    },
+    {
+      id: 9,
+      title: "Thiopentone",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "hypnotic",
+      color: "yellow",
+    },
+    {
+      id: 10,
+      title: "Saline 0.9%",
+      unit: "ml/hr",
+      route: "Intravenous",
+      durationunit: "min",
+      type: "ivfluid",
+      color: "white",
+    },
   ];
 
   const medItems = [
@@ -145,13 +205,15 @@ const MedModal = ({
     },
   ];
 
-  const medItem = [{
-    id: 1,
-    group: 1,
-    title: "",
-    start_time: moment().add(0.5, "m"),
-    end_time: moment().add(1, "m"),
-  }];
+  const medItem = [
+    {
+      id: 1,
+      group: 1,
+      title: "",
+      start_time: moment().add(0.5, "m"),
+      end_time: moment().add(1, "m"),
+    },
+  ];
 
   const doseunits = ["mg", "mcg", "mcg/kg/min", "ml/hr"];
 
@@ -173,7 +235,14 @@ const MedModal = ({
 
   const durations = ["bolus (sec)", "min", "sec"];
 
-  const addmeds = ["Midazolam","Suxamethonium", "Morphine", "Cisatracurium", "Thiopentone"];
+  const addmeds = [
+    "Midazolam",
+    "Suxamethonium",
+    "Morphine",
+    "Cisatracurium",
+    "Thiopentone",
+    "Saline 0.9%",
+  ];
 
   const StyledListItem = ({
     itemcolor,
@@ -185,7 +254,8 @@ const MedModal = ({
       root: {
         background: itemcolor,
         borderRadius: 3,
-        border: (itemselected === true ? "solid 6px rgba(144, 144, 144, 1)" : "0"),
+        border:
+          itemselected === true ? "solid 6px rgba(144, 144, 144, 1)" : "0",
         color: "black",
         height: 48,
         padding: "0 30px",
@@ -210,29 +280,38 @@ const MedModal = ({
   };
 
   const MedListItems = ({ list, itemselected }) => (
-
     <List dense={true}>
       {(list || []).map((listitem, index) => (
         <StyledListItem
           itemcolor={listitem.color}
           itemtitle={listitem.title}
           itemindex={listitem.id}
-          itemselected={typeof itemselected[0] === 'undefined'? false: (itemselected[0].group === listitem.id ? true : false)}
+          itemselected={
+            typeof itemselected[0] === "undefined"
+              ? false
+              : itemselected[0].group === listitem.id
+              ? true
+              : false
+          }
         ></StyledListItem>
-        ))}
+      ))}
     </List>
-    
   );
 
-  const [allGroups, setAllGroups] = React.useState(medGroups);
-  const [allItems, setAllItems] = React.useState(medItems);
-  const [selectGroup, setSelGroup] = React.useState(medGroups[0]);
+  //const [allGroups, setAllGroups] = React.useState(medGroups);
+  //const [allItems, setAllItems] = React.useState(medItems);
+  const [allGroups, setAllGroups] = React.useState(selectedMeds);
+  const [allItems, setAllItems] = React.useState(selectedItems);
+  //const [selectGroup, setSelGroup] = React.useState(medGroups[0]);
+  const [selectGroup, setSelGroup] = React.useState(selectedGroup);
   //const [selectItem, setSelItem] = React.useState(medItems[0]);
-  const [selectItem, setSelItem] = React.useState(selectedItem[0]);
-  const [selectItemIndex, setSelItemIndex] = React.useState(0);
-  const [selectGroupIndex, setSelGroupIndex] = React.useState(0);
-
+  const [selectItem, setSelItem] = React.useState(selectedItem);
+  const [selectItemIndex, setSelItemIndex] = React.useState(selectedItemIndex);
+  const [selectGroupIndex, setSelGroupIndex] = React.useState(
+    selectedGroupIndex
+  );
   const [selectDose, setSelDose] = React.useState(0);
+  //const [selectDose, setSelDose] = React.useState(selectedDose);
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
   const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
   const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
@@ -241,13 +320,15 @@ const MedModal = ({
   const [selectAddMeds, setSelAddMeds] = React.useState("");
   const [selectedDate, setSelDateChange] = React.useState(new Date());
 
-
   React.useEffect(() => {
+    //Run only on first mount with empty array dependency
     setAllGroups(selectedMeds);
     setAllItems(selectedItems);
-    //setAllGroups(allGroups);
-    //setAllItems(allItems);
+  }, []);
+
+  React.useEffect(() => {
     setSelGroup(selectedGroup);
+    setSelGroupIndex(selectedGroupIndex);
     setSelItem(selectedItem);
     setSelItemIndex(selectedItemIndex);
 
@@ -259,19 +340,16 @@ const MedModal = ({
     setSelDateChange(selectedItemTime);
     setShow(showMedDialog);
   }, [
-    allGroups,
-    allItems,
-    selectedMeds,
-    selectedItems,
     selectedGroup,
     selectedItem,
-    selectedDose,
+    selectedGroupIndex,
     selectedItemIndex,
+    selectedDose,
     selectedUnit,
     selectedRoute,
     selectedDuration,
-    selectedItemTime,
     selectedDurationUnit,
+    selectedItemTime,
     showMedDialog,
   ]);
 
@@ -280,9 +358,13 @@ const MedModal = ({
     handleAllGroupsChange();
     if (index === 0) return;
     //console.log(index);
+    handleMedListItemClick(index);
+  };
+
+  const handleMedListItemClick = (index) => {
     var group = allGroups.filter((e) => e.id === index).map((group) => group);
-    //var item = allItems.filter((e) => e.id === index).map((item) => item);
     var items = allItems.filter((e) => e.group === index).map((item) => item);
+
     //select last item
     var item = items.slice(-1);
 
@@ -292,8 +374,11 @@ const MedModal = ({
     setSelItemIndex(item.id);
     setSelGroupIndex(index);
 
-    //console.log(group);
-    //console.log(item);
+    //console.log(allGroups);
+    //console.log(allItems);
+    console.log(group);
+    console.log(items);
+    console.log(item);
 
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
@@ -312,9 +397,11 @@ const MedModal = ({
   };
 
   const handleAllItemsChange = () => {
-    if (selectItem[0] != null) {
-      var itemId = selectItem[0].id;
-      //var itemId = selectItemIndex;
+    //if (selectItem[0] !== null) {
+    console.log(selectItem[0]);
+    if (typeof selectItem[0] !== undefined && selectItem[0] !== null) {
+      //var itemId = selectItem[0].id;
+      var itemId = selectItemIndex;
 
       var items = allItems.map((item) =>
         item.id === itemId
@@ -326,13 +413,13 @@ const MedModal = ({
           : item
       );
       setAllItems(items);
-      //console.log(items);
       return items;
     } else return selectedItems;
   };
 
   const handleAllGroupsChange = () => {
-    if (selectGroup[0] != null) {
+    //if (selectGroup[0] !== null) {
+    if (typeof selectGroup[0] !== undefined && selectGroup[0] !== null) {
       //var groupId = selectGroup[0].id;
       var groupId = selectGroupIndex;
 
@@ -375,7 +462,7 @@ const MedModal = ({
     var durationunit = convertDurationUnit(selectDurationUnit);
     var duration = moment.duration().add(event.target.value, durationunit);
     var end_time = moment(start_time).add(duration);
-   
+
     var item = selectItem.map((item) =>
       item.id === itemId
         ? Object.assign({}, item, {
@@ -410,10 +497,10 @@ const MedModal = ({
     var start_time = moment(selectItem[0].start_time);
     var end_time = moment(selectItem[0].end_time);
     var duration = moment.duration(end_time.diff(start_time));
-    
+
     var final_start_time = moment(value);
     var final_end_time = moment(value).add(duration);
-    
+
     var item = selectItem.map((item) =>
       item.id === itemId
         ? Object.assign({}, item, {
@@ -423,7 +510,6 @@ const MedModal = ({
         : item
     );
     setSelItem(item);
-    
   };
 
   const handleUnitChange = (event) => {
@@ -453,46 +539,100 @@ const MedModal = ({
     setSelEvent(event.target.value);
   };
 
-  const handleMedSelChange = (event) =>{
+  const handleMedSelChange = (event) => {
     setSelAddMeds(event.target.value);
   };
 
-  const handleAddMeds = () =>{
+  const handleAddMeds = () => {
+    var selgroup = medGroups
+      .filter((e) => e.title === selectAddMeds)
+      .map((group) => group);
 
-    var selgroup = medGroups.filter((e) => e.title === selectAddMeds).map((group) => group);
-    
+    var selgroupindex = allGroups.length + 1;
+    selgroup[0].id = selgroupindex;
+
+    //console.log(selgroup);
+
     allGroups.push(selgroup[0]);
-    var selgroupindex = 0;
-    var selitemindex = 0;
-    
-    allItems.push(medItem[0]);
-    
-    var groups = allGroups.map((group, index) =>
-        group.title !== selgroup[0].title
-          ? group : Object.assign({}, group, {
-            id: selgroupindex = index+1,
-            })
-          
-      );
 
-      var items = allItems.map((item, index) =>
-        item.group !== selgroup[0].id
-          ? item : Object.assign({}, item, {
-            id: selitemindex = index+1,
-            })
-          
-      );
-    
-    setSelGroup(selgroup[0]);
+    var selitemindex = allItems.length + 1;
+
+    const item = [
+      {
+        id: selitemindex,
+        group: selgroupindex,
+        title: "0",
+        start_time: moment().add(0, "m"),
+        end_time: moment().add(0.5, "m"),
+      },
+    ];
+
+    //console.log(item);
+
+    allItems.push(item[0]);
+
+    var finalgroups = allGroups.map((group, index) =>
+      Object.assign({}, group, {
+        id: index + 1,
+      })
+    );
+
+    var finalitems = allItems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    //console.log(selgroupindex);
+    //console.log(selitemindex);
+
+    var finalgroup = finalgroups.filter((e) => e.id === selgroupindex);
+    setSelGroup(finalgroup);
     setSelGroupIndex(selgroupindex);
-    setSelItem(items[selitemindex]);
-    setSelItemIndex(selitemindex);
-    
-    setAllGroups(groups);
-    setAllItems(items);
-    //console.log(selgroup[0]);
-    //console.log(groups);
 
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelItem(finalitem);
+    setSelItemIndex(selitemindex);
+
+    setAllGroups(finalgroups);
+    setAllItems(finalitems);
+
+    //console.log(finalgroups);
+    //console.log(finalitems);
+    //console.log(selectedItem);
+    handleMedListClick(selgroupindex);
+  };
+
+  const handleAddMedDose = () => {
+    var selgroupindex = selectGroup[0].id;
+
+    //console.log(selgroupindex);
+
+    var selitemindex = allItems.length + 1;
+
+    const item = [
+      {
+        id: selitemindex,
+        group: selgroupindex,
+        title: "0",
+        start_time: moment().add(0, "m"),
+        end_time: moment().add(0.5, "m"),
+      },
+    ];
+
+    allItems.push(item[0]);
+
+    var finalitems = allItems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelItem(finalitem);
+    setSelItemIndex(selitemindex);
+
+    setAllItems(finalitems);
   };
 
   return (
@@ -538,9 +678,22 @@ const MedModal = ({
                   </TextField>
                 </Grid>
                 <Grid item xs>
-                <Button variant="outlined" color="default" size="large" onClick={handleAddMeds}>
-                  Add Meds
-                </Button>
+                  <Button
+                    variant="outlined"
+                    color="default"
+                    size="large"
+                    onClick={handleAddMeds}
+                  >
+                    Add Meds
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="default"
+                    size="large"
+                    onClick={handleAddMedDose}
+                  >
+                    Add Doses
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>

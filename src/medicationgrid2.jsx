@@ -151,6 +151,7 @@ function MedGrid() {
   const [allgroups, setGroups] = React.useState(groups);
 
   const [selectedGroup, setSelGroup] = React.useState(groups[0]);
+  const [selectedGroupIndex, setSelGroupIndex] = React.useState(0);
   const [selectedItem, setSelItem] = React.useState(items[0]);
   const [selectedItemIndex, setSelItemIndex] = React.useState(0);
 
@@ -161,12 +162,10 @@ function MedGrid() {
   const [selectedDuration, setSelDuration] = React.useState(0);
   const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
 
-  const [selectedTimeSteps, setSelTimeSteps] = React.useState({minute: 1});
+  const [selectedTimeSteps, setSelTimeSteps] = React.useState({ minute: 1 });
   const [timeStepCount, setTimeStepCount] = React.useState(0);
   const [selTimeStart, setSelTimeStart] = React.useState(moment().add(0, "s"));
   const [selTimeEnd, setSelTimeEnd] = React.useState(moment().add(600, "s"));
-  
-
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -176,6 +175,7 @@ function MedGrid() {
 
     setSelItem(item);
     setSelGroup(group);
+    setSelGroupIndex(groupid);
     setSelItemIndex(itemId);
 
     var dose = parseInt(item[0].title);
@@ -313,22 +313,39 @@ function MedGrid() {
     childstate,
     selectedMeds,
     selectedItems,
-    selectedItem
+    selectedItem,
+    selectedGroup,
+    selectedItemIndex,
+    selectedGroupIndex,
+    selectedDose,
+    selectedUnit,
+    selectedRoute,
+    selectedDate,
+    selectedDuration,
+    selectedDurationUnit
   ) => {
     setGroups(selectedMeds);
     setItems(selectedItems);
-    
-    setSelItem(selectedItems);
 
-    console.log(selectedMeds);
-    console.log(selectedItems);
+    setSelItem(selectedItem);
+    setSelGroup(selectedGroup);
+    setSelItemIndex(selectedItemIndex);
+    setSelGroupIndex(selectedGroupIndex);
+    setSelDose(selectedDose);
+    setSelUnit(selectedUnit);
+    setSelRoute(selectedRoute);
+    setSelDurationUnit(selectedDurationUnit);
+    setSelDuration(selectedDuration);
+    setSelItemTime(selectedDate);
+    //console.log(selectedMeds);
+    //console.log(selectedItems);
 
     setShow(childstate);
   };
 
   /*React.useEffect(() => {
-    //setGroups(allgroups);
-    //setItems(allitems);
+    setGroups(allgroups);
+    setItems(allitems);
   }, [allgroups, allitems]);*/
 
   const handleShowMed = () => setShow(true);
@@ -338,33 +355,34 @@ function MedGrid() {
     setSelTimeEnd(visibleTimeEnd);
   };
 
-  const handleTimeSteps = () =>{
+  const handleTimeSteps = () => {
+    var count =
+      timeStepCount !== 3
+        ? setTimeStepCount(timeStepCount + 1)
+        : setTimeStepCount(0);
 
-    var count = timeStepCount !== 3 ? setTimeStepCount(timeStepCount + 1) : setTimeStepCount(0);
-  
-    switch(timeStepCount){
+    switch (timeStepCount) {
       case 0:
-        setSelTimeSteps({minute: 1});
+        setSelTimeSteps({ minute: 1 });
         setSelTimeStart(moment().add(0, "s"));
         setSelTimeEnd(moment().add(600, "s"));
         break;
       case 1:
-        setSelTimeSteps({minute: 5});
+        setSelTimeSteps({ minute: 5 });
         setSelTimeStart(moment().add(0, "s"));
         setSelTimeEnd(moment().add(3600, "s"));
         break;
       case 2:
-        setSelTimeSteps({minute: 15});
+        setSelTimeSteps({ minute: 15 });
         setSelTimeStart(moment().add(0, "s"));
         setSelTimeEnd(moment().add(3600, "s"));
         break;
       default:
-        setSelTimeSteps({minute: 1});
+        setSelTimeSteps({ minute: 1 });
         setSelTimeStart(moment().add(0, "s"));
         setSelTimeEnd(moment().add(600, "s"));
         break;
     }
- 
   };
 
   return (
@@ -375,6 +393,7 @@ function MedGrid() {
         selectedMeds={allgroups}
         selectedItems={allitems}
         selectedGroup={selectedGroup}
+        selectedGroupIndex={selectedGroupIndex}
         selectedItem={selectedItem}
         selectedItemIndex={selectedItemIndex}
         selectedDose={selectedDose}
@@ -416,7 +435,7 @@ function MedGrid() {
               return <div style={sideStyles}>Medications</div>;
             }}
           </SidebarHeader>
-          <DateHeader unit="minute" labelFormat="HH:mm"/>
+          <DateHeader unit="minute" labelFormat="HH:mm" />
           <SidebarHeader variant="right">
             {({ getRootProps }) => {
               const sideStyles = {
