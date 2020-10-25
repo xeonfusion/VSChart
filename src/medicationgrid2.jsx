@@ -339,6 +339,10 @@ function MedGrid() {
     setSelItemTime(selectedDate);
     //console.log(selectedMeds);
     //console.log(selectedItems);
+    /*console.log(selectedItem);
+    console.log(selectedItemIndex);
+    console.log(selectedGroup);
+    console.log(selectedGroupIndex);*/
 
     setShow(childstate);
   };

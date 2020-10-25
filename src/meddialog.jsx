@@ -53,7 +53,7 @@ const MedModal = ({
       finalallItems,
       selectItem,
       selectGroup,
-      selectedItemIndex,
+      selectItemIndex,
       selectGroupIndex,
       selectDose,
       selectUnit,
@@ -311,7 +311,6 @@ const MedModal = ({
     selectedGroupIndex
   );
   const [selectDose, setSelDose] = React.useState(0);
-  //const [selectDose, setSelDose] = React.useState(selectedDose);
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
   const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
   const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
@@ -376,9 +375,9 @@ const MedModal = ({
 
     //console.log(allGroups);
     //console.log(allItems);
-    console.log(group);
-    console.log(items);
-    console.log(item);
+    //console.log(group);
+    //console.log(items);
+    //console.log(item);
 
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
@@ -399,9 +398,10 @@ const MedModal = ({
   const handleAllItemsChange = () => {
     //if (selectItem[0] !== null) {
     console.log(selectItem[0]);
-    if (typeof selectItem[0] !== undefined && selectItem[0] !== null) {
+    if (typeof selectItem[0] !== undefined) {
       //var itemId = selectItem[0].id;
       var itemId = selectItemIndex;
+      console.log(itemId);
 
       var items = allItems.map((item) =>
         item.id === itemId
@@ -413,13 +413,14 @@ const MedModal = ({
           : item
       );
       setAllItems(items);
+      //console.log(items);
       return items;
     } else return selectedItems;
   };
 
   const handleAllGroupsChange = () => {
     //if (selectGroup[0] !== null) {
-    if (typeof selectGroup[0] !== undefined && selectGroup[0] !== null) {
+    if (typeof selectGroup[0] !== undefined) {
       //var groupId = selectGroup[0].id;
       var groupId = selectGroupIndex;
 
@@ -543,6 +544,23 @@ const MedModal = ({
     setSelAddMeds(event.target.value);
   };
 
+  const handleGetSelItemDetail = (selitem, selgroup) => {
+    var dose = parseInt(selitem[0].title);
+    var unit = selgroup[0].unit;
+    var route = selgroup[0].route;
+    var start_time = selitem[0].start_time;
+    var end_time = selitem[0].end_time;
+    var duration = end_time.diff(start_time, "seconds");
+    var durationunit = selgroup[0].durationunit;
+
+    setSelDose(dose);
+    setSelUnit(unit);
+    setSelRoute(route);
+    setSelDateChange(start_time);
+    setSelDuration(duration);
+    setSelDurationUnit(durationunit);
+  };
+
   const handleAddMeds = () => {
     var selgroup = medGroups
       .filter((e) => e.title === selectAddMeds)
@@ -600,7 +618,7 @@ const MedModal = ({
     //console.log(finalgroups);
     //console.log(finalitems);
     //console.log(selectedItem);
-    handleMedListClick(selgroupindex);
+    handleGetSelItemDetail(finalitem, finalgroup);
   };
 
   const handleAddMedDose = () => {
