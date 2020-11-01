@@ -356,7 +356,6 @@ const MedModal = ({
     handleAllItemsChange();
     handleAllGroupsChange();
     if (index === 0) return;
-    //console.log(index);
     handleMedListItemClick(index);
   };
 
@@ -383,12 +382,10 @@ const MedModal = ({
   };
 
   const handleAllItemsChange = () => {
-    //if (selectItem[0] !== null) {
-    console.log(selectItem[0]);
-    if (typeof selectItem[0] !== undefined) {
-      //var itemId = selectItem[0].id;
-      var itemId = selectItemIndex;
-      console.log(itemId);
+    if (selectItemIndex !== 0) {
+      var itemId = selectItem[0].id;
+      //console.log(itemId);
+      //console.log(selectItemIndex);
 
       var items = allItems.map((item) =>
         item.id === itemId
@@ -400,16 +397,14 @@ const MedModal = ({
           : item
       );
       setAllItems(items);
-      //console.log(items);
       return items;
     } else return selectedItems;
   };
 
   const handleAllGroupsChange = () => {
-    //if (selectGroup[0] !== null) {
-    if (typeof selectGroup[0] !== undefined) {
-      //var groupId = selectGroup[0].id;
+    if (selectGroupIndex !== 0) {
       var groupId = selectGroupIndex;
+      //console.log(selectGroupIndex);
 
       var groups = allGroups.map((group) =>
         group.id === groupId
@@ -427,39 +422,43 @@ const MedModal = ({
   };
 
   const handleDoseChange = (event) => {
-    setSelDose(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelDose(event.target.value);
 
-    var itemId = selectItem[0].id;
+      var itemId = selectItem[0].id;
 
-    var item = selectItem.map((item) =>
-      item.id === itemId
-        ? Object.assign({}, item, {
-            title: event.target.value,
-          })
-        : item
-    );
-    setSelItem(item);
-    //console.log(item);
+      var item = selectItem.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              title: event.target.value,
+            })
+          : item
+      );
+      setSelItem(item);
+      //console.log(item);
+    }
   };
 
   const handleDurationChange = (event) => {
-    setSelDuration(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelDuration(event.target.value);
 
-    var itemId = selectItem[0].id;
-    var start_time = moment(selectItem[0].start_time);
-    var durationunit = convertDurationUnit(selectDurationUnit);
-    var duration = moment.duration().add(event.target.value, durationunit);
-    var end_time = moment(start_time).add(duration);
+      var itemId = selectItem[0].id;
+      var start_time = moment(selectItem[0].start_time);
+      var durationunit = convertDurationUnit(selectDurationUnit);
+      var duration = moment.duration().add(event.target.value, durationunit);
+      var end_time = moment(start_time).add(duration);
 
-    var item = selectItem.map((item) =>
-      item.id === itemId
-        ? Object.assign({}, item, {
-            start_time: start_time,
-            end_time: end_time,
-          })
-        : item
-    );
-    setSelItem(item);
+      var item = selectItem.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              start_time: start_time,
+              end_time: end_time,
+            })
+          : item
+      );
+      setSelItem(item);
+    }
   };
 
   const convertDurationUnit = (duration) => {
@@ -479,52 +478,62 @@ const MedModal = ({
   };
 
   const handleDateChange = (value) => {
-    setSelDateChange(value);
+    if (selectItemIndex !== 0) {
+      setSelDateChange(value);
 
-    var itemId = selectItem[0].id;
-    var start_time = moment(selectItem[0].start_time);
-    var end_time = moment(selectItem[0].end_time);
-    var duration = moment.duration(end_time.diff(start_time));
+      var itemId = selectItem[0].id;
+      var start_time = moment(selectItem[0].start_time);
+      var end_time = moment(selectItem[0].end_time);
+      var duration = moment.duration(end_time.diff(start_time));
 
-    var final_start_time = moment(value);
-    var final_end_time = moment(value).add(duration);
+      var final_start_time = moment(value);
+      var final_end_time = moment(value).add(duration);
 
-    var item = selectItem.map((item) =>
-      item.id === itemId
-        ? Object.assign({}, item, {
-            start_time: final_start_time,
-            end_time: final_end_time,
-          })
-        : item
-    );
-    setSelItem(item);
+      var item = selectItem.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              start_time: final_start_time,
+              end_time: final_end_time,
+            })
+          : item
+      );
+      setSelItem(item);
+    }
   };
 
   const handleUnitChange = (event) => {
-    setSelUnit(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelUnit(event.target.value);
 
-    var groupId = selectGroup[0].id;
+      var groupId = selectGroup[0].id;
 
-    var group = selectGroup.map((group) =>
-      group.id === groupId
-        ? Object.assign({}, group, {
-            unit: event.target.value,
-          })
-        : group
-    );
-    setSelGroup(group);
+      var group = selectGroup.map((group) =>
+        group.id === groupId
+          ? Object.assign({}, group, {
+              unit: event.target.value,
+            })
+          : group
+      );
+      setSelGroup(group);
+    }
   };
 
   const handleRouteChange = (event) => {
-    setSelRoute(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelRoute(event.target.value);
+    }
   };
 
   const handleDurationUnitChange = (event) => {
-    setSelDurationUnit(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelDurationUnit(event.target.value);
+    }
   };
 
   const handleEventChange = (event) => {
-    setSelEvent(event.target.value);
+    if (selectItemIndex !== 0) {
+      setSelEvent(event.target.value);
+    }
   };
 
   const handleMedSelChange = (event) => {
@@ -651,12 +660,12 @@ const MedModal = ({
       var selgroups = allGroups
         .filter((e) => e.id !== selgroupindex)
         .map((groups) => groups);
-      console.log(selgroups);
+      //console.log(selgroups);
 
       var selitems = allItems
         .filter((e) => e.group !== selgroupindex)
         .map((items) => items);
-      console.log(selitems);
+      //console.log(selitems);
 
       //var selitemindex = selectItem[0].id;
 
@@ -694,8 +703,8 @@ const MedModal = ({
       setAllGroups(finalgroups);
       setAllItems(finalitems);
 
-      console.log(finalgroups);
-      console.log(finalitems);
+      //console.log(finalgroups);
+      //console.log(finalitems);
       if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
     }
   };
@@ -707,7 +716,7 @@ const MedModal = ({
       var items = allItems
         .filter((e) => e.group === selgroupindex)
         .map((items) => items);
-      console.log(items);
+      //console.log(items);
 
       if (items.length === 1) {
         handleRemoveMeds();
@@ -719,7 +728,7 @@ const MedModal = ({
       var selitems = allItems
         .filter((e) => e.id !== item[0].id)
         .map((items) => items);
-      console.log(selitems);
+      //console.log(selitems);
 
       var finalgroups = allGroups.map((group, index) =>
         Object.assign({}, group, {
@@ -746,8 +755,8 @@ const MedModal = ({
       setAllGroups(finalgroups);
       setAllItems(finalitems);
 
-      console.log(finalgroups);
-      console.log(finalitems);
+      //console.log(finalgroups);
+      //console.log(finalitems);
       handleGetSelItemDetail(finalitem, finalgroup);
     }
   };
@@ -775,7 +784,7 @@ const MedModal = ({
       var selgroups = allGroups.map((groups) => groups);
 
       arraymove(selgroups, selgroupindex - 1, finalgroupindex - 1);
-      console.log(selgroups);
+      //console.log(selgroups);
 
       var selitems = allItems.map((items) => items);
 
@@ -804,8 +813,8 @@ const MedModal = ({
       setAllGroups(finalgroups);
       setAllItems(finalitems);
 
-      console.log(finalgroups);
-      console.log(finalitems);
+      //console.log(finalgroups);
+      //console.log(finalitems);
       if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
     }
   };
@@ -826,7 +835,7 @@ const MedModal = ({
       var selgroups = allGroups.map((groups) => groups);
 
       arraymove(selgroups, selgroupindex - 1, finalgroupindex - 1);
-      console.log(selgroups);
+      //console.log(selgroups);
 
       var selitems = allItems.map((items) => items);
 
@@ -855,8 +864,8 @@ const MedModal = ({
       setAllGroups(finalgroups);
       setAllItems(finalitems);
 
-      console.log(finalgroups);
-      console.log(finalitems);
+      //console.log(finalgroups);
+      //console.log(finalitems);
       if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
     }
   };
