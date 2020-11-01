@@ -711,6 +711,115 @@ const MedModal = ({
 
   const handleRemoveMedDose = () => {};
 
+  function arraymove(array, oldIndex, newIndex) {
+    if (newIndex >= array.length) {
+      newIndex = array.length - 1;
+    }
+    array.splice(newIndex, 0, array.splice(oldIndex, 1)[0]);
+    return array;
+  }
+  const handleUpMeds = () => {
+    if (selectGroupIndex !== 0) {
+      var selgroupindex = selectGroup[0].id;
+
+      var finalgroupindex = 0;
+      switch (selgroupindex) {
+        case 1:
+          if (allGroups.length > 0) finalgroupindex = allGroups.length;
+          break;
+        default:
+          finalgroupindex = selgroupindex - 1;
+      }
+
+      var selgroups = allGroups.map((groups) => groups);
+
+      arraymove(selgroups, selgroupindex - 1, finalgroupindex - 1);
+      console.log(selgroups);
+
+      var selitems = allItems.map((items) => items);
+
+      var finalgroups = selgroups.map((group, index) =>
+        Object.assign({}, group, {
+          oldid: group.id,
+          id: index + 1,
+        })
+      );
+
+      var finalitems = selitems.map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+          group: finalgroups.find((e) => e.oldid === item.group).id,
+        })
+      );
+
+      var finalgroup = finalgroups.filter((e) => e.id === finalgroupindex);
+      setSelGroup(finalgroup);
+      setSelGroupIndex(finalgroupindex);
+
+      var finalitem = finalitems.filter((e) => e.group === finalgroupindex);
+      setSelItem(finalitem);
+      setSelItemIndex(finalitem.id);
+
+      setAllGroups(finalgroups);
+      setAllItems(finalitems);
+
+      console.log(finalgroups);
+      console.log(finalitems);
+      if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
+    }
+  };
+
+  const handleDownMeds = () => {
+    if (selectGroupIndex !== 0) {
+      var selgroupindex = selectGroup[0].id;
+
+      var finalgroupindex = 0;
+      switch (selgroupindex) {
+        case allGroups.length:
+          if (allGroups.length > 0) finalgroupindex = 1;
+          break;
+        default:
+          finalgroupindex = selgroupindex + 1;
+      }
+
+      var selgroups = allGroups.map((groups) => groups);
+
+      arraymove(selgroups, selgroupindex - 1, finalgroupindex - 1);
+      console.log(selgroups);
+
+      var selitems = allItems.map((items) => items);
+
+      var finalgroups = selgroups.map((group, index) =>
+        Object.assign({}, group, {
+          oldid: group.id,
+          id: index + 1,
+        })
+      );
+
+      var finalitems = selitems.map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+          group: finalgroups.find((e) => e.oldid === item.group).id,
+        })
+      );
+
+      var finalgroup = finalgroups.filter((e) => e.id === finalgroupindex);
+      setSelGroup(finalgroup);
+      setSelGroupIndex(finalgroupindex);
+
+      var finalitem = finalitems.filter((e) => e.group === finalgroupindex);
+      setSelItem(finalitem);
+      setSelItemIndex(finalitem.id);
+
+      setAllGroups(finalgroups);
+      setAllItems(finalitems);
+
+      console.log(finalgroups);
+      console.log(finalitems);
+      if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
+    }
+  };
+
   return (
     <>
       <Dialog
@@ -780,6 +889,32 @@ const MedModal = ({
                       Remove Meds
                     </Button>
                   </ButtonGroup>
+                  <Grid item xs>
+                    <ButtonGroup aria-label="Up/Down Meds">
+                      <Button
+                        variant="outlined"
+                        color="default"
+                        size="large"
+                        style={{
+                          maxWidth: "80px",
+                        }}
+                        onClick={handleUpMeds}
+                      >
+                        Shift Up
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="default"
+                        size="large"
+                        style={{
+                          maxWidth: "80px",
+                        }}
+                        onClick={handleDownMeds}
+                      >
+                        Shift Down
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
