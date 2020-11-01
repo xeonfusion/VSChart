@@ -149,6 +149,8 @@ function MedGrid() {
   const [show, setShow] = React.useState(false);
   const [allitems, setItems] = React.useState(items);
   const [allgroups, setGroups] = React.useState(groups);
+  //const [allitems, setItems] = React.useState([]);
+  //const [allgroups, setGroups] = React.useState([]);
 
   const [selectedGroup, setSelGroup] = React.useState(groups[0]);
   const [selectedGroupIndex, setSelGroupIndex] = React.useState(0);

@@ -653,6 +653,64 @@ const MedModal = ({
     setAllItems(finalitems);
   };
 
+  const handleRemoveMeds = () => {
+    if (selectGroupIndex !== 0) {
+      var selgroupindex = selectGroup[0].id;
+
+      var selgroups = allGroups
+        .filter((e) => e.id !== selgroupindex)
+        .map((groups) => groups);
+      console.log(selgroups);
+
+      var selitems = allItems
+        .filter((e) => e.group !== selgroupindex)
+        .map((items) => items);
+      console.log(selitems);
+
+      //var selitemindex = selectItem[0].id;
+
+      var finalgroups = selgroups.map((group, index) =>
+        Object.assign({}, group, {
+          oldid: group.id,
+          id: index + 1,
+        })
+      );
+
+      var finalitems = selitems.map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+          group: finalgroups.find((e) => e.oldid === item.group).id,
+        })
+      );
+
+      var finalgroupindex = 0;
+      switch (selgroupindex) {
+        case 1:
+          if (selgroups.length > 0) finalgroupindex = selgroups.length;
+          break;
+        default:
+          finalgroupindex = selgroupindex - 1;
+      }
+
+      var finalgroup = finalgroups.filter((e) => e.id === finalgroupindex);
+      setSelGroup(finalgroup);
+      setSelGroupIndex(finalgroupindex);
+
+      var finalitem = finalitems.filter((e) => e.group === finalgroupindex);
+      setSelItem(finalitem);
+      setSelItemIndex(finalitem.id);
+
+      setAllGroups(finalgroups);
+      setAllItems(finalitems);
+
+      console.log(finalgroups);
+      console.log(finalitems);
+      if (finalgroupindex !== 0) handleGetSelItemDetail(finalitem, finalgroup);
+    }
+  };
+
+  const handleRemoveMedDose = () => {};
+
   return (
     <>
       <Dialog
@@ -664,11 +722,11 @@ const MedModal = ({
       >
         <DialogTitle id="simple-dialog-title">Add Medication</DialogTitle>
         <DialogContent>
-          <Grid container spacing={3} direction="row">
+          <Grid container spacing={2} direction="row">
             <Grid item xs>
               <Grid
                 container
-                spacing={3}
+                spacing={2}
                 direction="column"
                 justify="space-between"
                 alignItems="flex-start"
@@ -687,7 +745,9 @@ const MedModal = ({
                     label=""
                     helperText="Add Medication"
                     variant="outlined"
-                    fullWidth
+                    style={{
+                      minWidth: "160px",
+                    }}
                     onChange={handleMedSelChange}
                   >
                     {addmeds.map((item) => (
@@ -696,31 +756,39 @@ const MedModal = ({
                   </TextField>
                 </Grid>
                 <Grid item xs>
-                  <Button
-                    variant="outlined"
-                    color="default"
-                    size="large"
-                    onClick={handleAddMeds}
-                  >
-                    Add Meds
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="default"
-                    size="large"
-                    onClick={handleAddMedDose}
-                  >
-                    Add Doses
-                  </Button>
+                  <ButtonGroup aria-label="Add/Remove Meds">
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="large"
+                      style={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleAddMeds}
+                    >
+                      Add Meds
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="large"
+                      style={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleRemoveMeds}
+                    >
+                      Remove Meds
+                    </Button>
+                  </ButtonGroup>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs>
               <Grid
                 container
-                spacing={3}
+                spacing={2}
                 direction="column"
-                justify="space-between"
+                justify="flex-start"
                 alignItems="stretch"
               >
                 <Grid item xs>
@@ -770,12 +838,33 @@ const MedModal = ({
                     </Button>
                   </ButtonGroup>
                 </Grid>
+                <Grid items xs>
+                  Add/Remove Doses
+                  <ButtonGroup aria-label="Add/Remove doses">
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="small"
+                      onClick={handleAddMedDose}
+                    >
+                      Add Doses
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="small"
+                      onClick={handleRemoveMedDose}
+                    >
+                      Remove Doses
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs>
               <Grid
                 container
-                spacing={3}
+                spacing={2}
                 direction="column"
                 justify="flex-start"
                 alignItems="stretch"
@@ -832,7 +921,7 @@ const MedModal = ({
             <Grid item xs>
               <Grid
                 container
-                spacing={3}
+                spacing={2}
                 direction="column"
                 justify="flex-start"
                 alignItems="stretch"
