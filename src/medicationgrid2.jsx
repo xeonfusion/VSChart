@@ -222,20 +222,76 @@ function MedGrid() {
     console.log("Resized", itemId, time, edge);
   };
 
-  const handleCanvasDoubleClick = (groupId, e, time) => {
+  const handleCanvasDoubleClick = (groupId, time, e) => {
     var group = allgroups.filter((e) => e.id === groupId);
-    var item = allitems.filter((e) => e.group === groupId);
+    var items = allitems.filter((e) => e.group === groupId);
+
+    //select last item
+    var item = items.slice(-1);
+    console.log(item);
+    var itemindex = items.indexOf(item[0]);
 
     setSelItem(item);
     setSelGroup(group);
+    setSelGroupIndex(groupId);
+    setSelItemIndex(itemindex);
+    //console.log(time);
 
     var dose = parseInt(item[0].title);
     var unit = group[0].unit;
     var route = group[0].route;
-    //var start_time = item[0].start_time;
-    //var end_time = item[0].end_time;
-    var start_time = moment(time);
-    var end_time = moment(time).clone().add(0.5, "m");
+    var start_time = item[0].start_time;
+    var end_time = item[0].end_time;
+    var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+
+    setSelDose(dose);
+    setSelUnit(unit);
+    setSelRoute(route);
+    setSelItemTime(start_time);
+    setSelDuration(duration);
+    setSelDurationUnit(durationunit);
+
+    setShow(true);
+  };
+
+  const handleCanvasContextMenu = (groupId, time, e) => {
+    var group = allgroups.filter((e) => e.id === groupId);
+
+    var selitemindex = allitems.length + 1;
+
+    const item = [
+      {
+        id: selitemindex,
+        group: groupId,
+        title: "0",
+        start_time: moment(time),
+        end_time: moment(time).clone().add(0.5, "m"),
+      },
+    ];
+    console.log(time);
+
+    allitems.push(item[0]);
+
+    var finalitems = allitems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelItem(finalitem);
+    setSelItemIndex(selitemindex);
+    setSelGroup(group);
+    setSelGroupIndex(groupId);
+
+    setItems(finalitems);
+
+    var dose = parseInt(finalitem[0].title);
+    var unit = group[0].unit;
+    var route = group[0].route;
+    var start_time = finalitem[0].start_time;
+    var end_time = finalitem[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
 
@@ -420,8 +476,10 @@ function MedGrid() {
         showCursorLine
         stackItems={true}
         canResize={true}
+        itemTouchSendsClick={true}
         onItemDoubleClick={handleItemDoubleClick}
         onItemResize={handleItemResize}
+        onCanvasContextMenu={handleCanvasContextMenu}
         onCanvasDoubleClick={handleCanvasDoubleClick}
         groupRenderer={groupRenderer}
         itemRenderer={itemRenderer}

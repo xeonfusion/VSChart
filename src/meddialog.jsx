@@ -633,7 +633,7 @@ const MedModal = ({
           group: selgroupindex,
           title: "0",
           start_time: moment().add(0, "m"),
-          end_time: moment().add(0.5, "m"),
+          end_time: moment().clone().add(0.5, "m"),
         },
       ];
 
@@ -870,6 +870,74 @@ const MedModal = ({
     }
   };
 
+  const handlePreviousDose = () => {
+    if (selectGroupIndex !== 0) {
+      var selgroupindex = selectGroup[0].id;
+
+      var items = allItems
+        .filter((e) => e.group === selgroupindex)
+        .map((items) => items);
+
+      var item = items.filter((e) => e.id === selectItem[0].id);
+      var itemindex = items.indexOf(item[0]);
+      //console.log(items);
+      //console.log(item);
+      //console.log(itemindex);
+
+      var group = allGroups
+        .filter((e) => e.id === selgroupindex)
+        .map((group) => group);
+
+      //select previous item
+      var previousitem;
+      if (itemindex === 0) previousitem = items.slice(-1);
+      else previousitem = items.slice(itemindex - 1, itemindex);
+      //console.log(previousitem);
+
+      setSelGroup(group);
+      setSelItem(previousitem);
+
+      setSelItemIndex(previousitem.id);
+      setSelGroupIndex(selgroupindex);
+
+      handleGetSelItemDetail(previousitem, group);
+    }
+  };
+
+  const handleNextDose = () => {
+    if (selectGroupIndex !== 0) {
+      var selgroupindex = selectGroup[0].id;
+
+      var items = allItems
+        .filter((e) => e.group === selgroupindex)
+        .map((items) => items);
+
+      var item = items.filter((e) => e.id === selectItem[0].id);
+      var itemindex = items.indexOf(item[0]);
+      //console.log(items);
+      //console.log(item);
+      //console.log(itemindex);
+
+      var group = allGroups
+        .filter((e) => e.id === selgroupindex)
+        .map((group) => group);
+
+      //select next item
+      var nextitem;
+      if (itemindex === items.length - 1) nextitem = items.slice(0, 1);
+      else nextitem = items.slice(itemindex + 1, itemindex + 2);
+      //console.log(nextitem);
+
+      setSelGroup(group);
+      setSelItem(nextitem);
+
+      setSelItemIndex(nextitem.id);
+      setSelGroupIndex(selgroupindex);
+
+      handleGetSelItemDetail(nextitem, group);
+    }
+  };
+
   return (
     <>
       <Dialog
@@ -1009,9 +1077,9 @@ const MedModal = ({
                     onChange={handleDurationChange}
                   />
                 </Grid>
-                <Grid items xs>
-                  Add/Remove Doses
-                  <ButtonGroup aria-label="Add/Remove doses">
+                <Grid item xs>
+                  Select Doses
+                  <ButtonGroup aria-label="Last doses">
                     <Button
                       variant="outlined"
                       color="default"
@@ -1019,9 +1087,9 @@ const MedModal = ({
                       style={{
                         maxWidth: "80px",
                       }}
-                      onClick={handleAddMedDose}
+                      onClick={handlePreviousDose}
                     >
-                      Add Doses
+                      Previous Dose
                     </Button>
                     <Button
                       variant="outlined"
@@ -1030,9 +1098,9 @@ const MedModal = ({
                       style={{
                         maxWidth: "80px",
                       }}
-                      onClick={handleRemoveMedDose}
+                      onClick={handleNextDose}
                     >
-                      Remove Doses
+                      Next Dose
                     </Button>
                   </ButtonGroup>
                 </Grid>
@@ -1081,17 +1149,32 @@ const MedModal = ({
                     ))}
                   </Select>
                 </Grid>
-                <Grid item xs>
-                  Timestamp
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDateTimePicker
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                      openTo="minutes"
-                      format="DD/MM/YYYY hh:mm a"
-                      variant="dialog"
-                    />
-                  </MuiPickersUtilsProvider>
+                <Grid items xs>
+                  Add/Remove Doses
+                  <ButtonGroup aria-label="Add/Remove doses">
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="small"
+                      style={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleAddMedDose}
+                    >
+                      Add Doses
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      size="small"
+                      style={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleRemoveMedDose}
+                    >
+                      Remove Doses
+                    </Button>
+                  </ButtonGroup>
                 </Grid>
               </Grid>
             </Grid>
@@ -1140,18 +1223,16 @@ const MedModal = ({
                   </Select>
                 </Grid>
                 <Grid item xs>
-                  Last Doses
-                  <ButtonGroup aria-label="Last doses">
-                    <Button variant="outlined" color="default" size="small">
-                      Dose1
-                    </Button>
-                    <Button variant="outlined" color="default" size="small">
-                      Dose2
-                    </Button>
-                    <Button variant="outlined" color="default" size="small">
-                      Dose3
-                    </Button>
-                  </ButtonGroup>
+                  Timestamp
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <KeyboardDateTimePicker
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      openTo="minutes"
+                      format="DD/MM/YYYY hh:mm a"
+                      variant="dialog"
+                    />
+                  </MuiPickersUtilsProvider>
                 </Grid>
               </Grid>
             </Grid>
