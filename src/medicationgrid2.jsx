@@ -222,7 +222,7 @@ function MedGrid() {
     console.log("Resized", itemId, time, edge);
   };
 
-  const handleCanvasDoubleClick = (groupId, time, e) => {
+  const handleCanvasContextMenu = (groupId, time, e) => {
     var group = allgroups.filter((e) => e.id === groupId);
     var items = allitems.filter((e) => e.group === groupId);
 
@@ -255,7 +255,7 @@ function MedGrid() {
     setShow(true);
   };
 
-  const handleCanvasContextMenu = (groupId, time, e) => {
+  const handleCanvasDoubleClick = (groupId, time, e) => {
     var group = allgroups.filter((e) => e.id === groupId);
 
     var selitemindex = allitems.length + 1;
@@ -376,6 +376,7 @@ function MedGrid() {
         <div
           style={{
             height: itemContext.dimensions.height,
+            width: itemContext.width,
             overflow: "hidden",
             paddingLeft: 3,
             textOverflow: "ellipsis",
@@ -447,23 +448,23 @@ function MedGrid() {
     switch (timeStepCount) {
       case 0:
         setSelTimeSteps({ minute: 1 });
-        setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(600, "s"));
+        setSelTimeStart(moment().add(0, "m"));
+        setSelTimeEnd(moment().add(12, "m"));
         break;
       case 1:
         setSelTimeSteps({ minute: 5 });
-        setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(3600, "s"));
+        setSelTimeStart(moment().add(0, "m"));
+        setSelTimeEnd(moment().add(60, "m"));
         break;
       case 2:
         setSelTimeSteps({ minute: 15 });
-        setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(3600, "s"));
+        setSelTimeStart(moment().add(0, "m"));
+        setSelTimeEnd(moment().add(180, "m"));
         break;
       default:
         setSelTimeSteps({ minute: 1 });
-        setSelTimeStart(moment().add(0, "s"));
-        setSelTimeEnd(moment().add(600, "s"));
+        setSelTimeStart(moment().add(0, "m"));
+        setSelTimeEnd(moment().add(12, "m"));
         break;
     }
   };
@@ -490,13 +491,14 @@ function MedGrid() {
         key={keys}
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={moment().add(0, "s")}
-        defaultTimeEnd={moment().add(600, "s")}
+        defaultTimeStart={moment().add(0, "m")}
+        defaultTimeEnd={moment().add(12, "m")}
         sidebarWidth={150}
         rightSidebarWidth={100}
         showCursorLine
         stackItems={true}
         canResize={true}
+        dragSnap={1 * 60 * 1000}
         itemTouchSendsClick={true}
         onItemDoubleClick={handleItemDoubleClick}
         onItemResize={handleItemResize}
