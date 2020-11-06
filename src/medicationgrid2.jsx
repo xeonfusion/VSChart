@@ -305,6 +305,17 @@ function MedGrid() {
     setShow(true);
   };
 
+  const getItemTotalsFromGroup = (groupId) => {
+    var items = allitems.filter((e) => e.group === groupId);
+
+    var sum = 0;
+    items.forEach((item) => {
+      sum += parseInt(item.title);
+    });
+
+    return sum;
+  };
+
   const groupRenderer = ({ group, isRightSidebar }) => {
     if (group.title !== "" && !isRightSidebar) {
       return (
@@ -316,7 +327,17 @@ function MedGrid() {
           </tbody>
         </table>
       );
-    } else return null;
+    } else if (group.title !== "" && isRightSidebar) {
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>{getItemTotalsFromGroup(group.id) + " " + group.unit}</td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }
   };
 
   const [showItemInfo, setShowItemInfo] = React.useState(false);
@@ -472,7 +493,7 @@ function MedGrid() {
         defaultTimeStart={moment().add(0, "s")}
         defaultTimeEnd={moment().add(600, "s")}
         sidebarWidth={150}
-        rightSidebarWidth={150}
+        rightSidebarWidth={100}
         showCursorLine
         stackItems={true}
         canResize={true}
@@ -505,7 +526,7 @@ function MedGrid() {
               const sideStyles = {
                 ...getRootProps(),
                 backgroundColor: "#F0F0F0",
-                width: 150,
+                width: 100,
               };
               return <div style={sideStyles}>Totals</div>;
             }}
