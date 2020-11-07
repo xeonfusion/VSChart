@@ -65,7 +65,7 @@ const items = [
   {
     id: 1,
     group: 1,
-    title: "150 mg",
+    title: "150",
     start_time: moment().add(0.5, "m"),
     end_time: moment().add(1, "m"),
     rightTitle: "",
@@ -73,7 +73,7 @@ const items = [
   {
     id: 2,
     group: 1,
-    title: "50 mg",
+    title: "50",
     start_time: moment().add(1.5, "m"),
     end_time: moment().add(2, "m"),
     rightTitle: "",
@@ -82,28 +82,28 @@ const items = [
   {
     id: 3,
     group: 2,
-    title: "75 mcg",
+    title: "75",
     start_time: moment().add(0, "m"),
     end_time: moment().add(0.5, "m"),
   },
   {
     id: 4,
     group: 3,
-    title: "100 mg",
+    title: "100",
     start_time: moment().add(0, "m"),
     end_time: moment().add(0.5, "m"),
   },
   {
     id: 5,
     group: 4,
-    title: "50 mg",
+    title: "50",
     start_time: moment().add(1, "m"),
     end_time: moment().add(1.5, "m"),
   },
   {
     id: 6,
     group: 5,
-    title: "60 ml/hr",
+    title: "60",
     start_time: moment().add(0, "m"),
     end_time: moment().add(10, "m"),
   },
@@ -165,7 +165,7 @@ function MedGrid() {
   const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
 
   const [selectedTimeSteps, setSelTimeSteps] = React.useState({ minute: 1 });
-  const [timeStepCount, setTimeStepCount] = React.useState(0);
+  const [timeStepCount, setTimeStepCount] = React.useState(1);
   const [selTimeStart, setSelTimeStart] = React.useState(moment().add(0, "s"));
   const [selTimeEnd, setSelTimeEnd] = React.useState(moment().add(600, "s"));
 
@@ -219,7 +219,7 @@ function MedGrid() {
   //const handleItemSelect = (itemId, e, time) => {};
 
   const handleItemResize = (itemId, time, edge) => {
-    console.log("Resized", itemId, time, edge);
+    //console.log("Resized", itemId, time, edge);
   };
 
   const handleCanvasContextMenu = (groupId, time, e) => {
@@ -228,7 +228,7 @@ function MedGrid() {
 
     //select last item
     var item = items.slice(-1);
-    console.log(item);
+    //console.log(item);
     var itemindex = items.indexOf(item[0]);
 
     setSelItem(item);
@@ -269,7 +269,7 @@ function MedGrid() {
         end_time: moment(time).clone().add(0.5, "m"),
       },
     ];
-    console.log(time);
+    //console.log(time);
 
     allitems.push(item[0]);
 
@@ -303,6 +303,12 @@ function MedGrid() {
     setSelDurationUnit(durationunit);
 
     setShow(true);
+  };
+
+  const getItemUnitFromGroup = (groupId) => {
+    var group = allgroups.filter((e) => e.id === groupId);
+    var unit = group[0].unit;
+    return unit;
   };
 
   const getItemTotalsFromGroup = (groupId) => {
@@ -381,9 +387,12 @@ function MedGrid() {
             paddingLeft: 3,
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
+            color: "white",
+            textAlign: "left",
           }}
         >
           {item.title}
+          {" " + getItemUnitFromGroup(item.group)}
         </div>
       </div>
     );
@@ -440,10 +449,9 @@ function MedGrid() {
   };
 
   const handleTimeSteps = () => {
-    var count =
-      timeStepCount !== 3
-        ? setTimeStepCount(timeStepCount + 1)
-        : setTimeStepCount(0);
+    timeStepCount !== 2
+      ? setTimeStepCount(timeStepCount + 1)
+      : setTimeStepCount(0);
 
     switch (timeStepCount) {
       case 0:
