@@ -1,6 +1,6 @@
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
-import { Component } from "react";
+import { forwardRef } from "react";
 import React from "react";
 import Timeline, {
   TimelineHeaders,
@@ -11,7 +11,7 @@ import Timeline, {
 } from "react-calendar-timeline/lib";
 
 import MedModal from "./meddialog.jsx";
-import Button from "@material-ui/core/Button";
+//import Button from "@material-ui/core/Button";
 
 const groups = [
   {
@@ -121,31 +121,17 @@ var keys = {
   itemTimeEndKey: "end_time",
 };
 
-export class MedicationGrid2 extends Component {
-  constructor() {
-    super();
+const MedicationGrid2 = forwardRef((props, ref) => {
+  //Forward Menu button actions
+  React.useImperativeHandle(ref, () => ({
+    handleShowMedCall: () => {
+      handleShowMed();
+    },
+    handleTimeStepsCall: () => {
+      handleTimeSteps();
+    },
+  }));
 
-    const defaultTimeStart = moment().startOf("day").toDate();
-    const defaultTimeEnd = moment().startOf("day").add(1, "day").toDate();
-
-    this.state = {
-      groups,
-      items,
-      defaultTimeStart,
-      defaultTimeEnd,
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <MedGrid />
-      </div>
-    );
-  }
-}
-
-function MedGrid() {
   const [show, setShow] = React.useState(false);
   const [allitems, setItems] = React.useState(items);
   const [allgroups, setGroups] = React.useState(groups);
@@ -556,14 +542,8 @@ function MedGrid() {
           </TodayMarker>
         </TimelineMarkers>
       </Timeline>
-      <Button variant="contained" color="primary" onClick={handleShowMed}>
-        Add Medication
-      </Button>
-      <Button variant="contained" color="primary" onClick={handleTimeSteps}>
-        Change Timesteps
-      </Button>
     </>
   );
-}
+});
 
-export default MedGrid;
+export default MedicationGrid2;

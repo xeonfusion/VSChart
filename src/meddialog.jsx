@@ -42,6 +42,7 @@ const MedModal = ({
   selectedDurationUnit,
 }) => {
   const [show, setShow] = React.useState(false);
+
   const handleClose = () => {
     var finalallItems = handleAllItemsChange();
     var finalallGroups = handleAllGroupsChange();
@@ -949,12 +950,20 @@ const MedModal = ({
       >
         <DialogTitle id="simple-dialog-title">Add Medication</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} direction="row">
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            display="flex"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
             <Grid item xs>
               <Grid
                 container
                 spacing={2}
                 direction="column"
+                display="flex"
                 justify="flex-start"
                 alignItems="flex-start"
               >
@@ -1041,6 +1050,7 @@ const MedModal = ({
                 container
                 spacing={2}
                 direction="column"
+                display="flex"
                 justify="flex-start"
                 alignItems="stretch"
               >
@@ -1058,6 +1068,7 @@ const MedModal = ({
                     }}
                     value={selectDose}
                     onChange={handleDoseChange}
+                    fullWidth
                   />
                 </Grid>
                 <Grid item xs>
@@ -1075,6 +1086,7 @@ const MedModal = ({
                     defaultValue={0}
                     value={selectDuration}
                     onChange={handleDurationChange}
+                    fullWidth
                   />
                 </Grid>
                 <Grid item xs>
@@ -1111,6 +1123,7 @@ const MedModal = ({
                 container
                 spacing={2}
                 direction="column"
+                display="flex"
                 justify="flex-start"
                 alignItems="stretch"
               >
@@ -1183,6 +1196,7 @@ const MedModal = ({
                 container
                 spacing={2}
                 direction="column"
+                display="flex"
                 justify="flex-start"
                 alignItems="stretch"
               >
@@ -1241,9 +1255,6 @@ const MedModal = ({
         <DialogActions>
           <Button color="primary" onClick={handleClose}>
             Close
-          </Button>
-          <Button color="primary" onClick={handleClose}>
-            Save Changes
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,7 +1,7 @@
-import Button from "@material-ui/core/Button";
+//import Button from "@material-ui/core/Button";
 
 import React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, forwardRef } from "react";
 import Chartjs from "chart.js";
 
 const divStyle = {
@@ -11,17 +11,6 @@ const divStyle = {
 };
 
 let newChartInstance;
-
-export class AnaesthesiaChart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return <newChart />;
-  }
-}
 
 const getDatasetsbyPhysioID = (jdata, physioid) => {
   var datapoints = [];
@@ -232,7 +221,13 @@ const chartConfig = {
   },
 };
 
-const NewChart = () => {
+const NewChart = forwardRef((props, ref) => {
+  React.useImperativeHandle(ref, () => ({
+    handleLoadChartCall() {
+      handleLoadChart();
+    },
+  }));
+
   const chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
   const [chartJdata, setChartJdata] = useState(null);
@@ -265,7 +260,7 @@ const NewChart = () => {
     chartInstance.update();
   };
 
-  const onButtonClick = () => {
+  const handleLoadChart = () => {
     var jsondata = null;
 
     fetch("./AS3DataExport.json")
@@ -282,9 +277,6 @@ const NewChart = () => {
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={onButtonClick}>
-        Load Chart
-      </Button>
       <canvas
         style={divStyle}
         ref={chartContainer}
@@ -293,6 +285,6 @@ const NewChart = () => {
       ></canvas>
     </div>
   );
-};
+});
 
 export default NewChart;
