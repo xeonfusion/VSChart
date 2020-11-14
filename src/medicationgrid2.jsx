@@ -121,6 +121,104 @@ var keys = {
   itemTimeEndKey: "end_time",
 };
 
+const eventgroups = [
+  {
+    id: 1,
+    title: "Events",
+  },
+];
+
+const eventitems = [
+  {
+    id: 1,
+    group: 1,
+    title: "Equipment Check",
+    start_time: moment().subtract(4, "m"),
+    end_time: moment().subtract(3, "m"),
+    note: "",
+  },
+  {
+    id: 2,
+    group: 1,
+    title: "Patient In",
+    start_time: moment().subtract(3, "m"),
+    end_time: moment().subtract(2, "m"),
+    note: "",
+  },
+  {
+    id: 3,
+    group: 1,
+    title: "Anesthesia Start",
+    start_time: moment().subtract(2, "m"),
+    end_time: moment().subtract(1, "m"),
+    note: "",
+  },
+  {
+    id: 4,
+    group: 1,
+    title: "Preoxygenation",
+    start_time: moment().subtract(1, "m"),
+    end_time: moment().add(0, "m"),
+    note: "",
+  },
+  {
+    id: 5,
+    group: 1,
+    title: "Induction",
+    start_time: moment().add(0, "m"),
+    end_time: moment().add(1, "m"),
+    note: "",
+  },
+  {
+    id: 6,
+    group: 1,
+    title: "Intubation/SGAirway In",
+    start_time: moment().add(3, "m"),
+    end_time: moment().add(4, "m"),
+    note: "",
+  },
+  {
+    id: 7,
+    group: 1,
+    title: "Surgery Start",
+    start_time: moment().add(4, "m"),
+    end_time: moment().add(5, "m"),
+    note: "",
+  },
+  {
+    id: 8,
+    group: 1,
+    title: "Surgery Stop",
+    start_time: moment().add(11, "m"),
+    end_time: moment().add(12, "m"),
+    note: "",
+  },
+  {
+    id: 9,
+    group: 1,
+    title: "Extubation/SGAirway Out",
+    start_time: moment().add(12, "m"),
+    end_time: moment().add(13, "m"),
+    note: "",
+  },
+  {
+    id: 10,
+    group: 1,
+    title: "Patient Out",
+    start_time: moment().add(13, "m"),
+    end_time: moment().add(14, "m"),
+    note: "",
+  },
+  {
+    id: 11,
+    group: 1,
+    title: "Anaesthesia Stop",
+    start_time: moment().add(14, "m"),
+    end_time: moment().add(15, "m"),
+    note: "",
+  },
+];
+
 const MedicationGrid2 = forwardRef((props, ref) => {
   //Forward Menu button actions
   React.useImperativeHandle(ref, () => ({
@@ -525,6 +623,56 @@ const MedicationGrid2 = forwardRef((props, ref) => {
                 width: 100,
               };
               return <div style={sideStyles}>Totals</div>;
+            }}
+          </SidebarHeader>
+        </TimelineHeaders>
+        <TimelineMarkers>
+          <TodayMarker interval={10000} />
+          <TodayMarker>
+            {({ styles, date }) => {
+              const customStyles = {
+                ...styles,
+                backgroundColor: "red",
+                width: "2px",
+              };
+              return <div style={customStyles} />;
+            }}
+          </TodayMarker>
+        </TimelineMarkers>
+      </Timeline>
+      <Timeline
+        groups={eventgroups}
+        items={eventitems}
+        timeSteps={selectedTimeSteps}
+        visibleTimeStart={selTimeStart}
+        visibleTimeEnd={selTimeEnd}
+        onTimeChange={handleTimeChange}
+        sidebarWidth={150}
+        rightSidebarWidth={100}
+        showCursorLine
+        stackItems={true}
+        canResize={true}
+        dragSnap={1 * 60 * 1000}
+      >
+        <TimelineHeaders className="sticky">
+          <SidebarHeader>
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#BBBBBB",
+                width: 150,
+              };
+              return <div style={sideStyles}></div>;
+            }}
+          </SidebarHeader>
+          <SidebarHeader variant="right">
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#BBBBBB",
+                width: 100,
+              };
+              return <div style={sideStyles}></div>;
             }}
           </SidebarHeader>
         </TimelineHeaders>
