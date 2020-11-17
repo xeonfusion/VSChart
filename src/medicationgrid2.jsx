@@ -11,6 +11,7 @@ import Timeline, {
 } from "react-calendar-timeline/lib";
 
 import MedModal from "./meddialog.jsx";
+import EventModal from "./eventdialog.jsx";
 //import Button from "@material-ui/core/Button";
 
 const groups = [
@@ -225,6 +226,12 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     handleShowMedCall: () => {
       handleShowMed();
     },
+    handleShowEventsCall: () => {
+      handleShowEvents();
+    },
+    handleShowNoteCall: () => {
+      handleShowEvents();
+    },
     handleTimeStepsCall: () => {
       handleTimeSteps();
     },
@@ -252,6 +259,11 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [timeStepCount, setTimeStepCount] = React.useState(1);
   const [selTimeStart, setSelTimeStart] = React.useState(moment().add(0, "s"));
   const [selTimeEnd, setSelTimeEnd] = React.useState(moment().add(600, "s"));
+
+  const [showEvent, setEventShow] = React.useState(false);
+  const [alleventitems, setEventItems] = React.useState(eventitems);
+  const [selectedEventItem, setSelEventItem] = React.useState(eventitems[0]);
+  const [selectedEventItemIndex, setSelEventItemIndex] = React.useState(0);
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -561,6 +573,41 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     }
   };
 
+  const handleEventItemDoubleClick = (itemId, e, time) => {
+    var item = alleventitems.filter((e) => e.id === itemId);
+
+    //var groupid = item[0].group;
+    //var group = eventgroups.filter((e) => e.id === groupid);
+
+    setSelEventItem(item);
+    //setSelGroup(group);
+    setSelEventItemIndex(itemId);
+    //console.log(item);
+    setEventShow(true);
+  };
+
+  const handleEventCanvasDoubleClick = (groupId, time, e) => {
+    //add
+  };
+
+  const handleEventChildState = (
+    childeventstate,
+    selectedEventItems,
+    selectedEventItem,
+    selectedEventItemIndex
+  ) => {
+    setEventItems(selectedEventItems);
+
+    setSelEventItem(selectedEventItem);
+    setSelEventItemIndex(selectedEventItemIndex);
+
+    setEventShow(childeventstate);
+  };
+
+  const handleShowEvents = () => {
+    setEventShow(true);
+  };
+
   return (
     <>
       <MedModal
@@ -642,7 +689,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
       </Timeline>
       <Timeline
         groups={eventgroups}
-        items={eventitems}
+        items={alleventitems}
         timeSteps={selectedTimeSteps}
         visibleTimeStart={selTimeStart}
         visibleTimeEnd={selTimeEnd}
@@ -653,6 +700,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         stackItems={true}
         canResize={true}
         dragSnap={1 * 60 * 1000}
+        itemTouchSendsClick={true}
+        onItemDoubleClick={handleEventItemDoubleClick}
+        onCanvasDoubleClick={handleEventCanvasDoubleClick}
       >
         <TimelineHeaders className="sticky">
           <SidebarHeader>
@@ -690,6 +740,13 @@ const MedicationGrid2 = forwardRef((props, ref) => {
           </TodayMarker>
         </TimelineMarkers>
       </Timeline>
+      <EventModal
+        showEventDialog={showEvent}
+        childEventState={handleEventChildState}
+        selectedEventItems={alleventitems}
+        selectedEventItem={selectedEventItem}
+        selectedEventItemIndex={selectedEventItemIndex}
+      />
     </>
   );
 });

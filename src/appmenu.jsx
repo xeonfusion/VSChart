@@ -21,6 +21,8 @@ import MedicationGrid2 from "./medicationgrid2.jsx";
 import { ListItem, ListItemText } from "@material-ui/core";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import AddCommentIcon from "@material-ui/icons/AddComment";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 
 const drawerWidth = 240;
@@ -200,6 +202,24 @@ export default function AppMenu() {
               <ZoomInIcon />
             </ListItemIcon>
             <ListItemText>Change Timesteps</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => medgridRef.current.handleShowEventsCall()}
+          >
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText>Add Event</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => medgridRef.current.handleShowNoteCall()}
+          >
+            <ListItemIcon>
+              <AddCommentIcon />
+            </ListItemIcon>
+            <ListItemText>Add Note</ListItemText>
           </ListItem>
           <ListItem
             button
