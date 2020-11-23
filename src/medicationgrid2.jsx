@@ -173,7 +173,7 @@ const eventitems = [
   {
     id: 6,
     group: 1,
-    title: "Intubation/SGAirway In",
+    title: "Intubation/SGA In",
     start_time: moment().add(3, "m"),
     end_time: moment().add(4, "m"),
     note: "",
@@ -197,7 +197,7 @@ const eventitems = [
   {
     id: 9,
     group: 1,
-    title: "Extubation/SGAirway Out",
+    title: "Extubation/SGA Out",
     start_time: moment().add(12, "m"),
     end_time: moment().add(13, "m"),
     note: "",
@@ -264,6 +264,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [alleventitems, setEventItems] = React.useState(eventitems);
   const [selectedEventItem, setSelEventItem] = React.useState(eventitems[0]);
   const [selectedEventItemIndex, setSelEventItemIndex] = React.useState(0);
+  const [selectedEventItemTime, setSelEventItemTime] = React.useState(moment());
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -583,6 +584,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     //setSelGroup(group);
     setSelEventItemIndex(itemId);
     //console.log(item);
+    setSelEventItemTime(item[0].start_time);
+
     setEventShow(true);
   };
 
@@ -594,12 +597,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     childeventstate,
     selectedEventItems,
     selectedEventItem,
-    selectedEventItemIndex
+    selectedEventItemIndex,
+    selectedEventItemTime
   ) => {
     setEventItems(selectedEventItems);
 
     setSelEventItem(selectedEventItem);
     setSelEventItemIndex(selectedEventItemIndex);
+    setSelEventItemTime(selectedEventItemTime);
 
     setEventShow(childeventstate);
   };
@@ -746,6 +751,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventItems={alleventitems}
         selectedEventItem={selectedEventItem}
         selectedEventItemIndex={selectedEventItemIndex}
+        selectedEventItemTime={selectedEventItemTime}
       />
     </>
   );

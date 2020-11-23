@@ -227,10 +227,18 @@ const MedModal = ({
   ];
 
   const eventtimes = [
+    "Equipment Check",
+    "Patient In",
+    "Anesthesia Start",
+    "Preoxygenation",
     "Induction",
-    "Intubation",
-    "Maintenance",
-    "Extubation",
+    "Intubation/SGA In",
+    "Surgery Start",
+    "Surgery Stop",
+    "Extubation/SGA Out",
+    "Patient Out",
+    "Anaesthesia Stop",
+    "Add Note",
     "Other",
   ];
 
@@ -274,6 +282,7 @@ const MedModal = ({
         button
         divider={true}
         onClick={() => handleMedListClick(itemindex)}
+        autoFocus={itemselected ? true : false}
       >
         <ListItemText>{itemtitle}</ListItemText>
       </ListItem>
@@ -281,7 +290,15 @@ const MedModal = ({
   };
 
   const MedListItems = ({ list, itemselected }) => (
-    <List dense={true}>
+    <List
+      dense={true}
+      style={{
+        maxHeight: 300,
+        maxWidth: 160,
+        minWidth: 160,
+        overflow: "scroll",
+      }}
+    >
       {(list || []).map((listitem, index) => (
         <StyledListItem
           itemcolor={listitem.color}
@@ -315,7 +332,7 @@ const MedModal = ({
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
   const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
   const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
-  const [selectEvent, setSelEvent] = React.useState(eventtimes[0]);
+  const [selectEvent, setSelEvent] = React.useState(eventtimes[4]);
   const [selectDuration, setSelDuration] = React.useState(0);
   const [selectAddMeds, setSelAddMeds] = React.useState("");
   const [selectedDate, setSelDateChange] = React.useState(new Date());
