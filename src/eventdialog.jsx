@@ -102,7 +102,7 @@ const EventModal = ({
   const EventListItems = ({ list, itemselected }) => (
     <List
       dense={true}
-      style={{ maxHeight: 270, maxWidth: 200, overflow: "scroll" }}
+      style={{ maxHeight: 270, maxWidth: 180, overflow: "scroll" }}
     >
       {(list || []).map((listitem, index) => (
         <StyledListItem
@@ -177,9 +177,76 @@ const EventModal = ({
     setSelAddEvents(event.target.value);
   };
 
-  const handleAddEvents = (value) => {};
+  const handleAddEvents = () => {
+    if (selectAddEvents !== "") {
+      var seleventindex = allEventItems.length + 1;
 
-  const handleRemoveEvents = (value) => {};
+      const item = [
+        {
+          id: seleventindex,
+          group: 1,
+          title: selectAddEvents,
+          start_time: moment().add(0, "m"),
+          end_time: moment().add(0.5, "m"),
+        },
+      ];
+
+      allEventItems.push(item[0]);
+
+      var finalitems = allEventItems.map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+        })
+      );
+
+      var finalitem = finalitems.filter((e) => e.id === seleventindex);
+
+      setSelEventItem(finalitem);
+      setSelEventItemIndex(seleventindex);
+      setAllEventItems(finalitems);
+
+      handleGetSelEventDetail(finalitem);
+    }
+  };
+
+  const handleGetSelEventDetail = (selevent) => {
+    var start_time = selevent[0].start_time;
+    setSelDateChange(start_time);
+  };
+
+  const handleRemoveEvents = () => {
+    if (selectEventItemIndex !== 0) {
+      var seleventindex = selectEventItem[0].id;
+
+      var seleventitems = allEventItems
+        .filter((e) => e.id !== seleventindex)
+        .map((items) => items);
+
+      var finalitems = seleventitems.map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+        })
+      );
+
+      //console.log(finalitems);
+
+      var finaleventindex = 0;
+      switch (seleventindex) {
+        case 1:
+          if (seleventitems.length > 0) finaleventindex = seleventitems.length;
+          break;
+        default:
+          finaleventindex = seleventindex - 1;
+      }
+
+      var finalitem = finalitems.filter((e) => e.id === finaleventindex);
+      setSelEventItem(finalitem);
+      setSelEventItemIndex(finalitem.id);
+
+      setAllEventItems(finalitems);
+      if (finaleventindex !== 0) handleGetSelEventDetail(finalitem);
+    }
+  };
 
   const handleUpEvents = (value) => {};
 
@@ -190,8 +257,7 @@ const EventModal = ({
   const handleAllEventsChange = () => {
     if (selectEventItemIndex !== 0) {
       var itemId = selectEventItem[0].id;
-      //console.log(itemId);
-      //console.log(selectItemIndex);
+      //console.log(selectEventItem[0]);
 
       var items = allEventItems.map((item) =>
         item.id === itemId
@@ -263,7 +329,7 @@ const EventModal = ({
                     helperText="Add Event"
                     variant="outlined"
                     style={{
-                      minWidth: "160px",
+                      minWidth: "180px",
                     }}
                     onChange={handleEventSelChange}
                   >
@@ -279,7 +345,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "80px",
+                        maxWidth: "90px",
                       }}
                       onClick={handleAddEvents}
                     >
@@ -290,7 +356,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "80px",
+                        maxWidth: "90px",
                       }}
                       onClick={handleRemoveEvents}
                     >
@@ -305,7 +371,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "80px",
+                        maxWidth: "90px",
                       }}
                       onClick={handleUpEvents}
                     >
@@ -316,7 +382,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "80px",
+                        maxWidth: "90px",
                       }}
                       onClick={handleDownEvents}
                     >

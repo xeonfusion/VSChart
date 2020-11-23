@@ -186,38 +186,6 @@ const eventitems = [
     end_time: moment().add(5, "m"),
     note: "",
   },
-  {
-    id: 8,
-    group: 1,
-    title: "Surgery Stop",
-    start_time: moment().add(11, "m"),
-    end_time: moment().add(12, "m"),
-    note: "",
-  },
-  {
-    id: 9,
-    group: 1,
-    title: "Extubation/SGA Out",
-    start_time: moment().add(12, "m"),
-    end_time: moment().add(13, "m"),
-    note: "",
-  },
-  {
-    id: 10,
-    group: 1,
-    title: "Patient Out",
-    start_time: moment().add(13, "m"),
-    end_time: moment().add(14, "m"),
-    note: "",
-  },
-  {
-    id: 11,
-    group: 1,
-    title: "Anaesthesia Stop",
-    start_time: moment().add(14, "m"),
-    end_time: moment().add(15, "m"),
-    note: "",
-  },
 ];
 
 const MedicationGrid2 = forwardRef((props, ref) => {
@@ -577,11 +545,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const handleEventItemDoubleClick = (itemId, e, time) => {
     var item = alleventitems.filter((e) => e.id === itemId);
 
-    //var groupid = item[0].group;
-    //var group = eventgroups.filter((e) => e.id === groupid);
-
     setSelEventItem(item);
-    //setSelGroup(group);
     setSelEventItemIndex(itemId);
     //console.log(item);
     setSelEventItemTime(item[0].start_time);
@@ -591,6 +555,43 @@ const MedicationGrid2 = forwardRef((props, ref) => {
 
   const handleEventCanvasDoubleClick = (groupId, time, e) => {
     //add
+  };
+
+  const itemEventRenderer = ({
+    item,
+    timelineContext,
+    itemContext,
+    getItemProps,
+    getResizeProps,
+  }) => {
+    return (
+      <div
+        {...getItemProps({
+          style: {
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderRadius: 4,
+            borderLeftWidth: itemContext.selected ? 3 : 1,
+            borderRightWidth: itemContext.selected ? 3 : 1,
+          },
+        })}
+      >
+        <div
+          style={{
+            height: itemContext.dimensions.height,
+            width: itemContext.width,
+            overflow: "hidden",
+            paddingLeft: 3,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "white",
+            textAlign: "left",
+          }}
+        >
+          {item.title}
+        </div>
+      </div>
+    );
   };
 
   const handleEventChildState = (
@@ -708,6 +709,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         itemTouchSendsClick={true}
         onItemDoubleClick={handleEventItemDoubleClick}
         onCanvasDoubleClick={handleEventCanvasDoubleClick}
+        itemRenderer={itemEventRenderer}
       >
         <TimelineHeaders className="sticky">
           <SidebarHeader>
