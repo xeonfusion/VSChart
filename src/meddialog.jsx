@@ -387,7 +387,7 @@ const MedModal = ({
     setSelGroup(group);
     setSelItem(item);
 
-    setSelItemIndex(item.id);
+    setSelItemIndex(item[0].id);
     setSelGroupIndex(index);
 
     //console.log(allGroups);

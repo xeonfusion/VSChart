@@ -282,8 +282,8 @@ const EventModal = ({
     //console.log(item);
 
     setSelEventItem(item);
-    setSelEventItemIndex(item.id);
-    setSelDateChange(item.start_time);
+    setSelEventItemIndex(item[0].id);
+    setSelDateChange(item[0].start_time);
   };
 
   return (
