@@ -66,6 +66,7 @@ const EventModal = ({
   const StyledListItem = ({
     itemcolor,
     itemtitle,
+    itemtime,
     itemindex,
     itemselected,
   }) => {
@@ -94,7 +95,7 @@ const EventModal = ({
         onClick={() => handleEventListClick(itemindex)}
         autoFocus={itemselected ? true : false}
       >
-        <ListItemText>{itemtitle}</ListItemText>
+        <ListItemText secondary={itemtime}>{itemtitle}</ListItemText>
       </ListItem>
     );
   };
@@ -104,20 +105,23 @@ const EventModal = ({
       dense={true}
       style={{ maxHeight: 270, maxWidth: 180, overflow: "scroll" }}
     >
-      {(list || []).map((listitem, index) => (
-        <StyledListItem
-          itemcolor={listitem.color}
-          itemtitle={listitem.title}
-          itemindex={listitem.id}
-          itemselected={
-            typeof itemselected[0] === "undefined"
-              ? false
-              : itemselected[0].id === listitem.id
-              ? true
-              : false
-          }
-        ></StyledListItem>
-      ))}
+      {(list || [])
+        .sort((a, b) => a.start_time.diff(b.start_time))
+        .map((listitem, index) => (
+          <StyledListItem
+            itemcolor={index % 2 ? "#ffffff" : "#ededed"}
+            itemtitle={listitem.title}
+            itemtime={listitem.start_time.format("hh:mm")}
+            itemindex={listitem.id}
+            itemselected={
+              typeof itemselected[0] === "undefined"
+                ? false
+                : itemselected[0].id === listitem.id
+                ? true
+                : false
+            }
+          ></StyledListItem>
+        ))}
     </List>
   );
 
