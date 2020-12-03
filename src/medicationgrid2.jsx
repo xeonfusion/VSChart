@@ -198,7 +198,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
       handleShowEvents();
     },
     handleShowNoteCall: () => {
-      handleShowEvents();
+      handleShowEventAddNote();
     },
     handleTimeStepsCall: () => {
       handleTimeSteps();
@@ -233,6 +233,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedEventItem, setSelEventItem] = React.useState(eventitems[0]);
   const [selectedEventItemIndex, setSelEventItemIndex] = React.useState(0);
   const [selectedEventItemTime, setSelEventItemTime] = React.useState(moment());
+  const [selectedEventType, setSelEventType] = React.useState("");
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -554,7 +555,34 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   };
 
   const handleEventCanvasDoubleClick = (groupId, time, e) => {
-    //add
+    var seleventindex = alleventitems.length + 1;
+
+    const item = [
+      {
+        id: seleventindex,
+        group: 1,
+        title: "Add Note",
+        start_time: moment(time).add(0, "m"),
+        end_time: moment(time).add(0.5, "m"),
+      },
+    ];
+
+    alleventitems.push(item[0]);
+
+    var finalitems = alleventitems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    var finalitem = finalitems.filter((e) => e.id === seleventindex);
+
+    setSelEventItem(finalitem);
+    setSelEventItemIndex(seleventindex);
+    setEventItems(finalitems);
+
+    setSelEventType("Add Note");
+    setEventShow(true);
   };
 
   const itemEventRenderer = ({
@@ -599,18 +627,51 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     selectedEventItems,
     selectedEventItem,
     selectedEventItemIndex,
-    selectedEventItemTime
+    selectedEventItemTime,
+    selectedEventType
   ) => {
     setEventItems(selectedEventItems);
 
     setSelEventItem(selectedEventItem);
     setSelEventItemIndex(selectedEventItemIndex);
     setSelEventItemTime(selectedEventItemTime);
+    setSelEventType(selectedEventType);
 
     setEventShow(childeventstate);
   };
 
   const handleShowEvents = () => {
+    setEventShow(true);
+  };
+
+  const handleShowEventAddNote = () => {
+    var seleventindex = alleventitems.length + 1;
+
+    const item = [
+      {
+        id: seleventindex,
+        group: 1,
+        title: "Add Note",
+        start_time: moment().add(0, "m"),
+        end_time: moment().add(0.5, "m"),
+      },
+    ];
+
+    alleventitems.push(item[0]);
+
+    var finalitems = alleventitems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    var finalitem = finalitems.filter((e) => e.id === seleventindex);
+
+    setSelEventItem(finalitem);
+    setSelEventItemIndex(seleventindex);
+    setEventItems(finalitems);
+
+    setSelEventType("Add Note");
     setEventShow(true);
   };
 
@@ -754,6 +815,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventItem={selectedEventItem}
         selectedEventItemIndex={selectedEventItemIndex}
         selectedEventItemTime={selectedEventItemTime}
+        selectedEventType={selectedEventType}
       />
     </>
   );

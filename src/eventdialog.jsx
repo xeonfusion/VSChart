@@ -31,6 +31,7 @@ const EventModal = ({
   selectedEventItem,
   selectedEventItemIndex,
   selectedEventItemTime,
+  selectedEventType,
 }) => {
   const [showEvent, setEventShow] = React.useState(false);
 
@@ -59,7 +60,8 @@ const EventModal = ({
       finalallEventItems,
       selectEventItem,
       selectEventItemIndex,
-      selectedDate
+      selectedDate,
+      selectAddEvents
     );
   };
 
@@ -103,13 +105,18 @@ const EventModal = ({
   const EventListItems = ({ list, itemselected }) => (
     <List
       dense={true}
-      style={{ maxHeight: 270, maxWidth: 180, overflow: "scroll" }}
+      style={{
+        maxHeight: 270,
+        maxWidth: 200,
+        minWidth: 200,
+        overflow: "scroll",
+      }}
     >
       {(list || [])
         .sort((a, b) => a.start_time.diff(b.start_time))
         .map((listitem, index) => (
           <StyledListItem
-            itemcolor={index % 2 ? "#ffffff" : "#ededed"}
+            itemcolor={index % 2 ? "#ffffff" : "#dbe7f4"}
             itemtitle={listitem.title}
             itemtime={listitem.start_time.format("hh:mm")}
             itemindex={listitem.id}
@@ -143,11 +150,13 @@ const EventModal = ({
     setSelEventItem(selectedEventItem);
     setSelEventItemIndex(selectedEventItemIndex);
     setSelDateChange(selectedEventItemTime);
+    setSelAddEvents(selectedEventType);
     setEventShow(showEventDialog);
   }, [
     selectedEventItem,
     selectedEventItemIndex,
     selectedEventItemTime,
+    selectedEventType,
     showEventDialog,
   ]);
 
@@ -252,9 +261,27 @@ const EventModal = ({
     }
   };
 
-  const handleUpEvents = (value) => {};
+  const handleChangeEventType = (value) => {
+    if (selectEventItemIndex !== 0) {
+      var seleventindex = selectEventItem[0].id;
 
-  const handleDownEvents = (value) => {};
+      var finalitems = allEventItems.map((item, index) =>
+        item.id === seleventindex
+          ? Object.assign({}, item, {
+              title: selectAddEvents,
+            })
+          : item
+      );
+
+      var finalitem = finalitems.filter((e) => e.id === seleventindex);
+
+      setSelEventItem(finalitem);
+      setSelEventItemIndex(seleventindex);
+      setAllEventItems(finalitems);
+
+      handleGetSelEventDetail(finalitem);
+    }
+  };
 
   const handleEventNoteChange = (value) => {};
 
@@ -333,8 +360,9 @@ const EventModal = ({
                     helperText="Add Event"
                     variant="outlined"
                     style={{
-                      minWidth: "180px",
+                      minWidth: "200px",
                     }}
+                    value={selectAddEvents}
                     onChange={handleEventSelChange}
                   >
                     {addevents.map((item) => (
@@ -349,7 +377,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "90px",
+                        maxWidth: "100px",
                       }}
                       onClick={handleAddEvents}
                     >
@@ -360,7 +388,7 @@ const EventModal = ({
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "90px",
+                        maxWidth: "100px",
                       }}
                       onClick={handleRemoveEvents}
                     >
@@ -369,28 +397,17 @@ const EventModal = ({
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs>
-                  <ButtonGroup aria-label="Up/Down Events">
+                  <ButtonGroup aria-label="Change Events">
                     <Button
                       variant="outlined"
                       color="default"
                       size="large"
                       style={{
-                        maxWidth: "90px",
+                        maxWidth: "200px",
                       }}
-                      onClick={handleUpEvents}
+                      onClick={handleChangeEventType}
                     >
-                      Shift Up
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="default"
-                      size="large"
-                      style={{
-                        maxWidth: "90px",
-                      }}
-                      onClick={handleDownEvents}
-                    >
-                      Shift Down
+                      Change Event Type
                     </Button>
                   </ButtonGroup>
                 </Grid>
