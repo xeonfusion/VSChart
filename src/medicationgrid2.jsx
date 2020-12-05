@@ -234,6 +234,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedEventItemIndex, setSelEventItemIndex] = React.useState(0);
   const [selectedEventItemTime, setSelEventItemTime] = React.useState(moment());
   const [selectedEventType, setSelEventType] = React.useState("");
+  const [selectedEventNote, setSelEventNote] = React.useState("");
 
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
@@ -550,6 +551,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelEventItemIndex(itemId);
     //console.log(item);
     setSelEventItemTime(item[0].start_time);
+    setSelEventNote(item[0].note);
 
     setEventShow(true);
   };
@@ -582,6 +584,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setEventItems(finalitems);
 
     setSelEventType("Add Note");
+    setSelEventNote("");
     setEventShow(true);
   };
 
@@ -628,7 +631,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     selectedEventItem,
     selectedEventItemIndex,
     selectedEventItemTime,
-    selectedEventType
+    selectedEventType,
+    selectedEventNote
   ) => {
     setEventItems(selectedEventItems);
 
@@ -636,6 +640,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelEventItemIndex(selectedEventItemIndex);
     setSelEventItemTime(selectedEventItemTime);
     setSelEventType(selectedEventType);
+    setSelEventNote(selectedEventNote);
 
     setEventShow(childeventstate);
   };
@@ -672,6 +677,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setEventItems(finalitems);
 
     setSelEventType("Add Note");
+    setSelEventNote("");
     setEventShow(true);
   };
 
@@ -816,6 +822,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventItemIndex={selectedEventItemIndex}
         selectedEventItemTime={selectedEventItemTime}
         selectedEventType={selectedEventType}
+        selectedEventNote={selectedEventNote}
       />
     </>
   );

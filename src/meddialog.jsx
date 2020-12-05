@@ -282,7 +282,6 @@ const MedModal = ({
         button
         divider={true}
         onClick={() => handleMedListClick(itemindex)}
-        autoFocus={itemselected ? true : false}
       >
         <ListItemText>{itemtitle}</ListItemText>
       </ListItem>
@@ -1236,7 +1235,7 @@ const MedModal = ({
                   </Select>
                 </Grid>
                 <Grid item xs>
-                  Event timing
+                  Get Event timing
                 </Grid>
                 <Grid item xs>
                   <Select

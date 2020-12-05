@@ -32,6 +32,7 @@ const EventModal = ({
   selectedEventItemIndex,
   selectedEventItemTime,
   selectedEventType,
+  selectedEventNote,
 }) => {
   const [showEvent, setEventShow] = React.useState(false);
 
@@ -61,7 +62,8 @@ const EventModal = ({
       selectEventItem,
       selectEventItemIndex,
       selectedDate,
-      selectAddEvents
+      selectAddEvents,
+      selectEventNote
     );
   };
 
@@ -95,7 +97,7 @@ const EventModal = ({
         button
         divider={true}
         onClick={() => handleEventListClick(itemindex)}
-        autoFocus={itemselected ? true : false}
+        autoFocus={itemselected && selectListFocus ? true : false}
       >
         <ListItemText secondary={itemtime}>{itemtitle}</ListItemText>
       </ListItem>
@@ -139,7 +141,8 @@ const EventModal = ({
   );
   const [selectAddEvents, setSelAddEvents] = React.useState("");
   const [selectedDate, setSelDateChange] = React.useState(new Date());
-  const [selectEventNote, setSelEventChange] = React.useState("");
+  const [selectEventNote, setSelEventNoteChange] = React.useState("");
+  const [selectListFocus, setSelListFocus] = React.useState(false);
 
   React.useEffect(() => {
     //Run only on first mount with empty array dependency
@@ -151,12 +154,14 @@ const EventModal = ({
     setSelEventItemIndex(selectedEventItemIndex);
     setSelDateChange(selectedEventItemTime);
     setSelAddEvents(selectedEventType);
+    setSelEventNoteChange(selectedEventNote);
     setEventShow(showEventDialog);
   }, [
     selectedEventItem,
     selectedEventItemIndex,
     selectedEventItemTime,
     selectedEventType,
+    selectedEventNote,
     showEventDialog,
   ]);
 
@@ -183,6 +188,16 @@ const EventModal = ({
       );
       //console.log(item);
       setSelEventItem(item);
+
+      var items = allEventItems.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              start_time: final_start_time,
+              end_time: final_end_time,
+            })
+          : item
+      );
+      setAllEventItems(items);
     }
   };
 
@@ -219,12 +234,15 @@ const EventModal = ({
       setAllEventItems(finalitems);
 
       handleGetSelEventDetail(finalitem);
+      setSelListFocus(true);
     }
   };
 
   const handleGetSelEventDetail = (selevent) => {
     var start_time = selevent[0].start_time;
     setSelDateChange(start_time);
+    var note = selevent[0].note;
+    setSelEventNoteChange(note);
   };
 
   const handleRemoveEvents = () => {
@@ -258,10 +276,11 @@ const EventModal = ({
 
       setAllEventItems(finalitems);
       if (finaleventindex !== 0) handleGetSelEventDetail(finalitem);
+      setSelListFocus(true);
     }
   };
 
-  const handleChangeEventType = (value) => {
+  const handleChangeEventType = (event) => {
     if (selectEventItemIndex !== 0) {
       var seleventindex = selectEventItem[0].id;
 
@@ -283,7 +302,24 @@ const EventModal = ({
     }
   };
 
-  const handleEventNoteChange = (value) => {};
+  const handleEventNoteChange = (event) => {
+    if (selectEventItemIndex !== 0) {
+      setSelEventNoteChange(event.target.value);
+
+      var itemId = selectEventItem[0].id;
+
+      var item = selectEventItem.map((item) =>
+        item.id === itemId
+          ? Object.assign({}, item, {
+              note: event.target.value,
+            })
+          : item
+      );
+      //console.log(item);
+      setSelListFocus(false);
+      setSelEventItem(item);
+    }
+  };
 
   const handleAllEventsChange = () => {
     if (selectEventItemIndex !== 0) {
@@ -296,6 +332,7 @@ const EventModal = ({
               title: selectEventItem[0].title,
               start_time: selectEventItem[0].start_time,
               end_time: selectEventItem[0].end_time,
+              note: selectEventItem[0].note,
             })
           : item
       );
@@ -315,6 +352,9 @@ const EventModal = ({
     setSelEventItem(item);
     setSelEventItemIndex(item[0].id);
     setSelDateChange(item[0].start_time);
+    setSelEventNoteChange(item[0].note);
+
+    setSelListFocus(true);
   };
 
   return (
@@ -324,6 +364,7 @@ const EventModal = ({
         onClose={() => {
           handleClose();
         }}
+        fullWidth
         maxWidth={"md"}
       >
         <DialogTitle id="simple-dialog-title-2">Add Event</DialogTitle>
@@ -430,7 +471,7 @@ const EventModal = ({
                     id="outlined-eventnote"
                     label="EventNote"
                     multiline={true}
-                    fullWidth
+                    style={{ width: 650 }}
                     rows={12}
                     rowsMax={16}
                     variant="outlined"
@@ -443,7 +484,6 @@ const EventModal = ({
                   />
                 </Grid>
                 <Grid item xs>
-                  Timestamp
                   <MuiPickersUtilsProvider utils={MomentUtils}>
                     <KeyboardDateTimePicker
                       value={selectedDate}
