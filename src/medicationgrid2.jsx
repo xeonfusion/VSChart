@@ -21,7 +21,7 @@ const groups = [
     unit: "mg",
     route: "Intravenous",
     durationunit: "bolus (sec)",
-    type: "hypnotic",
+    type: "InductionAgent",
     color: "yellow",
   },
   {
@@ -30,7 +30,7 @@ const groups = [
     unit: "mcg",
     route: "Intravenous",
     durationunit: "bolus (sec)",
-    type: "opioid",
+    type: "Opioid",
     color: "deepskyblue",
   },
   {
@@ -39,7 +39,7 @@ const groups = [
     unit: "mg",
     route: "Subcutaneous",
     durationunit: "bolus (sec)",
-    type: "localanaesthetic",
+    type: "LocalAnaesthetic",
     color: "grey",
   },
   {
@@ -48,7 +48,7 @@ const groups = [
     unit: "mg",
     route: "Intravenous",
     durationunit: "bolus (sec)",
-    type: "nmbd",
+    type: "MuscleRelaxant",
     color: "red",
   },
   {
@@ -57,7 +57,7 @@ const groups = [
     unit: "ml/hr",
     route: "Intravenous",
     durationunit: "min",
-    type: "ivfluid",
+    type: "IVfluid",
     color: "white",
   },
 ];
@@ -222,6 +222,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedItemTime, setSelItemTime] = React.useState(moment());
   const [selectedDuration, setSelDuration] = React.useState(0);
   const [selectedDurationUnit, setSelDurationUnit] = React.useState(0);
+  const [selectedMedType, setSelMedType] = React.useState("");
 
   const [selectedTimeSteps, setSelTimeSteps] = React.useState({ minute: 1 });
   const [timeStepCount, setTimeStepCount] = React.useState(1);
@@ -247,13 +248,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelGroupIndex(groupid);
     setSelItemIndex(itemId);
 
-    var dose = parseInt(item[0].title);
+    var dose = parseFloat(item[0].title);
     var unit = group[0].unit;
     var route = group[0].route;
     var start_time = item[0].start_time;
     var end_time = item[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    var medtype = group[0].type;
 
     setSelDose(dose);
     setSelUnit(unit);
@@ -261,6 +263,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelItemTime(start_time);
     setSelDuration(duration);
     setSelDurationUnit(durationunit);
+    setSelMedType(medtype);
 
     setShow(true);
   };
@@ -304,13 +307,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelItemIndex(itemindex);
     //console.log(time);
 
-    var dose = parseInt(item[0].title);
+    var dose = parseFloat(item[0].title);
     var unit = group[0].unit;
     var route = group[0].route;
     var start_time = item[0].start_time;
     var end_time = item[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    var medtype = group[0].type;
 
     setSelDose(dose);
     setSelUnit(unit);
@@ -318,6 +322,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelItemTime(start_time);
     setSelDuration(duration);
     setSelDurationUnit(durationunit);
+    setSelMedType(medtype);
 
     setShow(true);
   };
@@ -354,13 +359,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
 
     setItems(finalitems);
 
-    var dose = parseInt(finalitem[0].title);
+    var dose = parseFloat(finalitem[0].title);
     var unit = group[0].unit;
     var route = group[0].route;
     var start_time = finalitem[0].start_time;
     var end_time = finalitem[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    var medtype = group[0].type;
 
     setSelDose(dose);
     setSelUnit(unit);
@@ -368,6 +374,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelItemTime(start_time);
     setSelDuration(duration);
     setSelDurationUnit(durationunit);
+    setSelMedType(medtype);
 
     setShow(true);
   };
@@ -383,7 +390,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
 
     var sum = 0;
     items.forEach((item) => {
-      sum += parseInt(item.title);
+      sum += parseFloat(item.title);
     });
 
     return sum;
@@ -478,7 +485,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     selectedRoute,
     selectedDate,
     selectedDuration,
-    selectedDurationUnit
+    selectedDurationUnit,
+    selectedMedType
   ) => {
     setGroups(selectedMeds);
     setItems(selectedItems);
@@ -493,6 +501,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelDurationUnit(selectedDurationUnit);
     setSelDuration(selectedDuration);
     setSelItemTime(selectedDate);
+    setSelMedType(selectedMedType);
     //console.log(selectedMeds);
     //console.log(selectedItems);
     /*console.log(selectedItem);
@@ -698,6 +707,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedItemTime={selectedItemTime}
         selectedDuration={selectedDuration}
         selectedDurationUnit={selectedDurationUnit}
+        selectedMedType={selectedMedType}
       />
       <Timeline
         key={keys}

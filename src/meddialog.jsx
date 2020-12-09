@@ -19,6 +19,9 @@ import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import Grid from "@material-ui/core/Grid";
 //import NumPad from "react-numpad";
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
 
 import {
   KeyboardDateTimePicker,
@@ -40,6 +43,7 @@ const MedModal = ({
   selectedItemTime,
   selectedDuration,
   selectedDurationUnit,
+  selectedMedType,
 }) => {
   const [show, setShow] = React.useState(false);
 
@@ -61,7 +65,8 @@ const MedModal = ({
       selectRoute,
       selectedDate,
       selectDuration,
-      selectDurationUnit
+      selectDurationUnit,
+      selectMedType
     );
   };
 
@@ -72,7 +77,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "hypnotic",
+      type: "InductionAgent",
       color: "yellow",
     },
     {
@@ -81,7 +86,7 @@ const MedModal = ({
       unit: "mcg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "opioid",
+      type: "Opioid",
       color: "deepskyblue",
     },
     {
@@ -90,7 +95,7 @@ const MedModal = ({
       unit: "mg",
       route: "Subcutaneous",
       durationunit: "bolus (sec)",
-      type: "localanaesthetic",
+      type: "LocalAnaesthetic",
       color: "grey",
     },
     {
@@ -99,7 +104,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "nmbd",
+      type: "MuscleRelaxant",
       color: "red",
     },
     {
@@ -108,7 +113,7 @@ const MedModal = ({
       unit: "ml/hr",
       route: "Intravenous",
       durationunit: "min",
-      type: "ivfluid",
+      type: "IVfluid",
       color: "white",
     },
     {
@@ -117,7 +122,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "hypnotic",
+      type: "Hypnotic",
       color: "orange",
     },
     {
@@ -126,7 +131,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "nmbd",
+      type: "MuscleRelaxant",
       color: "red",
     },
     {
@@ -135,7 +140,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "opioid",
+      type: "Opioid",
       color: "deepskyblue",
     },
     {
@@ -144,7 +149,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "nmbd",
+      type: "MuscleRelaxant",
       color: "red",
     },
     {
@@ -153,7 +158,7 @@ const MedModal = ({
       unit: "mg",
       route: "Intravenous",
       durationunit: "bolus (sec)",
-      type: "hypnotic",
+      type: "InductionAgent",
       color: "yellow",
     },
     {
@@ -162,8 +167,26 @@ const MedModal = ({
       unit: "ml/hr",
       route: "Intravenous",
       durationunit: "min",
-      type: "ivfluid",
+      type: "IVfluid",
       color: "white",
+    },
+    {
+      id: 11,
+      title: "Glycopyrrolate",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Anticholinergic",
+      color: "lawngreen",
+    },
+    {
+      id: 12,
+      title: "Ephedrine",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Vasopressor",
+      color: "#debfd9",
     },
   ];
 
@@ -216,7 +239,7 @@ const MedModal = ({
     },
   ];
 
-  const doseunits = ["mg", "mcg", "mcg/kg/min", "ml/hr"];
+  const doseunits = ["mg", "mcg", "mcg/kg/min", "ml/hr", "U"];
 
   const doseroutes = [
     "Intravenous",
@@ -245,12 +268,28 @@ const MedModal = ({
   const durations = ["bolus (sec)", "min", "sec"];
 
   const addmeds = [
-    "Midazolam",
-    "Suxamethonium",
-    "Morphine",
-    "Cisatracurium",
-    "Thiopentone",
-    "Saline 0.9%",
+    { title: "Midazolam" },
+    { title: "Suxamethonium" },
+    { title: "Morphine" },
+    { title: "Cisatracurium" },
+    { title: "Thiopentone" },
+    { title: "Saline 0.9%" },
+    { title: "Glycopyrrolate" },
+    { title: "Ephedrine" },
+  ];
+
+  const medtypes = [
+    { type: "Other", color: "white", pattern: "solid" },
+    { type: "InductionAgent", color: "yellow", pattern: "solid" },
+    { type: "Hypnotic", color: "orange", pattern: "solid" },
+    { type: "IVfluid", color: "white", pattern: "solid" },
+    { type: "Opioid", color: "deepskyblue", pattern: "solid" },
+    { type: "LocalAnaesthetic", color: "grey", pattern: "solid" },
+    { type: "MuscleRelaxant", color: "red", pattern: "solid" },
+    { type: "Anticholinergic", color: "lawngreen", pattern: "solid" },
+    { type: "Vasopressor", color: "#debfd9", pattern: "solid" },
+    { type: "AntiEmetic", color: "#edc282", pattern: "solid" },
+    { type: "Vasodilators", color: "#debfd9", pattern: "striped" },
   ];
 
   const StyledListItem = ({
@@ -334,7 +373,11 @@ const MedModal = ({
   const [selectEvent, setSelEvent] = React.useState(eventtimes[4]);
   const [selectDuration, setSelDuration] = React.useState(0);
   const [selectAddMeds, setSelAddMeds] = React.useState("");
+  const [selectAddMedsList, setSelAddMedsList] = React.useState(medGroups);
+  const [selectMedType, setSelMedType] = React.useState(medtypes[0]);
   const [selectedDate, setSelDateChange] = React.useState(new Date());
+
+  const filter = createFilterOptions();
 
   React.useEffect(() => {
     //Run only on first mount with empty array dependency
@@ -353,6 +396,7 @@ const MedModal = ({
     setSelRoute(selectedRoute);
     setSelDurationUnit(selectedDurationUnit);
     setSelDuration(selectedDuration);
+    setSelMedType(selectedMedType);
     setSelDateChange(selectedItemTime);
     setShow(showMedDialog);
   }, [
@@ -365,6 +409,7 @@ const MedModal = ({
     selectedRoute,
     selectedDuration,
     selectedDurationUnit,
+    selectedMedType,
     selectedItemTime,
     showMedDialog,
   ]);
@@ -421,7 +466,10 @@ const MedModal = ({
   const handleAllGroupsChange = () => {
     if (selectGroupIndex !== 0) {
       var groupId = selectGroupIndex;
-      //console.log(selectGroupIndex);
+
+      var groupcolor = medtypes
+        .filter((e) => e.type === selectGroup[0].type)
+        .map((group) => group.color);
 
       var groups = allGroups.map((group) =>
         group.id === groupId
@@ -430,6 +478,8 @@ const MedModal = ({
               unit: selectGroup[0].unit,
               route: selectGroup[0].route,
               durationunit: selectGroup[0].durationunit,
+              type: selectGroup[0].type,
+              color: groupcolor,
             })
           : group
       );
@@ -535,6 +585,23 @@ const MedModal = ({
     }
   };
 
+  const handleMedTypeChange = (event) => {
+    if (selectItemIndex !== 0) {
+      setSelMedType(event.target.value);
+
+      var groupId = selectGroup[0].id;
+
+      var group = selectGroup.map((group) =>
+        group.id === groupId
+          ? Object.assign({}, group, {
+              type: event.target.value,
+            })
+          : group
+      );
+      setSelGroup(group);
+    }
+  };
+
   const handleRouteChange = (event) => {
     if (selectItemIndex !== 0) {
       setSelRoute(event.target.value);
@@ -553,18 +620,45 @@ const MedModal = ({
     }
   };
 
-  const handleMedSelChange = (event) => {
-    setSelAddMeds(event.target.value);
+  const handleMedSelChange = (event, value) => {
+    if (typeof value === "string") {
+      setSelAddMeds({
+        title: value,
+      });
+    } else if (value && value.inputValue) {
+      setSelAddMeds({
+        title: value.inputValue,
+      });
+
+      const newgroup = [
+        {
+          id: allGroups.length + 1,
+          title: value.inputValue,
+          unit: "mg",
+          route: "Intravenous",
+          durationunit: "bolus (sec)",
+          type: "Other",
+          color: "white",
+        },
+      ];
+
+      var addmedlist = selectAddMedsList.map((group) => group);
+      addmedlist.push(newgroup[0]);
+      setSelAddMedsList(addmedlist);
+    } else {
+      setSelAddMeds(value);
+    }
   };
 
   const handleGetSelItemDetail = (selitem, selgroup) => {
-    var dose = parseInt(selitem[0].title);
+    var dose = parseFloat(selitem[0].title);
     var unit = selgroup[0].unit;
     var route = selgroup[0].route;
     var start_time = selitem[0].start_time;
     var end_time = selitem[0].end_time;
     var duration = end_time.diff(start_time, "seconds");
     var durationunit = selgroup[0].durationunit;
+    var medtype = selgroup[0].type;
 
     setSelDose(dose);
     setSelUnit(unit);
@@ -572,12 +666,13 @@ const MedModal = ({
     setSelDateChange(start_time);
     setSelDuration(duration);
     setSelDurationUnit(durationunit);
+    setSelMedType(medtype);
   };
 
   const handleAddMeds = () => {
     if (selectAddMeds !== "") {
-      var selgroup = medGroups
-        .filter((e) => e.title === selectAddMeds)
+      var selgroup = selectAddMedsList
+        .filter((e) => e.title === selectAddMeds.title)
         .map((group) => group);
 
       var selgroupindex = allGroups.length + 1;
@@ -991,21 +1086,43 @@ const MedModal = ({
                   Add Medication
                 </Grid>
                 <Grid item xs>
-                  <TextField
+                  <Autocomplete
                     id="Add-entry"
-                    select
-                    label=""
-                    helperText="Add Medication"
-                    variant="outlined"
+                    options={addmeds}
+                    getOptionLabel={(option) => {
+                      if (typeof option === "string") {
+                        return option;
+                      }
+                      // Add option created dynamically
+                      if (option.inputValue) {
+                        return option.inputValue;
+                      }
+                      return option.title;
+                    }}
                     style={{
                       minWidth: "160px",
                     }}
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
+
+                      if (params.inputValue !== "") {
+                        filtered.push({
+                          inputValue: params.inputValue,
+                          title: `Add "${params.inputValue}"`,
+                        });
+                      }
+
+                      return filtered;
+                    }}
                     onChange={handleMedSelChange}
-                  >
-                    {addmeds.map((item) => (
-                      <MenuItem value={item}>{item}</MenuItem>
-                    ))}
-                  </TextField>
+                    renderOption={(option) => option.title}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    renderInput={(params) => (
+                      <TextField {...params} label="" variant="outlined" />
+                    )}
+                  />
                 </Grid>
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Meds">
@@ -1235,20 +1352,20 @@ const MedModal = ({
                   </Select>
                 </Grid>
                 <Grid item xs>
-                  Get Event timing
+                  Medication type
                 </Grid>
                 <Grid item xs>
                   <Select
-                    id="event-timing"
-                    labelId="Event timing"
+                    id="med-type"
+                    labelId="Medication type"
                     variant="outlined"
                     fullWidth
-                    defaultValue={eventtimes[0]}
-                    value={selectEvent}
-                    onChange={handleEventChange}
+                    defaultValue={medtypes[0]}
+                    value={selectMedType}
+                    onChange={handleMedTypeChange}
                   >
-                    {eventtimes.map((item) => (
-                      <MenuItem value={item}>{item}</MenuItem>
+                    {medtypes.map((item) => (
+                      <MenuItem value={item.type}>{item.type}</MenuItem>
                     ))}
                   </Select>
                 </Grid>
@@ -1263,6 +1380,22 @@ const MedModal = ({
                       variant="dialog"
                     />
                   </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item xs>
+                  <Select
+                    id="event-timing"
+                    labelId="Event timing"
+                    variant="outlined"
+                    fullWidth
+                    helperText="Get Event timing"
+                    defaultValue={eventtimes[0]}
+                    value={selectEvent}
+                    onChange={handleEventChange}
+                  >
+                    {eventtimes.map((item) => (
+                      <MenuItem value={item}>{item}</MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
               </Grid>
             </Grid>
