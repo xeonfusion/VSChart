@@ -204,6 +204,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     handleTimeStepsCall: () => {
       handleTimeSteps();
     },
+    handleExportDataCall: () => {
+      handleExportData();
+    },
   }));
 
   const [show, setShow] = React.useState(false);
@@ -397,6 +400,42 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     });
 
     return sum;
+  };
+
+  const handleExportData = () => {
+    var items = allitems.map((item) => item);
+    var groups = allgroups.map((group) => group);
+    var eventitems = alleventitems.map((eventitem) => eventitem);
+
+    /*var itemsdata = JSON.stringify(items);
+    var groupsdata = JSON.stringify(groups);
+    var eventitemsdata = JSON.stringify(eventitems);
+
+    localStorage.setItem("items", itemsdata);
+    localStorage.setItem("groups", groupsdata);
+    localStorage.setItem("eventitems", eventitemsdata);
+
+    console.log(localStorage.getItem("items"));
+    console.log(localStorage.getItem("groups"));
+    console.log(localStorage.getItem("eventitems"));*/
+
+    var data = Object.assign(
+      {},
+      { items: items, groups: groups, eventitems: eventitems }
+    );
+
+    const blob = new Blob([JSON.stringify(data)], {
+      type: "application/json",
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+
+    link.setAttribute("download", `vschartdata.json`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
   };
 
   const groupRenderer = ({ group, isRightSidebar }) => {
