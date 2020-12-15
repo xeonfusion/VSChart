@@ -1,4 +1,5 @@
-import "react-calendar-timeline/lib/Timeline.css";
+//import "react-calendar-timeline/lib/Timeline.css";
+import "./Timeline.css";
 import moment from "moment";
 import { forwardRef } from "react";
 import React from "react";
@@ -237,6 +238,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedEventType, setSelEventType] = React.useState("");
   const [selectedEventNote, setSelEventNote] = React.useState("");
 
+  const [showItemInfo, setShowItemInfo] = React.useState(false);
+
   const handleItemDoubleClick = (itemId, e, time) => {
     var item = allitems.filter((e) => e.id === itemId);
 
@@ -420,8 +423,6 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     }
   };
 
-  const [showItemInfo, setShowItemInfo] = React.useState(false);
-
   const itemRenderer = ({
     item,
     timelineContext,
@@ -438,20 +439,17 @@ const MedicationGrid2 = forwardRef((props, ref) => {
             borderRadius: 4,
             borderLeftWidth: itemContext.selected ? 3 : 1,
             borderRightWidth: itemContext.selected ? 3 : 1,
-          },
-          onMouseEnter: () => {
-            setShowItemInfo(true);
-          },
-          onMouseLeave: () => {
-            setShowItemInfo(false);
-          },
-          onClick: () => {
-            setShowItemInfo(false);
-          },
-          onDoubleClick: () => {
-            setShowItemInfo(false);
+            color: item.color,
+            backgroundColor: "#2196f3",
+            //backgroundColor: "rgba(0, 0, 0, 0)",
           },
         })}
+        onMouseOver={() => {
+          //setShowItemInfo(true);
+        }}
+        onMouseLeave={() => {
+          //setShowItemInfo(false);
+        }}
       >
         <div
           style={{
@@ -468,6 +466,18 @@ const MedicationGrid2 = forwardRef((props, ref) => {
           {item.title}
           {" " + getItemUnitFromGroup(item.group)}
         </div>
+        {showItemInfo && (
+          <div
+            className="itemModal"
+            style={{
+              minWidth: "160px",
+            }}
+          >
+            {item.start_time.format("hh:mm a") +
+              " - " +
+              item.end_time.format("hh:mm a")}
+          </div>
+        )}
       </div>
     );
   };

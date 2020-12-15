@@ -188,6 +188,105 @@ const MedModal = ({
       type: "Vasopressor",
       color: "#debfd9",
     },
+    {
+      id: 13,
+      title: "Ondansetron",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Antiemetic",
+      color: "#edc282",
+    },
+    {
+      id: 14,
+      title: "Remifentanil",
+      unit: "mcg/kg/min",
+      route: "Intravenous",
+      durationunit: "continuous",
+      type: "Opioid",
+      color: "deepskyblue",
+    },
+    {
+      id: 15,
+      title: "Ketamine",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "InductionAgent",
+      color: "yellow",
+    },
+    {
+      id: 16,
+      title: "Dexmedetomidine",
+      unit: "mcg/kg/hr",
+      route: "Intravenous",
+      durationunit: "continuous",
+      type: "Other",
+      color: "white",
+    },
+    {
+      id: 17,
+      title: "Phenylephrine",
+      unit: "mcg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Vasopressor",
+      color: "#debfd9",
+    },
+    {
+      id: 18,
+      title: "Sugammadex",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Other",
+      color: "white",
+    },
+    {
+      id: 19,
+      title: "Neostigmine",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Other",
+      color: "white",
+    },
+    {
+      id: 20,
+      title: "Dexamethasone",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Other",
+      color: "white",
+    },
+    {
+      id: 21,
+      title: "Atropine",
+      unit: "mg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Anticholinergic",
+      color: "lawngreen",
+    },
+    {
+      id: 22,
+      title: "Norepinephrine",
+      unit: "mcg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Vasopressor",
+      color: "debfd9",
+    },
+    {
+      id: 23,
+      title: "Epinephrine",
+      unit: "mcg",
+      route: "Intravenous",
+      durationunit: "bolus (sec)",
+      type: "Vasopressor",
+      color: "debfd9",
+    },
   ];
 
   const medItems = [
@@ -239,7 +338,19 @@ const MedModal = ({
     },
   ];
 
-  const doseunits = ["mg", "mcg", "mcg/kg/min", "ml/hr", "U"];
+  const doseunits = [
+    "mg",
+    "mcg",
+    "mcg/kg/min",
+    "ml/hr",
+    "mg/kg/hr",
+    "mcg/kg/hr",
+    "mg/hr",
+    "U",
+    "U/hr",
+    "%",
+    "L/min",
+  ];
 
   const doseroutes = [
     "Intravenous",
@@ -247,6 +358,8 @@ const MedModal = ({
     "Intramuscular",
     "Intranasal",
     "Endotracheal",
+    "Topical",
+    "Mucosal",
   ];
 
   const eventtimes = [
@@ -258,6 +371,7 @@ const MedModal = ({
     "Intubation/SGA In",
     "Surgery Start",
     "Surgery Stop",
+    "Emergence",
     "Extubation/SGA Out",
     "Patient Out",
     "Anaesthesia Stop",
@@ -265,17 +379,28 @@ const MedModal = ({
     "Other",
   ];
 
-  const durations = ["bolus (sec)", "min", "sec"];
+  const durations = ["bolus (sec)", "min", "sec", "continuous"];
 
   const addmeds = [
-    { title: "Midazolam" },
-    { title: "Suxamethonium" },
-    { title: "Morphine" },
+    { title: "Atropine" },
     { title: "Cisatracurium" },
-    { title: "Thiopentone" },
-    { title: "Saline 0.9%" },
-    { title: "Glycopyrrolate" },
+    { title: "Dexamethasone" },
+    { title: "Dexmedetomidine" },
     { title: "Ephedrine" },
+    { title: "Epinephrine" },
+    { title: "Glycopyrrolate" },
+    { title: "Ketamine" },
+    { title: "Midazolam" },
+    { title: "Morphine" },
+    { title: "Nesotigmine" },
+    { title: "Norepinephrine" },
+    { title: "Ondansetron" },
+    { title: "Phenylephrine" },
+    { title: "Remifentanil" },
+    { title: "Saline 0.9%" },
+    { title: "Sugammadex" },
+    { title: "Suxamethonium" },
+    { title: "Thiopentone" },
   ];
 
   const medtypes = [
@@ -288,7 +413,7 @@ const MedModal = ({
     { type: "MuscleRelaxant", color: "red", pattern: "solid" },
     { type: "Anticholinergic", color: "lawngreen", pattern: "solid" },
     { type: "Vasopressor", color: "#debfd9", pattern: "solid" },
-    { type: "AntiEmetic", color: "#edc282", pattern: "solid" },
+    { type: "Antiemetic", color: "#edc282", pattern: "solid" },
     { type: "Vasodilators", color: "#debfd9", pattern: "striped" },
   ];
 
