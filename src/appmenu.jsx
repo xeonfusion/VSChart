@@ -24,6 +24,7 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
+import ArchiveIcon from "@material-ui/icons/Archive";
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -229,6 +230,15 @@ export default function AppMenu() {
               <AutorenewIcon />
             </ListItemIcon>
             <ListItemText>Load Chart</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => medgridRef.current.handleExportDataCall()}
+          >
+            <ListItemIcon>
+              <ArchiveIcon />
+            </ListItemIcon>
+            <ListItemText>Export Data</ListItemText>
           </ListItem>
         </List>
       </Drawer>
