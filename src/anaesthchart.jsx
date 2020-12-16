@@ -13,6 +13,24 @@ const divStyle = {
 let newChartInstance;
 
 const getDatasetsbyPhysioID = (jdata, physioid) => {
+  //For reading from json-server test db.json
+  var datapoints = [];
+  //console.log(jdata);
+  if (jdata !== null && jdata !== undefined) {
+    jdata.posts.forEach((e) =>
+      e.constructor === Array
+        ? e
+            .filter((e) => e.PhysioID === physioid)
+            .map((e) =>
+              datapoints.push({ x: new Date([e.Timestamp]), y: e.Value })
+            )
+        : null
+    );
+  }
+  return datapoints;
+};
+
+const getDatasetsbyPhysioID2 = (jdata, physioid) => {
   var datapoints = [];
   if (jdata !== null) {
     jdata
@@ -263,7 +281,9 @@ const NewChart = forwardRef((props, ref) => {
   const handleLoadChart = () => {
     var jsondata = null;
 
-    fetch("./AS3DataExport.json")
+    //fetch("./AS3DataExport.json")
+    fetch("./db2.json")
+      //fetch("http://localhost:5000/posts")
       .then((response) => response.json())
       .then((data) => {
         jsondata = JSON.parse(JSON.stringify(data));
