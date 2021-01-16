@@ -17,7 +17,7 @@ const getDatasetsbyPhysioID = (jdata, physioid) => {
   var datapoints = [];
   //console.log(jdata);
   if (jdata !== null && jdata !== undefined) {
-    jdata.posts.forEach((e) =>
+    jdata.forEach((e) =>
       e.constructor === Array
         ? e
             .filter((e) => e.PhysioID === physioid)
@@ -282,8 +282,8 @@ const NewChart = forwardRef((props, ref) => {
     var jsondata = null;
 
     //fetch("./AS3DataExport.json")
-    fetch("./db2.json")
-      //fetch("http://localhost:5000/posts")
+    //fetch("./db2.json")
+    fetch("http://localhost:5000/posts")
       .then((response) => response.json())
       .then((data) => {
         jsondata = JSON.parse(JSON.stringify(data));

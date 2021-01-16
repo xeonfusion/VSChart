@@ -1,17 +1,26 @@
 const { app, BrowserWindow } = require("electron");
+const path = require('path');
+const url = require('url');
+
 let win;
 function CreateWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    title: "VSCaptureChart",
+    title: "VSChart",
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
   // and load the app.
-  win.loadURL("localhost:3000");
+  const startUrl = process.env.ELECTRON_START_URL || url.format({
+    pathname: path.join(__dirname, '/../build/index.html'),
+    protocol: 'file:',
+    slashes: true
+});
+
+  win.loadURL(startUrl);
 }
 
 app.whenReady().then(CreateWindow);
@@ -29,7 +38,7 @@ app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    CreateWindow();
   }
 });
 
