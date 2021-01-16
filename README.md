@@ -16,6 +16,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
+### `npm devserver`
+
+Runs the app in the development mode on port 3000 with a json-server running concurrently on port 5000.<br />
+Send JSON data from VSCaptureWave C# app to http://localhost:5000/posts to read and chart vitals data with VSChart. <br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
+
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.<br />
