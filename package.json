@@ -44,7 +44,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron-dev": "ELECTRON_START_URL=http://localhost:3000 && electron .",
-    "electron": "concurrently \"npm run start\" \"wait-on http://localhost:3000/ && npm run electron-dev\""
+    "electron": "concurrently \"npm run devserver\" \"wait-on http://localhost:3000/ && npm run electron-dev\""
   },
   "eslintConfig": {
     "extends": "react-app"
