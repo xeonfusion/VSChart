@@ -3,6 +3,7 @@
 import React from "react";
 import { useEffect, useRef, useState, forwardRef } from "react";
 import Chartjs from "chart.js";
+import VitalSourceModal from "./vitalsourcedialog.jsx";
 
 const divStyle = {
   //position: "relative",
@@ -12,7 +13,7 @@ const divStyle = {
 
 let newChartInstance;
 
-const getDatasetsbyPhysioID = (jdata, physioid) => {
+const getDatasetsbyPhysioID1 = (jdata, physioid) => {
   //For reading from json-server test db.json
   var datapoints = [];
   //console.log(jdata);
@@ -31,7 +32,31 @@ const getDatasetsbyPhysioID = (jdata, physioid) => {
 };
 
 const getDatasetsbyPhysioID2 = (jdata, physioid) => {
+  //For reading from json-server local db.json file format
   var datapoints = [];
+  //console.log(jdata);
+  if (jdata !== null && jdata !== undefined) {
+    jdata.posts.forEach((e) =>
+      e.constructor === Array
+        ? e
+            .filter((e) => e.PhysioID === physioid)
+            .map((e) =>
+              datapoints.push({ x: new Date([e.Timestamp]), y: e.Value })
+            )
+        : null
+    );
+  }
+  return datapoints;
+};
+
+const getDatasetsbyPhysioID3 = (jdata, physioid) => {
+  //For reading from VSCapture csv file format
+};
+
+const getDatasetsbyPhysioID4 = (jdata, physioid) => {
+  //For reading from VSCapture json file format
+  var datapoints = [];
+  //console.log(jdata);
   if (jdata !== null) {
     jdata
       .filter((e) => e.PhysioID === physioid)
@@ -244,11 +269,23 @@ const NewChart = forwardRef((props, ref) => {
     handleLoadChartCall() {
       handleLoadChart();
     },
+    handleVitalsSourceCall: () => {
+      handleVitalsSource();
+    },
   }));
 
   const chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
   const [chartJdata, setChartJdata] = useState(null);
+
+  const [showVitalSource, setVitalSourceShow] = React.useState(false);
+  const [selectedVitalSource, setSelVitalSource] = React.useState(
+    "http://localhost:5000/posts"
+  );
+  const [selectedVitalSourceType, setSelVitalSourceType] = React.useState(
+    "URL"
+  );
+  const [selectedVitalFileSource, setSelVitalFileSource] = React.useState(null);
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
@@ -258,24 +295,29 @@ const NewChart = forwardRef((props, ref) => {
   }, [chartContainer]);
 
   const updateDataset = () => {
-    var datasets = [
-      getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
-      getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
-      getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
-      getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
-      getDatasetsbyPhysioID(chartJdata, "SpO2"),
-      getDatasetsbyPhysioID(chartJdata, "RR"),
-      getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
-      getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
-      getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
-      getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
-    ];
+    if (chartJdata !== null && chartJdata !== undefined) {
+      var datasets = [
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
+        getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
+        getDatasetsbyPhysioID(chartJdata, "SpO2"),
+        getDatasetsbyPhysioID(chartJdata, "RR"),
+        getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
+      ];
 
-    datasets.map((e, index) => {
-      return (chartInstance.data.datasets[index].data = e);
-    });
+      datasets.map((e, index) => {
+        return (chartInstance.data.datasets[index].data = e);
+      });
+      chartInstance.update();
+    }
+  };
 
-    chartInstance.update();
+  const handleVitalsSource = () => {
+    setVitalSourceShow(true);
   };
 
   const handleLoadChart = () => {
@@ -283,27 +325,98 @@ const NewChart = forwardRef((props, ref) => {
 
     //fetch("./AS3DataExport.json")
     //fetch("./db2.json")
-    fetch("http://localhost:5000/posts")
-      .then((response) => response.json())
-      .then((data) => {
-        jsondata = JSON.parse(JSON.stringify(data));
+    //fetch("http://localhost:5000/posts")
+
+    //console.log(selectedVitalSourceType);
+    //console.log(selectedVitalSource);
+    console.log(selectedVitalFileSource);
+
+    if (selectedVitalSourceType === "URL") {
+      fetch(selectedVitalSource, { mode: "no-cors" })
+        .then((response) => response.json())
+        .then((data) => {
+          jsondata = JSON.parse(JSON.stringify(data));
+          setChartJdata(jsondata);
+          updateDataset();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else if (
+      selectedVitalSourceType === "File" ||
+      "VSJSONFile" ||
+      "VSCSVFile"
+    ) {
+      var reader = new FileReader();
+      if (selectedVitalFileSource !== undefined) {
+        reader.readAsText(selectedVitalFileSource);
+      }
+      reader.onloadend = () => {
+        try {
+          jsondata = JSON.parse(reader.result);
+        } catch (e) {
+          console.log("Error reading file");
+        }
+        //console.log(reader.result);
         setChartJdata(jsondata);
         updateDataset();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      };
+    }
+  };
+
+  const handleVitalSourceChildState = (
+    childvitalsourcestate,
+    selectedVitalSource,
+    selectedVitalFileSource,
+    selectedVitalSourceType
+  ) => {
+    setVitalSourceShow(childvitalsourcestate);
+    setSelVitalSource(selectedVitalSource);
+    setSelVitalFileSource(selectedVitalFileSource);
+    setSelVitalSourceType(selectedVitalSourceType);
+  };
+
+  const getDatasetsbyPhysioID = (jdata, physioid) => {
+    if (jdata !== null && jdata !== undefined) {
+      var datapoints = [];
+      switch (selectedVitalSourceType) {
+        case "URL":
+          datapoints = getDatasetsbyPhysioID1(jdata, physioid);
+          break;
+        case "File":
+          datapoints = getDatasetsbyPhysioID2(jdata, physioid);
+          break;
+        case "VSCSVFile":
+          datapoints = getDatasetsbyPhysioID3(jdata, physioid);
+          break;
+        case "VSJSONFile":
+          datapoints = getDatasetsbyPhysioID4(jdata, physioid);
+          break;
+        default:
+          break;
+      }
+      return datapoints;
+    }
   };
 
   return (
-    <div>
-      <canvas
-        style={divStyle}
-        ref={chartContainer}
-        height={window.innerHeight}
-        width={window.innerWidth}
-      ></canvas>
-    </div>
+    <>
+      <div>
+        <canvas
+          style={divStyle}
+          ref={chartContainer}
+          height={window.innerHeight}
+          width={window.innerWidth}
+        ></canvas>
+      </div>
+      <VitalSourceModal
+        showVitalSourceDialog={showVitalSource}
+        childVitalSourceState={handleVitalSourceChildState}
+        selectedVitalURLSource={selectedVitalSource}
+        selectedVitalFileSource={selectedVitalFileSource}
+        selectedVitalSourceType={selectedVitalSourceType}
+      />
+    </>
   );
 });
 

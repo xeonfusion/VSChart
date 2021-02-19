@@ -25,6 +25,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 import ArchiveIcon from "@material-ui/icons/Archive";
+import BuildIcon from "@material-ui/icons/Build";
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -230,6 +231,15 @@ export default function AppMenu() {
               <AutorenewIcon />
             </ListItemIcon>
             <ListItemText>Load Chart</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => chartRef.current.handleVitalsSourceCall()}
+          >
+            <ListItemIcon>
+              <BuildIcon />
+            </ListItemIcon>
+            <ListItemText>Vitals Source</ListItemText>
           </ListItem>
           <ListItem
             button
