@@ -51,6 +51,15 @@ const getDatasetsbyPhysioID2 = (jdata, physioid) => {
 
 const getDatasetsbyPhysioID3 = (jdata, physioid) => {
   //For reading from VSCapture csv file format
+  var datapoints = [];
+  //console.log(jdata);
+  if (jdata !== null) {
+    jdata.map((e) =>
+      datapoints.push({ x: new Date([e.Time]), y: e[physioid] })
+    );
+  }
+  //console.log(datapoints);
+  return datapoints;
 };
 
 const getDatasetsbyPhysioID4 = (jdata, physioid) => {
@@ -320,6 +329,23 @@ const NewChart = forwardRef((props, ref) => {
     setVitalSourceShow(true);
   };
 
+  const CSVToJSON = (csv) => {
+    var lines = csv.split(/\r\n|\n/);
+    //console.log(lines);
+    const headers = lines.shift().split(/\t|,/);
+
+    var jsonarray = lines.map((line) => {
+      const values = line.split(/\t|,/);
+      return headers.reduce(
+        (obj, header, index) => ((obj[header] = values[index]), obj),
+        {}
+      );
+    });
+
+    //console.log(jsonarray);
+    return jsonarray;
+  };
+
   const handleLoadChart = () => {
     var jsondata = null;
 
@@ -353,7 +379,11 @@ const NewChart = forwardRef((props, ref) => {
       }
       reader.onloadend = () => {
         try {
-          jsondata = JSON.parse(reader.result);
+          if (selectedVitalSourceType !== "VSCSVFile") {
+            jsondata = JSON.parse(reader.result);
+          } else {
+            jsondata = JSON.parse(JSON.stringify(CSVToJSON(reader.result)));
+          }
         } catch (e) {
           console.log("Error reading file");
         }
