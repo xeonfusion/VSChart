@@ -1,6 +1,6 @@
 {
   "name": "vschart",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "John George K. (xeonfusion@yahoo.com)"
   },
@@ -27,7 +27,6 @@
     "interactjs": "^1.10.3",
     "moment": "^2.29.1",
     "react": "^16.14.0",
-    "react-bootstrap": "^1.4.3",
     "react-calendar-timeline": "^0.27.0",
     "react-data-grid": "^7.0.0-canary.36",
     "react-dom": "^16.14.0",
