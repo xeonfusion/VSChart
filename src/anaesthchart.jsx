@@ -373,7 +373,28 @@ const NewChart = forwardRef((props, ref) => {
       "VSJSONFile" ||
       "VSCSVFile"
     ) {
-      var reader = new FileReader();
+      var path = URL.createObjectURL(selectedVitalFileSource);
+
+      fetch(path, { mode: "no-cors" })
+        .then((response) => response.text())
+        .then((data) => {
+          var strdata = CSVToJSON(data);
+          if (selectedVitalSourceType !== "VSCSVFile") {
+            jsondata = JSON.parse(data);
+          }
+          else {
+            jsondata = JSON.parse(JSON.stringify(strdata));
+          }
+          setChartJdata(jsondata);
+          updateDataset();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+        URL.revokeObjectURL(path);
+      
+      /*var reader = new FileReader();
       if (selectedVitalFileSource !== undefined) {
         reader.readAsText(selectedVitalFileSource);
       }
@@ -390,7 +411,7 @@ const NewChart = forwardRef((props, ref) => {
         //console.log(reader.result);
         setChartJdata(jsondata);
         updateDataset();
-      };
+      };*/
     }
   };
 
