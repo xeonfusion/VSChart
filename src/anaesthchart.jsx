@@ -295,6 +295,10 @@ const NewChart = forwardRef((props, ref) => {
     "URL"
   );
   const [selectedVitalFileSource, setSelVitalFileSource] = React.useState(null);
+  const [
+    dropVitalFileSourceValue,
+    setDropVitalFileSourceValue,
+  ] = React.useState(false);
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
@@ -330,20 +334,21 @@ const NewChart = forwardRef((props, ref) => {
   };
 
   const CSVToJSON = (csv) => {
-    var lines = csv.split(/\r\n|\n/);
-    //console.log(lines);
-    const headers = lines.shift().split(/\t|,/);
+    if (csv !== null) {
+      var lines = csv.split(/\r\n|\n/);
+      //console.log(lines);
+      const headers = lines.shift().split(/\t|,/);
 
-    var jsonarray = lines.map((line) => {
-      const values = line.split(/\t|,/);
-      return headers.reduce(
-        (obj, header, index) => ((obj[header] = values[index]), obj),
-        {}
-      );
-    });
-
-    //console.log(jsonarray);
-    return jsonarray;
+      var jsonarray = lines.map((line) => {
+        const values = line.split(/\t|,/);
+        return headers.reduce(
+          (obj, header, index) => ((obj[header] = values[index]), obj),
+          {}
+        );
+      });
+      //console.log(jsonarray);
+      return jsonarray;
+    }
   };
 
   const handleLoadChart = () => {
@@ -373,40 +378,80 @@ const NewChart = forwardRef((props, ref) => {
       "VSJSONFile" ||
       "VSCSVFile"
     ) {
-      var path = URL.createObjectURL(selectedVitalFileSource);
+      if (dropVitalFileSourceValue === false) {
+        var path = URL.createObjectURL(selectedVitalFileSource);
 
-      fetch(path, { mode: "no-cors" })
-        .then((response) => response.text())
-        .then((data) => {
-          var strdata = CSVToJSON(data);
-          if (selectedVitalSourceType !== "VSCSVFile") {
-            jsondata = JSON.parse(data);
-          }
-          else {
-            jsondata = JSON.parse(JSON.stringify(strdata));
+        fetch(path, { mode: "no-cors" })
+          .then((response) => response.text())
+          .then((data) => {
+            var strdata = CSVToJSON(data);
+            if (selectedVitalSourceType !== "VSCSVFile") {
+              jsondata = JSON.parse(data);
+            } else {
+              jsondata = JSON.parse(JSON.stringify(strdata));
+            }
+            setChartJdata(jsondata);
+            updateDataset();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        URL.revokeObjectURL(path);
+      } else if (dropVitalFileSourceValue === true) {
+        var fileentry = selectedVitalFileSource;
+
+        function ReadFile(entry, successCallback, errorCallback) {
+          entry.file(function (file) {
+            let reader = new FileReader();
+
+            reader.onload = function () {
+              successCallback(reader.result);
+            };
+
+            reader.onerror = function () {
+              errorCallback(reader.error);
+            };
+
+            reader.readAsText(file);
+          }, errorCallback);
+        }
+
+        function ReadData(result) {
+          var readresult = CSVToJSON(result);
+          //console.log(readresult);
+          if (readresult !== null && readresult !== undefined) {
+            jsondata = JSON.parse(JSON.stringify(readresult));
           }
           setChartJdata(jsondata);
           updateDataset();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        }
 
-        URL.revokeObjectURL(path);
-      
+        function ErrorData(e) {
+          console.log(e);
+        }
+
+        ReadFile(fileentry, ReadData, ErrorData);
+      }
+
       /*var reader = new FileReader();
       if (selectedVitalFileSource !== undefined) {
         reader.readAsText(selectedVitalFileSource);
       }
-      reader.onloadend = () => {
+      reader.onload = () => {
         try {
           if (selectedVitalSourceType !== "VSCSVFile") {
             jsondata = JSON.parse(reader.result);
           } else {
-            jsondata = JSON.parse(JSON.stringify(CSVToJSON(reader.result)));
+            var readresult = CSVToJSON(reader.result);
+            if (readresult !== null && readresult !== undefined)
+            {
+              jsondata = JSON.parse(JSON.stringify(readresult));
+            }
+            
           }
         } catch (e) {
-          console.log("Error reading file");
+          console.log("Error reading file", e);
         }
         //console.log(reader.result);
         setChartJdata(jsondata);
@@ -419,12 +464,14 @@ const NewChart = forwardRef((props, ref) => {
     childvitalsourcestate,
     selectedVitalSource,
     selectedVitalFileSource,
-    selectedVitalSourceType
+    selectedVitalSourceType,
+    dropVitalSourceFileValue
   ) => {
     setVitalSourceShow(childvitalsourcestate);
     setSelVitalSource(selectedVitalSource);
     setSelVitalFileSource(selectedVitalFileSource);
     setSelVitalSourceType(selectedVitalSourceType);
+    setDropVitalFileSourceValue(dropVitalSourceFileValue);
   };
 
   const getDatasetsbyPhysioID = (jdata, physioid) => {
@@ -466,6 +513,7 @@ const NewChart = forwardRef((props, ref) => {
         selectedVitalURLSource={selectedVitalSource}
         selectedVitalFileSource={selectedVitalFileSource}
         selectedVitalSourceType={selectedVitalSourceType}
+        dropVitalSourceFileValue={dropVitalFileSourceValue}
       />
     </>
   );

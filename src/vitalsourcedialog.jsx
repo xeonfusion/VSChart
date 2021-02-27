@@ -20,6 +20,7 @@ const VitalSourceModal = ({
   selectedVitalURLSource,
   selectedVitalFileSource,
   selectedVitalSourceType,
+  dropVitalSourceFileValue,
 }) => {
   const [showVitalSource, setVitalSourceShow] = React.useState(false);
   const [vitalsourcetype, setVitalSourceType] = React.useState("URL");
@@ -27,6 +28,10 @@ const VitalSourceModal = ({
     "http://localhost:5000/posts"
   );
   const [vitalsourcefilevalue, setVitalSourceFileValue] = React.useState(null);
+  const [
+    dropvitalsourcefilevalue,
+    setDropVitalSourceFileValue,
+  ] = React.useState(false);
 
   const handleClose = () => {
     setVitalSourceShow(false);
@@ -34,7 +39,8 @@ const VitalSourceModal = ({
       false,
       vitalsourceurlvalue,
       vitalsourcefilevalue,
-      vitalsourcetype
+      vitalsourcetype,
+      dropvitalsourcefilevalue
     );
   };
 
@@ -49,8 +55,19 @@ const VitalSourceModal = ({
 
   const handleFileChange = (event) => {
     setVitalSourceFileValue(event.target.files[0]);
-    console.log(event.target.value);
+    //console.log(event.target.value);
     //console.log(event.target.files[0]);
+    setDropVitalSourceFileValue(false);
+  };
+
+  const handleFileDrop = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const fileEntry = event.dataTransfer.items[0].webkitGetAsEntry();
+    //console.log(fileEntry);
+    setVitalSourceFileValue(fileEntry);
+    setDropVitalSourceFileValue(true);
   };
 
   React.useEffect(() => {
@@ -58,11 +75,13 @@ const VitalSourceModal = ({
     setVitalSourceURLValue(selectedVitalURLSource);
     setVitalSourceFileValue(selectedVitalFileSource);
     setVitalSourceType(selectedVitalSourceType);
+    setDropVitalSourceFileValue(dropVitalSourceFileValue);
   }, [
     showVitalSourceDialog,
     selectedVitalURLSource,
     selectedVitalFileSource,
     selectedVitalSourceType,
+    dropVitalSourceFileValue,
   ]);
 
   return (
@@ -72,6 +91,7 @@ const VitalSourceModal = ({
         onClose={() => {
           handleClose();
         }}
+        onDrop={(e) => handleFileDrop(e)}
         fullWidth
         maxWidth={"sm"}
       >
