@@ -301,6 +301,18 @@ const NewChart = forwardRef((props, ref) => {
   ] = React.useState(false);
 
   useEffect(() => {
+    if (chartInstance && chartContainer && chartContainer.current) {
+      updateDataset();
+    }
+  }, [chartJdata]);
+
+  useEffect(() => {
+    if (chartInstance && chartContainer && chartContainer.current) {
+      handleLoadChart();
+    }
+  }, [selectedVitalSource, selectedVitalSourceType, selectedVitalFileSource]);
+
+  useEffect(() => {
     if (chartContainer && chartContainer.current) {
       newChartInstance = new Chartjs(chartContainer.current, chartConfig);
       setChartInstance(newChartInstance);
@@ -360,7 +372,7 @@ const NewChart = forwardRef((props, ref) => {
 
     //console.log(selectedVitalSourceType);
     //console.log(selectedVitalSource);
-    console.log(selectedVitalFileSource);
+    //console.log(selectedVitalFileSource);
 
     if (selectedVitalSourceType === "URL") {
       fetch(selectedVitalSource, { mode: "no-cors" })

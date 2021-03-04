@@ -56,8 +56,23 @@ const VitalSourceModal = ({
   const handleFileChange = (event) => {
     setVitalSourceFileValue(event.target.files[0]);
     //console.log(event.target.value);
-    //console.log(event.target.files[0]);
+    console.log(event.target.files[0]);
     setDropVitalSourceFileValue(false);
+
+    /*event.stopPropagation();
+    event.preventDefault();
+
+    console.log(event.target.webkitEntries);
+
+    const dt = new DataTransfer();
+    var file = event.target.files[0];
+    dt.items.add(file);
+    console.log(dt.items[0]);
+    var fileentry = dt.items[0].webkitGetAsEntry();
+    console.log(fileentry);
+
+    setVitalSourceFileValue(fileentry);
+    setDropVitalSourceFileValue(true);*/
   };
 
   const handleFileDrop = (event) => {
@@ -108,7 +123,8 @@ const VitalSourceModal = ({
             <Grid item xs>
               <FormControl component="fieldset">
                 <FormLabel component="legend">
-                  Set Vital Signs Data Source (URL or File Input):
+                  <h6>Set Vital Signs Data Source (URL or File Input):</h6>
+                  <h6>(use drag and drop for reading files in real-time)</h6>
                 </FormLabel>
                 <RadioGroup
                   aria-label="vitalsource"
