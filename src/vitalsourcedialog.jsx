@@ -115,102 +115,117 @@ const VitalSourceModal = ({
           <Grid
             container
             spacing={2}
-            direction="column"
+            direction="row"
             display="flex"
             justify="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">
-                  <h6>Set Vital Signs Data Source (URL or File Input):</h6>
-                  <h6>(use drag and drop for reading files in real-time)</h6>
-                </FormLabel>
-                <RadioGroup
-                  aria-label="vitalsource"
-                  name="vsource"
-                  value={vitalsourcetype}
-                  onChange={handleRadioChange}
-                >
-                  <FormControlLabel
-                    value="URL"
-                    control={<Radio />}
-                    label={
-                      <TextField
-                        id="outlined-url"
-                        label="JSON Server URL"
-                        type="url"
-                        defaultValue="http://localhost:5000/posts"
-                        variant="outlined"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        value={vitalsourceurlvalue}
-                        onChange={handleURLChange}
-                        style={{ width: 450 }}
-                        fullWidth
-                      />
-                    }
-                  />
-                  <FormControlLabel
-                    value="File"
-                    control={<Radio />}
-                    label={
-                      <TextField
-                        id="outlined-file"
-                        label="LocalDB JSON Server File"
-                        accept="application/json,.json"
-                        type="file"
-                        variant="outlined"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={handleFileChange}
-                        style={{ width: 450 }}
-                        fullWidth
-                      />
-                    }
-                  />
-                  <FormControlLabel
-                    value="VSCSVFile"
-                    control={<Radio />}
-                    label={
-                      <TextField
-                        id="outlined-file2"
-                        label="VSCapture CSV File"
-                        accept="text/csv,.csv"
-                        type="file"
-                        variant="outlined"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={handleFileChange}
-                        style={{ width: 450 }}
-                        fullWidth
-                      />
-                    }
-                  />
-                  <FormControlLabel
-                    value="VSJSONFile"
-                    control={<Radio />}
-                    label={
-                      <TextField
-                        id="outlined-file3"
-                        label="VSCapture JSON File"
-                        accept="application/json,.json"
-                        type="file"
-                        variant="outlined"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={handleFileChange}
-                        style={{ width: 450 }}
-                        fullWidth
-                      />
-                    }
-                  />
-                </RadioGroup>
-              </FormControl>
+              <Grid
+                container
+                spacing={2}
+                direction="column"
+                display="flex"
+                justify="flex-start"
+                alignItems="flex-start"
+              >
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Set Vital Signs Data Source (URL or File Input):
+                  </FormLabel>
+                  <FormLabel
+                    component="legend"
+                    style={{ paddingTop: "5px", paddingBottom: "10px" }}
+                  >
+                    (use drag and drop for reading files in real-time)
+                  </FormLabel>
+                  <RadioGroup
+                    aria-label="vitalsource"
+                    name="vsource"
+                    value={vitalsourcetype}
+                    onChange={handleRadioChange}
+                  >
+                    <FormControlLabel
+                      value="URL"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          id="outlined-url"
+                          label="JSON Server URL"
+                          type="url"
+                          defaultValue="http://localhost:5000/posts"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          value={vitalsourceurlvalue}
+                          onChange={handleURLChange}
+                          style={{ width: 450, paddingBottom: "10px" }}
+                          fullWidth
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value="File"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          id="outlined-file"
+                          label="LocalDB JSON Server File"
+                          accept="application/json,.json"
+                          type="file"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={handleFileChange}
+                          style={{ width: 450, paddingBottom: "10px" }}
+                          fullWidth
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value="VSCSVFile"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          id="outlined-file2"
+                          label="VSCapture CSV File"
+                          accept="text/csv,.csv"
+                          type="file"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={handleFileChange}
+                          style={{ width: 450, paddingBottom: "10px" }}
+                          fullWidth
+                        />
+                      }
+                    />
+
+                    <FormControlLabel
+                      value="VSJSONFile"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          id="outlined-file3"
+                          label="VSCapture JSON File"
+                          accept="application/json,.json"
+                          type="file"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={handleFileChange}
+                          style={{ width: 450, paddingBottom: "10px" }}
+                          fullWidth
+                        />
+                      }
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

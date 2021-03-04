@@ -374,7 +374,7 @@ const NewChart = forwardRef((props, ref) => {
     //console.log(selectedVitalSource);
     //console.log(selectedVitalFileSource);
 
-    if (selectedVitalSourceType === "URL") {
+    if (selectedVitalSourceType === "URL" && selectedVitalSource !== null) {
       fetch(selectedVitalSource, { mode: "no-cors" })
         .then((response) => response.json())
         .then((data) => {
@@ -390,7 +390,10 @@ const NewChart = forwardRef((props, ref) => {
       "VSJSONFile" ||
       "VSCSVFile"
     ) {
-      if (dropVitalFileSourceValue === false) {
+      if (
+        dropVitalFileSourceValue === false &&
+        selectedVitalFileSource !== null
+      ) {
         var path = URL.createObjectURL(selectedVitalFileSource);
 
         fetch(path, { mode: "no-cors" })
@@ -410,7 +413,10 @@ const NewChart = forwardRef((props, ref) => {
           });
 
         URL.revokeObjectURL(path);
-      } else if (dropVitalFileSourceValue === true) {
+      } else if (
+        dropVitalFileSourceValue === true &&
+        selectedVitalFileSource !== null
+      ) {
         var fileentry = selectedVitalFileSource;
 
         function ReadFile(entry, successCallback, errorCallback) {
