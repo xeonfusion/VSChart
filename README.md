@@ -1,6 +1,6 @@
 ### VSChart implements a ReactJS based digital Anaesthesia chart
 
-It supports timeline based adding or removing of intraoperative anaesthetic medications and automatic loading of monitor vital signs from the JSON file exported by VSCaptureWave C# app (https://sourceforge.net/projects/vscapture/)
+It supports timeline based adding or removing of intraoperative anaesthetic medications and automatic loading of monitor vital signs from the CSV or JSON file exported by VSCaptureWave C# app (https://sourceforge.net/projects/vscapture/)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
