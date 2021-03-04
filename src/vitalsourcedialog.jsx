@@ -28,6 +28,7 @@ const VitalSourceModal = ({
     "http://localhost:5000/posts"
   );
   const [vitalsourcefilevalue, setVitalSourceFileValue] = React.useState(null);
+  const [vitalsourcefilename, setVitalSourceFilename] = React.useState();
   const [
     dropvitalsourcefilevalue,
     setDropVitalSourceFileValue,
@@ -57,11 +58,13 @@ const VitalSourceModal = ({
     setVitalSourceFileValue(event.target.files[0]);
     //console.log(event.target.value);
     console.log(event.target.files[0]);
+    
+    setVitalSourceFilename("");
     setDropVitalSourceFileValue(false);
 
     /*event.stopPropagation();
     event.preventDefault();
-
+    
     console.log(event.target.webkitEntries);
 
     const dt = new DataTransfer();
@@ -81,6 +84,8 @@ const VitalSourceModal = ({
 
     const fileEntry = event.dataTransfer.items[0].webkitGetAsEntry();
     //console.log(fileEntry);
+    
+    setVitalSourceFilename(fileEntry.name + " chosen");
     setVitalSourceFileValue(fileEntry);
     setDropVitalSourceFileValue(true);
   };
@@ -181,6 +186,7 @@ const VitalSourceModal = ({
                           onChange={handleFileChange}
                           style={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
+                          helperText={vitalsourcefilename}
                         />
                       }
                     />
@@ -200,6 +206,7 @@ const VitalSourceModal = ({
                           onChange={handleFileChange}
                           style={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
+                          helperText={vitalsourcefilename}
                         />
                       }
                     />
@@ -220,6 +227,7 @@ const VitalSourceModal = ({
                           onChange={handleFileChange}
                           style={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
+                          helperText={vitalsourcefilename}
                         />
                       }
                     />
