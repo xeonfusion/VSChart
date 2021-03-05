@@ -521,8 +521,8 @@ const NewChart = forwardRef((props, ref) => {
         <canvas
           style={divStyle}
           ref={chartContainer}
-          height={window.innerHeight}
-          width={window.innerWidth}
+          //height={window.innerHeight}
+          //width={window.innerWidth}
         ></canvas>
       </div>
       <VitalSourceModal

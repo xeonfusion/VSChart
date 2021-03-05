@@ -1,12 +1,16 @@
 const { app, BrowserWindow } = require("electron");
+const {ipcMain, shell} = require("electron");
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const url = require('url');
 
 let win;
 function CreateWindow() {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
+    //useContentSize: true,
     title: "VSChart",
     webPreferences: {
       nodeIntegration: true,
@@ -24,6 +28,22 @@ function CreateWindow() {
 }
 
 app.whenReady().then(CreateWindow);
+
+ipcMain.on('print-to-pdf', function (event) {
+  const pdfPath = path.join(os.tmpdir(), 'vschartprint.pdf')
+  const win = BrowserWindow.fromWebContents(event.sender)
+  
+  win.webContents.printToPDF({printBackground: true, landscape: true}, function (error, data) {
+    if (error) return console.log(error.message)
+    fs.writeFile(pdfPath, data, function (error) {
+      if (error) {
+        return console.log (error.message)
+      }
+      shell.openExternal('file://' + pdfPath)
+      event.sender.send('wrote-pdf', pdfPath)
+    })
+  })
+})
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

@@ -5,9 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
 //import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import clsx from "clsx";
 
@@ -26,6 +24,7 @@ import AddCommentIcon from "@material-ui/icons/AddComment";
 import AutorenewIcon from "@material-ui/icons/Autorenew";
 import ArchiveIcon from "@material-ui/icons/Archive";
 import BuildIcon from "@material-ui/icons/Build";
+import PrintIcon from "@material-ui/icons/Print";
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -136,6 +135,18 @@ export default function AppMenu() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handlePrintData = () => {
+    /*if(isElectron){
+        try{
+        window.ipcRenderer.send('print-to-pdf');
+      }
+      catch(error){
+        console.log(error);
+      } 
+    }*/
+    window.print();
   };
 
   return (
@@ -250,7 +261,16 @@ export default function AppMenu() {
             </ListItemIcon>
             <ListItemText>Export Data</ListItemText>
           </ListItem>
-        </List>
+          <ListItem
+            button
+            onClick={() => handlePrintData()}
+          >
+            <ListItemIcon>
+              <PrintIcon />
+            </ListItemIcon>
+            <ListItemText>Print Data</ListItemText>
+          </ListItem>
+       </List>
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
