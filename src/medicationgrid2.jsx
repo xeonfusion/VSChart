@@ -230,8 +230,10 @@ const MedicationGrid2 = forwardRef((props, ref) => {
 
   const [selectedTimeSteps, setSelTimeSteps] = React.useState({ minute: 1 });
   const [timeStepCount, setTimeStepCount] = React.useState(1);
-  const [selTimeStart, setSelTimeStart] = React.useState(moment().add(0, "s"));
-  const [selTimeEnd, setSelTimeEnd] = React.useState(moment().add(600, "s"));
+  const [selTimeStart, setSelTimeStart] = React.useState(moment().startOf("m"));
+  const [selTimeEnd, setSelTimeEnd] = React.useState(
+    moment().startOf("m").add(12, "m")
+  );
 
   const [showEvent, setEventShow] = React.useState(false);
   const [alleventitems, setEventItems] = React.useState(eventitems);

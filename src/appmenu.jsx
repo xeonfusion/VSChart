@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AppMenu() {
   const medgridRef = React.useRef();
   const chartRef = React.useRef();
+  //const respgridRef = React.useRef();
 
   const classes = useStyles();
   const theme = useTheme();
@@ -261,16 +262,13 @@ export default function AppMenu() {
             </ListItemIcon>
             <ListItemText>Export Data</ListItemText>
           </ListItem>
-          <ListItem
-            button
-            onClick={() => handlePrintData()}
-          >
+          <ListItem button onClick={() => handlePrintData()}>
             <ListItemIcon>
               <PrintIcon />
             </ListItemIcon>
             <ListItemText>Print Data</ListItemText>
           </ListItem>
-       </List>
+        </List>
       </Drawer>
       <main className={classes.content}>
         <Toolbar />

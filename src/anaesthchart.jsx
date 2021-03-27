@@ -4,6 +4,8 @@ import React from "react";
 import { useEffect, useRef, useState, forwardRef } from "react";
 import Chartjs from "chart.js";
 import VitalSourceModal from "./vitalsourcedialog.jsx";
+import RespGrid from "./respiratorygrid.jsx";
+import moment from "moment";
 
 const divStyle = {
   //position: "relative",
@@ -299,6 +301,13 @@ const NewChart = forwardRef((props, ref) => {
     dropVitalFileSourceValue,
     setDropVitalFileSourceValue,
   ] = React.useState(false);
+  const [selRespDatasetItems, setSelRespDatasetItems] = React.useState([]);
+  const [selRespDefaultStartTime, setSelRespDefaultStartTime] = React.useState(
+    moment().add(0, "m")
+  );
+  const [selRespDefaultEndTime, setSelRespDefaultEndTime] = React.useState(
+    moment().add(12, "m")
+  );
 
   useEffect(() => {
     if (chartInstance && chartContainer && chartContainer.current) {
@@ -337,6 +346,17 @@ const NewChart = forwardRef((props, ref) => {
       datasets.map((e, index) => {
         return (chartInstance.data.datasets[index].data = e);
       });
+
+      var respdatasets = [
+        getDatasetsbyPhysioID(chartJdata, "O2_FI"),
+        getDatasetsbyPhysioID(chartJdata, "TV_Exp"),
+        getDatasetsbyPhysioID(chartJdata, "RR"),
+        getDatasetsbyPhysioID(chartJdata, "PEEP"),
+        getDatasetsbyPhysioID(chartJdata, "ET_CO2"),
+      ];
+
+      getRespDatasetsItems(respdatasets);
+
       chartInstance.update();
     }
   };
@@ -394,7 +414,8 @@ const NewChart = forwardRef((props, ref) => {
         dropVitalFileSourceValue === false &&
         selectedVitalFileSource !== null
       ) {
-        var path = URL.createObjectURL(selectedVitalFileSource);
+        //var path = URL.createObjectURL(selectedVitalFileSource);
+        var path = selectedVitalFileSource.name;
 
         fetch(path, { mode: "no-cors" })
           .then((response) => response.text())
@@ -412,7 +433,7 @@ const NewChart = forwardRef((props, ref) => {
             console.log(error);
           });
 
-        URL.revokeObjectURL(path);
+        //URL.revokeObjectURL(path);
       } else if (
         dropVitalFileSourceValue === true &&
         selectedVitalFileSource !== null
@@ -515,6 +536,52 @@ const NewChart = forwardRef((props, ref) => {
     }
   };
 
+  const getRespDatasetsItems = (respdatasets) => {
+    var allItems = [];
+
+    respdatasets.map((item, index) => {
+      return item.map((item2, index2) => {
+        var selitemindex = allItems.length + 1;
+
+        const item = [
+          {
+            id: selitemindex,
+            group: index + 1,
+            title: item2.y,
+            start_time: moment(item2.x),
+            end_time: moment(item2.x),
+          },
+        ];
+        allItems.push(item[0]);
+        return item[0];
+      });
+    });
+
+    var selrespdatasets = allItems.filter(
+      (item) =>
+        item.start_time.isSameOrBefore(
+          item.start_time.startOf("m").clone().add(1, "m"),
+          "m"
+        ) === true
+    );
+
+    var visiblestarttime = selrespdatasets[0].start_time.clone().startOf("m");
+    var visibleendtime = selrespdatasets[0].start_time
+      .clone()
+      .startOf("m")
+      .add(12, "m");
+
+    setSelRespDefaultStartTime(visiblestarttime);
+    setSelRespDefaultEndTime(visibleendtime);
+    console.log(selrespdatasets);
+    //console.log(visiblestarttime);
+    //console.log(visibleendtime);
+
+    //console.log(allItems);
+    setSelRespDatasetItems(selrespdatasets);
+    //setSelRespDatasetItems(allItems);
+  };
+
   return (
     <>
       <div>
@@ -532,6 +599,11 @@ const NewChart = forwardRef((props, ref) => {
         selectedVitalFileSource={selectedVitalFileSource}
         selectedVitalSourceType={selectedVitalSourceType}
         dropVitalSourceFileValue={dropVitalFileSourceValue}
+      />
+      <RespGrid
+        respDatasetItems={selRespDatasetItems}
+        respDefaultStartTime={selRespDefaultStartTime}
+        respDefaultEndTime={selRespDefaultEndTime}
       />
     </>
   );

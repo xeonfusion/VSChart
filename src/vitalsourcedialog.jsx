@@ -13,6 +13,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import { fileOpen } from "browser-fs-access";
 
 const VitalSourceModal = ({
   showVitalSourceDialog,
@@ -54,11 +55,34 @@ const VitalSourceModal = ({
     setVitalSourceURLValue(event.target.value);
   };
 
+  const handleCSVButtonClick = () => {
+    (async () => {
+      const blob = await fileOpen({
+        mimeTypes: ["text/csv"],
+      });
+      console.log(blob.handle);
+      setVitalSourceFileValue(blob.handle);
+
+      setVitalSourceFilename(blob.handle.name);
+
+      /*var fileHandle;
+      [fileHandle] = await window.showOpenFilePicker();
+
+      // get file contents
+      const fileData = await fileHandle.getFile();
+      setVitalSourceFileValue(fileData);
+
+      setVitalSourceFilename(fileData.name);
+
+      setDropVitalSourceFileValue(false);*/
+    })();
+  };
+
   const handleFileChange = (event) => {
     setVitalSourceFileValue(event.target.files[0]);
     //console.log(event.target.value);
     console.log(event.target.files[0]);
-    
+
     setVitalSourceFilename("");
     setDropVitalSourceFileValue(false);
 
@@ -84,7 +108,7 @@ const VitalSourceModal = ({
 
     const fileEntry = event.dataTransfer.items[0].webkitGetAsEntry();
     //console.log(fileEntry);
-    
+
     setVitalSourceFilename(fileEntry.name + " chosen");
     setVitalSourceFileValue(fileEntry);
     setDropVitalSourceFileValue(true);
