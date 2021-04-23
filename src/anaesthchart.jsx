@@ -539,6 +539,7 @@ const NewChart = forwardRef((props, ref) => {
   const getRespDatasetsItems = (respdatasets) => {
     var allItems = [];
 
+    //convert to flat object data array
     respdatasets.map((item, index) => {
       return item.map((item2, index2) => {
         var selitemindex = allItems.length + 1;
@@ -548,7 +549,7 @@ const NewChart = forwardRef((props, ref) => {
             id: selitemindex,
             group: index + 1,
             title: item2.y,
-            start_time: moment(item2.x),
+            start_time: moment(item2.x).startOf("m"),
             end_time: moment(item2.x),
           },
         ];
@@ -557,13 +558,25 @@ const NewChart = forwardRef((props, ref) => {
       });
     });
 
-    var selrespdatasets = allItems.filter(
-      (item) =>
-        item.start_time.isSameOrBefore(
-          item.start_time.startOf("m").clone().add(1, "m"),
-          "m"
-        ) === true
-    );
+    //console.log(allItems);
+
+    //filter and remove duplicates or multiple values in a minute
+    var selrespdatasets = allItems
+      .filter(
+        (value, index, array) =>
+          array.findIndex(
+            (t) =>
+              t.start_time.valueOf() === value.start_time.valueOf() &&
+              t.group === value.group
+          ) === index
+      )
+      .map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+        })
+      );
+
+    //console.log(selrespdatasets);
 
     var visiblestarttime = selrespdatasets[0].start_time.clone().startOf("m");
     var visibleendtime = selrespdatasets[0].start_time
@@ -573,13 +586,10 @@ const NewChart = forwardRef((props, ref) => {
 
     setSelRespDefaultStartTime(visiblestarttime);
     setSelRespDefaultEndTime(visibleendtime);
-    console.log(selrespdatasets);
     //console.log(visiblestarttime);
     //console.log(visibleendtime);
 
-    //console.log(allItems);
     setSelRespDatasetItems(selrespdatasets);
-    //setSelRespDatasetItems(allItems);
   };
 
   return (
