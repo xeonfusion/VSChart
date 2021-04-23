@@ -349,10 +349,22 @@ const NewChart = forwardRef((props, ref) => {
 
       var respdatasets = [
         getDatasetsbyPhysioID(chartJdata, "O2_FI"),
+        getDatasetsbyPhysioID(chartJdata, "O2_ET"),
+        getDatasetsbyPhysioID(chartJdata, "TV_Insp"),
         getDatasetsbyPhysioID(chartJdata, "TV_Exp"),
         getDatasetsbyPhysioID(chartJdata, "RR"),
         getDatasetsbyPhysioID(chartJdata, "PEEP"),
         getDatasetsbyPhysioID(chartJdata, "ET_CO2"),
+        getDatasetsbyPhysioID(chartJdata, "PPeak"),
+        getDatasetsbyPhysioID(chartJdata, "PPlat"),
+        getDatasetsbyPhysioID(chartJdata, "N2O_FI"),
+        getDatasetsbyPhysioID(chartJdata, "N2O_ET"),
+        getDatasetsbyPhysioID(chartJdata, "AA_FI"),
+        getDatasetsbyPhysioID(chartJdata, "AA_ET"),
+        getDatasetsbyPhysioID(chartJdata, "Agent_AA"),
+        getDatasetsbyPhysioID(chartJdata, "AA_MAC_SUM"),
+        getDatasetsbyPhysioID(chartJdata, "MV_Exp"),
+        getDatasetsbyPhysioID(chartJdata, "Compliance"),
       ];
 
       getRespDatasetsItems(respdatasets);

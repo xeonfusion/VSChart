@@ -13,28 +13,88 @@ import Timeline, {
 const groups = [
   {
     id: 1,
-    title: "FiO2",
+    title: "FIO2",
     unit: "%",
   },
   {
     id: 2,
+    title: "ETO2",
+    unit: "%",
+  },
+  {
+    id: 3,
+    title: "Vti",
+    unit: "ml",
+  },
+  {
+    id: 4,
     title: "Vte",
     unit: "ml",
   },
   {
-    id: 3,
+    id: 5,
     title: "RR",
     unit: "/min",
   },
   {
-    id: 4,
+    id: 6,
     title: "PEEP",
     unit: "cm H2O",
   },
   {
-    id: 5,
+    id: 7,
     title: "ETCO2",
     unit: "mm Hg",
+  },
+  {
+    id: 8,
+    title: "PPeak",
+    unit: "cm H2O",
+  },
+  {
+    id: 9,
+    title: "PPlateau",
+    unit: "cm H2O",
+  },
+  {
+    id: 10,
+    title: "FIN2O",
+    unit: "%",
+  },
+  {
+    id: 11,
+    title: "ETN2O",
+    unit: "%",
+  },
+  {
+    id: 12,
+    title: "FIAA",
+    unit: "%",
+  },
+  {
+    id: 13,
+    title: "ETAA",
+    unit: "%",
+  },
+  {
+    id: 14,
+    title: "AgentAA",
+    unit: "",
+  },
+  {
+    id: 15,
+    title: "MAC_SUM",
+    unit: "%",
+  },
+  {
+    id: 16,
+    title: "MinuteVolExp",
+    unit: "L/min",
+  },
+  {
+    id: 17,
+    title: "Compliance",
+    unit: "mL/cm H2O",
   },
 ];
 
@@ -124,7 +184,7 @@ const RespGrid = ({
     setRespDefaultEndTime(respDefaultEndTime);
   }, [respDatasetItems, respDefaultStartTime, respDefaultEndTime]);
 
-  const handleLoadRespChart = () => {};
+  //const handleLoadRespChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
     setRespDefaultStartTime(visibleTimeStart);
