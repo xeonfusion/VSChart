@@ -12,95 +12,55 @@ import Timeline, {
 const groups = [
   {
     id: 1,
-    title: "FIO2",
-    unit: "%",
+    title: "T1_Temp",
+    unit: "deg C",
   },
   {
     id: 2,
-    title: "ETO2",
-    unit: "%",
+    title: "T2_Temp",
+    unit: "deg C",
   },
   {
     id: 3,
-    title: "Vti",
-    unit: "ml",
-  },
-  {
-    id: 4,
-    title: "Vte",
-    unit: "ml",
-  },
-  {
-    id: 5,
-    title: "RR",
-    unit: "/min",
-  },
-  {
-    id: 6,
-    title: "PEEP",
-    unit: "cm H2O",
-  },
-  {
-    id: 7,
-    title: "ETCO2",
-    unit: "mm Hg",
-  },
-  {
-    id: 8,
-    title: "PPeak",
-    unit: "cm H2O",
-  },
-  {
-    id: 9,
-    title: "PPlateau",
-    unit: "cm H2O",
-  },
-  {
-    id: 10,
-    title: "FIN2O",
-    unit: "%",
-  },
-  {
-    id: 11,
-    title: "ETN2O",
-    unit: "%",
-  },
-  {
-    id: 12,
-    title: "FIAA",
-    unit: "%",
-  },
-  {
-    id: 13,
-    title: "ETAA",
-    unit: "%",
-  },
-  {
-    id: 14,
-    title: "AgentAA",
+    title: "BIS",
     unit: "",
   },
   {
-    id: 15,
-    title: "MAC_SUM",
-    unit: "%",
+    id: 4,
+    title: "BIS_BSR",
+    unit: "",
   },
   {
-    id: 16,
-    title: "MinuteVolExp",
-    unit: "L/min",
+    id: 5,
+    title: "BIS_EMG",
+    unit: "",
   },
   {
-    id: 17,
-    title: "Compliance",
-    unit: "mL/cm H2O",
+    id: 6,
+    title: "BIS_SQI",
+    unit: "mm Hg",
+  },
+  {
+    id: 7,
+    title: "EEG_Entropy",
+    unit: "",
+  },
+  {
+    id: 8,
+    title: "EMG_Entropy",
+    unit: "",
+  },
+  {
+    id: 9,
+    title: "BSR_Entropy",
+    unit: "",
   },
 ];
 
-const RespGrid = ({
-  respDatasetItems,
-  respDefaultStartTime,
-  respDefaultEndTime,
+const MiscGrid = ({
+  miscDatasetItems,
+  miscDefaultStartTime,
+  miscDefaultEndTime,
 }) => {
   const groupRenderer = ({ group, isRightSidebar }) => {
     if (group.title !== "" && !isRightSidebar) {
@@ -116,13 +76,13 @@ const RespGrid = ({
     }
   };
 
-  const [allitems, setItems] = React.useState(respDatasetItems);
+  const [allitems, setItems] = React.useState(miscDatasetItems);
   const [allgroups, setGroups] = React.useState(groups);
-  const [selRespDefaultStartTime, setRespDefaultStartTime] = React.useState(
-    respDefaultStartTime
+  const [selMiscDefaultStartTime, setMiscDefaultStartTime] = React.useState(
+    miscDefaultStartTime
   );
-  const [selRespDefaultEndTime, setRespDefaultEndTime] = React.useState(
-    respDefaultEndTime
+  const [selMiscDefaultEndTime, setMiscDefaultEndTime] = React.useState(
+    miscDefaultEndTime
   );
   /*React.useEffect(() => {
     //Run only on first mount with empty array dependency
@@ -131,19 +91,19 @@ const RespGrid = ({
   }, []);*/
 
   React.useEffect(() => {
-    if (respDatasetItems !== undefined) {
-      setItems(respDatasetItems);
+    if (miscDatasetItems !== undefined) {
+      setItems(miscDatasetItems);
     }
-    //console.log(respDatasetItems);
-    setRespDefaultStartTime(respDefaultStartTime);
-    setRespDefaultEndTime(respDefaultEndTime);
-  }, [respDatasetItems, respDefaultStartTime, respDefaultEndTime]);
+    //console.log(hemoDatasetItems);
+    setMiscDefaultStartTime(miscDefaultStartTime);
+    setMiscDefaultEndTime(miscDefaultEndTime);
+  }, [miscDatasetItems, miscDefaultStartTime, miscDefaultEndTime]);
 
-  //const handleLoadRespChart = () => {};
+  //const handleLoadhemoChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
-    setRespDefaultStartTime(visibleTimeStart);
-    setRespDefaultEndTime(visibleTimeEnd);
+    setMiscDefaultStartTime(visibleTimeStart);
+    setMiscDefaultEndTime(visibleTimeEnd);
   };
 
   const itemRenderer = ({
@@ -192,10 +152,10 @@ const RespGrid = ({
       <Timeline
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={selRespDefaultStartTime}
-        defaultTimeEnd={selRespDefaultEndTime}
-        visibleTimeStart={selRespDefaultStartTime}
-        visibleTimeEnd={selRespDefaultEndTime}
+        defaultTimeStart={selMiscDefaultStartTime}
+        defaultTimeEnd={selMiscDefaultEndTime}
+        visibleTimeStart={selMiscDefaultStartTime}
+        visibleTimeEnd={selMiscDefaultEndTime}
         timeSteps={{ minute: 1 }}
         onTimeChange={handleTimeChange}
         sidebarWidth={150}
@@ -215,7 +175,7 @@ const RespGrid = ({
                 backgroundColor: "#F0F0F0",
                 width: 150,
               };
-              return <div style={sideStyles}>Respiratory</div>;
+              return <div style={sideStyles}>Hemodynamic</div>;
             }}
           </SidebarHeader>
           <DateHeader unit="minute" labelFormat="HH:mm" />
@@ -238,4 +198,4 @@ const RespGrid = ({
   );
 };
 
-export default RespGrid;
+export default MiscGrid;

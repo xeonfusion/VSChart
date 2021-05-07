@@ -12,95 +12,95 @@ import Timeline, {
 const groups = [
   {
     id: 1,
-    title: "FIO2",
-    unit: "%",
+    title: "NIBP_Systolic",
+    unit: "mm Hg",
   },
   {
     id: 2,
-    title: "ETO2",
-    unit: "%",
+    title: "NIBP_Diastolic",
+    unit: "mm Hg",
   },
   {
     id: 3,
-    title: "Vti",
-    unit: "ml",
+    title: "NIBP_Mean",
+    unit: "mm Hg",
   },
   {
     id: 4,
-    title: "Vte",
-    unit: "ml",
-  },
-  {
-    id: 5,
-    title: "RR",
+    title: "ECG_HR",
     unit: "/min",
   },
   {
+    id: 5,
+    title: "SpO2",
+    unit: "%",
+  },
+  {
     id: 6,
-    title: "PEEP",
-    unit: "cm H2O",
+    title: "P1_Systolic",
+    unit: "mm Hg",
   },
   {
     id: 7,
-    title: "ETCO2",
+    title: "P1_Diastolic",
     unit: "mm Hg",
   },
   {
     id: 8,
-    title: "PPeak",
-    unit: "cm H2O",
+    title: "P1_Mean",
+    unit: "mm Hg",
   },
   {
     id: 9,
-    title: "PPlateau",
-    unit: "cm H2O",
+    title: "P2_Systolic",
+    unit: "mm Hg",
   },
   {
     id: 10,
-    title: "FIN2O",
-    unit: "%",
+    title: "P2_Diastolic",
+    unit: "mm Hg",
   },
   {
     id: 11,
-    title: "ETN2O",
-    unit: "%",
+    title: "P2_Mean",
+    unit: "mm Hg",
   },
   {
     id: 12,
-    title: "FIAA",
-    unit: "%",
+    title: "CVP",
+    unit: "mm Hg",
   },
   {
     id: 13,
-    title: "ETAA",
-    unit: "%",
+    title: "ST_II",
+    unit: "mm",
   },
   {
     id: 14,
-    title: "AgentAA",
-    unit: "",
+    title: "ST_V5",
+    unit: "mm",
   },
   {
     id: 15,
-    title: "MAC_SUM",
-    unit: "%",
+    title: "ST_avL",
+    unit: "mm",
   },
   {
     id: 16,
-    title: "MinuteVolExp",
-    unit: "L/min",
+    title: "PPV",
+    unit: "%",
   },
   {
     id: 17,
-    title: "Compliance",
-    unit: "mL/cm H2O",
+    title: "PVI",
+    unit: "%",
   },
 ];
 
-const RespGrid = ({
-  respDatasetItems,
-  respDefaultStartTime,
-  respDefaultEndTime,
+const HemoGrid = ({
+  hemoDatasetItems,
+  hemoDefaultStartTime,
+  hemoDefaultEndTime,
 }) => {
   const groupRenderer = ({ group, isRightSidebar }) => {
     if (group.title !== "" && !isRightSidebar) {
@@ -116,13 +116,13 @@ const RespGrid = ({
     }
   };
 
-  const [allitems, setItems] = React.useState(respDatasetItems);
+  const [allitems, setItems] = React.useState(hemoDatasetItems);
   const [allgroups, setGroups] = React.useState(groups);
-  const [selRespDefaultStartTime, setRespDefaultStartTime] = React.useState(
-    respDefaultStartTime
+  const [selHemoDefaultStartTime, setHemoDefaultStartTime] = React.useState(
+    hemoDefaultStartTime
   );
-  const [selRespDefaultEndTime, setRespDefaultEndTime] = React.useState(
-    respDefaultEndTime
+  const [selHemoDefaultEndTime, setHemoDefaultEndTime] = React.useState(
+    hemoDefaultEndTime
   );
   /*React.useEffect(() => {
     //Run only on first mount with empty array dependency
@@ -131,19 +131,19 @@ const RespGrid = ({
   }, []);*/
 
   React.useEffect(() => {
-    if (respDatasetItems !== undefined) {
-      setItems(respDatasetItems);
+    if (hemoDatasetItems !== undefined) {
+      setItems(hemoDatasetItems);
     }
-    //console.log(respDatasetItems);
-    setRespDefaultStartTime(respDefaultStartTime);
-    setRespDefaultEndTime(respDefaultEndTime);
-  }, [respDatasetItems, respDefaultStartTime, respDefaultEndTime]);
+    //console.log(hemoDatasetItems);
+    setHemoDefaultStartTime(hemoDefaultStartTime);
+    setHemoDefaultEndTime(hemoDefaultEndTime);
+  }, [hemoDatasetItems, hemoDefaultStartTime, hemoDefaultEndTime]);
 
-  //const handleLoadRespChart = () => {};
+  //const handleLoadhemoChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
-    setRespDefaultStartTime(visibleTimeStart);
-    setRespDefaultEndTime(visibleTimeEnd);
+    setHemoDefaultStartTime(visibleTimeStart);
+    setHemoDefaultEndTime(visibleTimeEnd);
   };
 
   const itemRenderer = ({
@@ -192,10 +192,10 @@ const RespGrid = ({
       <Timeline
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={selRespDefaultStartTime}
-        defaultTimeEnd={selRespDefaultEndTime}
-        visibleTimeStart={selRespDefaultStartTime}
-        visibleTimeEnd={selRespDefaultEndTime}
+        defaultTimeStart={selHemoDefaultStartTime}
+        defaultTimeEnd={selHemoDefaultEndTime}
+        visibleTimeStart={selHemoDefaultStartTime}
+        visibleTimeEnd={selHemoDefaultEndTime}
         timeSteps={{ minute: 1 }}
         onTimeChange={handleTimeChange}
         sidebarWidth={150}
@@ -215,7 +215,7 @@ const RespGrid = ({
                 backgroundColor: "#F0F0F0",
                 width: 150,
               };
-              return <div style={sideStyles}>Respiratory</div>;
+              return <div style={sideStyles}>Hemodynamic</div>;
             }}
           </SidebarHeader>
           <DateHeader unit="minute" labelFormat="HH:mm" />
@@ -238,4 +238,4 @@ const RespGrid = ({
   );
 };
 
-export default RespGrid;
+export default HemoGrid;

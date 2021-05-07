@@ -4,8 +4,8 @@ import React from "react";
 import { useEffect, useRef, useState, forwardRef } from "react";
 import Chartjs from "chart.js";
 import VitalSourceModal from "./vitalsourcedialog.jsx";
-import RespGrid from "./respiratorygrid.jsx";
 import moment from "moment";
+import DataTabs from "./datagribtabs.jsx";
 
 const divStyle = {
   //position: "relative",
@@ -308,6 +308,20 @@ const NewChart = forwardRef((props, ref) => {
   const [selRespDefaultEndTime, setSelRespDefaultEndTime] = React.useState(
     moment().add(12, "m")
   );
+  const [selHemoDatasetItems, setSelHemoDatasetItems] = React.useState([]);
+  const [selHemoDefaultStartTime, setSelHemoDefaultStartTime] = React.useState(
+    moment().add(0, "m")
+  );
+  const [selHemoDefaultEndTime, setSelHemoDefaultEndTime] = React.useState(
+    moment().add(12, "m")
+  );
+  const [selMiscDatasetItems, setSelMiscDatasetItems] = React.useState([]);
+  const [selMiscDefaultStartTime, setSelMiscDefaultStartTime] = React.useState(
+    moment().add(0, "m")
+  );
+  const [selMiscDefaultEndTime, setSelMiscDefaultEndTime] = React.useState(
+    moment().add(12, "m")
+  );
 
   useEffect(() => {
     if (chartInstance && chartContainer && chartContainer.current) {
@@ -368,6 +382,42 @@ const NewChart = forwardRef((props, ref) => {
       ];
 
       getRespDatasetsItems(respdatasets);
+
+      var hemodatasets = [
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
+        getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
+        getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
+        getDatasetsbyPhysioID(chartJdata, "SpO2"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+        getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
+        getDatasetsbyPhysioID(chartJdata, "P2_Systolic"),
+        getDatasetsbyPhysioID(chartJdata, "P2_Diastolic"),
+        getDatasetsbyPhysioID(chartJdata, "P2_Mean"),
+        getDatasetsbyPhysioID(chartJdata, "CVP"),
+        getDatasetsbyPhysioID(chartJdata, "ST_II"),
+        getDatasetsbyPhysioID(chartJdata, "ST_V5"),
+        getDatasetsbyPhysioID(chartJdata, "ST_avL"),
+        getDatasetsbyPhysioID(chartJdata, "PPV"),
+        getDatasetsbyPhysioID(chartJdata, "PVI"),
+      ];
+
+      getHemoDatasetsItems(hemodatasets);
+
+      var miscdatasets = [
+        getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
+        getDatasetsbyPhysioID(chartJdata, "T2_Temp"),
+        getDatasetsbyPhysioID(chartJdata, "BIS"),
+        getDatasetsbyPhysioID(chartJdata, "BIS_BSR"),
+        getDatasetsbyPhysioID(chartJdata, "BIS_EMG"),
+        getDatasetsbyPhysioID(chartJdata, "BIS_SQI"),
+        getDatasetsbyPhysioID(chartJdata, "EEG_Entropy"),
+        getDatasetsbyPhysioID(chartJdata, "EMG_Entropy"),
+        getDatasetsbyPhysioID(chartJdata, "SQI_Entropy"),
+      ];
+
+      getMiscDatasetsItems(miscdatasets);
 
       chartInstance.update();
     }
@@ -604,6 +654,118 @@ const NewChart = forwardRef((props, ref) => {
     setSelRespDatasetItems(selrespdatasets);
   };
 
+  const getHemoDatasetsItems = (hemodatasets) => {
+    var allItems = [];
+
+    //convert to flat object data array
+    hemodatasets.map((item, index) => {
+      return item.map((item2, index2) => {
+        var selitemindex = allItems.length + 1;
+
+        const item = [
+          {
+            id: selitemindex,
+            group: index + 1,
+            title: item2.y,
+            start_time: moment(item2.x).startOf("m"),
+            end_time: moment(item2.x),
+          },
+        ];
+        allItems.push(item[0]);
+        return item[0];
+      });
+    });
+
+    //console.log(allItems);
+
+    //filter and remove duplicates or multiple values in a minute
+    var selhemodatasets = allItems
+      .filter(
+        (value, index, array) =>
+          array.findIndex(
+            (t) =>
+              t.start_time.valueOf() === value.start_time.valueOf() &&
+              t.group === value.group
+          ) === index
+      )
+      .map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+        })
+      );
+
+    //console.log(selhemodatasets);
+
+    var visiblestarttime = selhemodatasets[0].start_time.clone().startOf("m");
+    var visibleendtime = selhemodatasets[0].start_time
+      .clone()
+      .startOf("m")
+      .add(12, "m");
+
+    setSelHemoDefaultStartTime(visiblestarttime);
+    setSelHemoDefaultEndTime(visibleendtime);
+    //console.log(visiblestarttime);
+    //console.log(visibleendtime);
+
+    setSelHemoDatasetItems(selhemodatasets);
+  };
+
+  const getMiscDatasetsItems = (miscdatasets) => {
+    var allItems = [];
+
+    //convert to flat object data array
+    miscdatasets.map((item, index) => {
+      return item.map((item2, index2) => {
+        var selitemindex = allItems.length + 1;
+
+        const item = [
+          {
+            id: selitemindex,
+            group: index + 1,
+            title: item2.y,
+            start_time: moment(item2.x).startOf("m"),
+            end_time: moment(item2.x),
+          },
+        ];
+        allItems.push(item[0]);
+        return item[0];
+      });
+    });
+
+    //console.log(allItems);
+
+    //filter and remove duplicates or multiple values in a minute
+    var selmiscdatasets = allItems
+      .filter(
+        (value, index, array) =>
+          array.findIndex(
+            (t) =>
+              t.start_time.valueOf() === value.start_time.valueOf() &&
+              t.group === value.group
+          ) === index
+      )
+      .map((item, index) =>
+        Object.assign({}, item, {
+          id: index + 1,
+        })
+      );
+
+    //console.log(selmiscdatasets);
+
+    var visiblestarttime = selmiscdatasets[0].start_time.clone().startOf("m");
+    var visibleendtime = selmiscdatasets[0].start_time
+      .clone()
+      .startOf("m")
+      .add(12, "m");
+
+    setSelMiscDefaultStartTime(visiblestarttime);
+    setSelMiscDefaultEndTime(visibleendtime);
+    //console.log(visiblestarttime);
+    //console.log(visibleendtime);
+
+    setSelMiscDatasetItems(selmiscdatasets);
+  };
+
   return (
     <>
       <div>
@@ -622,10 +784,16 @@ const NewChart = forwardRef((props, ref) => {
         selectedVitalSourceType={selectedVitalSourceType}
         dropVitalSourceFileValue={dropVitalFileSourceValue}
       />
-      <RespGrid
+      <DataTabs
         respDatasetItems={selRespDatasetItems}
         respDefaultStartTime={selRespDefaultStartTime}
         respDefaultEndTime={selRespDefaultEndTime}
+        hemoDatasetItems={selHemoDatasetItems}
+        hemoDefaultStartTime={selHemoDefaultStartTime}
+        hemoDefaultEndTime={selHemoDefaultEndTime}
+        miscDatasetItems={selMiscDatasetItems}
+        miscDefaultStartTime={selMiscDefaultStartTime}
+        miscDefaultEndTime={selMiscDefaultEndTime}
       />
     </>
   );
