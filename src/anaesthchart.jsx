@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, forwardRef } from "react";
 import Chartjs from "chart.js";
 import VitalSourceModal from "./vitalsourcedialog.jsx";
 import moment from "moment";
-import DataTabs from "./datagribtabs.jsx";
+import DataTabs from "./datagridtabs.jsx";
 
 const divStyle = {
   //position: "relative",
@@ -322,6 +322,7 @@ const NewChart = forwardRef((props, ref) => {
   const [selMiscDefaultEndTime, setSelMiscDefaultEndTime] = React.useState(
     moment().add(12, "m")
   );
+  const [selectedMonitorType, setSelMonitorType] = React.useState("DatexS5");
 
   useEffect(() => {
     if (chartInstance && chartContainer && chartContainer.current) {
@@ -333,7 +334,12 @@ const NewChart = forwardRef((props, ref) => {
     if (chartInstance && chartContainer && chartContainer.current) {
       handleLoadChart();
     }
-  }, [selectedVitalSource, selectedVitalSourceType, selectedVitalFileSource]);
+  }, [
+    selectedVitalSource,
+    selectedVitalSourceType,
+    selectedVitalFileSource,
+    selectedMonitorType,
+  ]);
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
@@ -344,80 +350,167 @@ const NewChart = forwardRef((props, ref) => {
 
   const updateDataset = () => {
     if (chartJdata !== null && chartJdata !== undefined) {
-      var datasets = [
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
-        getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
-        getDatasetsbyPhysioID(chartJdata, "SpO2"),
-        getDatasetsbyPhysioID(chartJdata, "RR"),
-        getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
-      ];
+      var datasets = [];
+      var respdatasets = [];
+      var hemodatasets = [];
+      var miscdatasets = [];
 
-      datasets.map((e, index) => {
-        return (chartInstance.data.datasets[index].data = e);
-      });
+      if (selectedMonitorType === "Intellivue") {
+        datasets = [
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_SYS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_DIA"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_MEAN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_ECG_CARD_BEAT_RATE"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PULS_OXIM_SAT_O2"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_RESP_RATE"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_TEMP_GEN_1"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_SYS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_DIA"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_MEAN"),
+        ];
 
-      var respdatasets = [
-        getDatasetsbyPhysioID(chartJdata, "O2_FI"),
-        getDatasetsbyPhysioID(chartJdata, "O2_ET"),
-        getDatasetsbyPhysioID(chartJdata, "TV_Insp"),
-        getDatasetsbyPhysioID(chartJdata, "TV_Exp"),
-        getDatasetsbyPhysioID(chartJdata, "RR"),
-        getDatasetsbyPhysioID(chartJdata, "PEEP"),
-        getDatasetsbyPhysioID(chartJdata, "ET_CO2"),
-        getDatasetsbyPhysioID(chartJdata, "PPeak"),
-        getDatasetsbyPhysioID(chartJdata, "PPlat"),
-        getDatasetsbyPhysioID(chartJdata, "N2O_FI"),
-        getDatasetsbyPhysioID(chartJdata, "N2O_ET"),
-        getDatasetsbyPhysioID(chartJdata, "AA_FI"),
-        getDatasetsbyPhysioID(chartJdata, "AA_ET"),
-        getDatasetsbyPhysioID(chartJdata, "Agent_AA"),
-        getDatasetsbyPhysioID(chartJdata, "AA_MAC_SUM"),
-        getDatasetsbyPhysioID(chartJdata, "MV_Exp"),
-        getDatasetsbyPhysioID(chartJdata, "Compliance"),
-      ];
+        datasets.map((e, index) => {
+          return (chartInstance.data.datasets[index].data = e);
+        });
 
-      getRespDatasetsItems(respdatasets);
+        respdatasets = [
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_O2_INSP"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_O2_ET"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_VOL_AWAY_INSP_TIDAL"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_VOL_AWAY_EXP_TIDAL"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_RESP_RATE"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_VENT_PRESS_AWAY_END_EXP_POS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_AWAY_CO2_ET"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_AWAY_INSP_MAX"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_RESP_PLAT"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_N2O_INSP"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_N2O_ET"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_AGENT_INSP"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_AGENT_ET"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_AGENT"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_SUM_MAC_ET"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_VOL_MINUTE_AWAY_EXP"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_COMPL_LUNG_DYN"),
+        ];
 
-      var hemodatasets = [
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
-        getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
-        getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
-        getDatasetsbyPhysioID(chartJdata, "SpO2"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
-        getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
-        getDatasetsbyPhysioID(chartJdata, "P2_Systolic"),
-        getDatasetsbyPhysioID(chartJdata, "P2_Diastolic"),
-        getDatasetsbyPhysioID(chartJdata, "P2_Mean"),
-        getDatasetsbyPhysioID(chartJdata, "CVP"),
-        getDatasetsbyPhysioID(chartJdata, "ST_II"),
-        getDatasetsbyPhysioID(chartJdata, "ST_V5"),
-        getDatasetsbyPhysioID(chartJdata, "ST_avL"),
-        getDatasetsbyPhysioID(chartJdata, "PPV"),
-        getDatasetsbyPhysioID(chartJdata, "PVI"),
-      ];
+        getRespDatasetsItems(respdatasets);
 
-      getHemoDatasetsItems(hemodatasets);
+        hemodatasets = [
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_SYS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_DIA"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_MEAN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_ECG_CARD_BEAT_RATE"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PULS_OXIM_SAT_O2"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_SYS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_DIA"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_MEAN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_ABP_SYS"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_ABP_DIA"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_ART_ABP_MEAN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_VEN_CENT_MEAN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_ECG_AMPL_ST_II"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_ECG_AMPL_ST_V5"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_ECG_AMPL_ST_AVL"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_PULS_PRESS_VAR"),
+          getDatasetsbyPhysioID(
+            chartJdata,
+            "NOM_PULS_OXIM_PLETH_AMPL_VAR_INDEX"
+          ),
+        ];
 
-      var miscdatasets = [
-        getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
-        getDatasetsbyPhysioID(chartJdata, "T2_Temp"),
-        getDatasetsbyPhysioID(chartJdata, "BIS"),
-        getDatasetsbyPhysioID(chartJdata, "BIS_BSR"),
-        getDatasetsbyPhysioID(chartJdata, "BIS_EMG"),
-        getDatasetsbyPhysioID(chartJdata, "BIS_SQI"),
-        getDatasetsbyPhysioID(chartJdata, "EEG_Entropy"),
-        getDatasetsbyPhysioID(chartJdata, "EMG_Entropy"),
-        getDatasetsbyPhysioID(chartJdata, "SQI_Entropy"),
-      ];
+        getHemoDatasetsItems(hemodatasets);
 
-      getMiscDatasetsItems(miscdatasets);
+        miscdatasets = [
+          getDatasetsbyPhysioID(chartJdata, "NOM_TEMP_GEN_1"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_TEMP_GEN_2"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_EEG_BISPECTRAL_INDEX"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_EEG_RATIO_SUPPRN"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_EMG_ELEC_POTL_MUSCL"),
+          getDatasetsbyPhysioID(chartJdata, "NOM_EEG_BIS_SIG_QUAL_INDEX"),
+          getDatasetsbyPhysioID(chartJdata, "EEG_Entropy"),
+          getDatasetsbyPhysioID(chartJdata, "EMG_Entropy"),
+          getDatasetsbyPhysioID(chartJdata, "SQI_Entropy"),
+        ];
+
+        getMiscDatasetsItems(miscdatasets);
+      }
+
+      if (selectedMonitorType === "DatexS5") {
+        datasets = [
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
+          getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
+          getDatasetsbyPhysioID(chartJdata, "SpO2"),
+          getDatasetsbyPhysioID(chartJdata, "RR"),
+          getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
+        ];
+
+        datasets.map((e, index) => {
+          return (chartInstance.data.datasets[index].data = e);
+        });
+
+        respdatasets = [
+          getDatasetsbyPhysioID(chartJdata, "O2_FI"),
+          getDatasetsbyPhysioID(chartJdata, "O2_ET"),
+          getDatasetsbyPhysioID(chartJdata, "TV_Insp"),
+          getDatasetsbyPhysioID(chartJdata, "TV_Exp"),
+          getDatasetsbyPhysioID(chartJdata, "RR"),
+          getDatasetsbyPhysioID(chartJdata, "PEEP"),
+          getDatasetsbyPhysioID(chartJdata, "ET_CO2"),
+          getDatasetsbyPhysioID(chartJdata, "PPeak"),
+          getDatasetsbyPhysioID(chartJdata, "PPlat"),
+          getDatasetsbyPhysioID(chartJdata, "N2O_FI"),
+          getDatasetsbyPhysioID(chartJdata, "N2O_ET"),
+          getDatasetsbyPhysioID(chartJdata, "AA_FI"),
+          getDatasetsbyPhysioID(chartJdata, "AA_ET"),
+          getDatasetsbyPhysioID(chartJdata, "Agent_AA"),
+          getDatasetsbyPhysioID(chartJdata, "AA_MAC_SUM"),
+          getDatasetsbyPhysioID(chartJdata, "MV_Exp"),
+          getDatasetsbyPhysioID(chartJdata, "Compliance"),
+        ];
+
+        getRespDatasetsItems(respdatasets);
+
+        hemodatasets = [
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
+          getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
+          getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
+          getDatasetsbyPhysioID(chartJdata, "SpO2"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
+          getDatasetsbyPhysioID(chartJdata, "P2_Systolic"),
+          getDatasetsbyPhysioID(chartJdata, "P2_Diastolic"),
+          getDatasetsbyPhysioID(chartJdata, "P2_Mean"),
+          getDatasetsbyPhysioID(chartJdata, "CVP"),
+          getDatasetsbyPhysioID(chartJdata, "ST_II"),
+          getDatasetsbyPhysioID(chartJdata, "ST_V5"),
+          getDatasetsbyPhysioID(chartJdata, "ST_avL"),
+          getDatasetsbyPhysioID(chartJdata, "PPV"),
+          getDatasetsbyPhysioID(chartJdata, "PVI"),
+        ];
+
+        getHemoDatasetsItems(hemodatasets);
+
+        miscdatasets = [
+          getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
+          getDatasetsbyPhysioID(chartJdata, "T2_Temp"),
+          getDatasetsbyPhysioID(chartJdata, "BIS"),
+          getDatasetsbyPhysioID(chartJdata, "BIS_BSR"),
+          getDatasetsbyPhysioID(chartJdata, "BIS_EMG"),
+          getDatasetsbyPhysioID(chartJdata, "BIS_SQI"),
+          getDatasetsbyPhysioID(chartJdata, "EEG_Entropy"),
+          getDatasetsbyPhysioID(chartJdata, "EMG_Entropy"),
+          getDatasetsbyPhysioID(chartJdata, "SQI_Entropy"),
+        ];
+
+        getMiscDatasetsItems(miscdatasets);
+      }
 
       chartInstance.update();
     }
@@ -566,13 +659,15 @@ const NewChart = forwardRef((props, ref) => {
     selectedVitalSource,
     selectedVitalFileSource,
     selectedVitalSourceType,
-    dropVitalSourceFileValue
+    dropVitalSourceFileValue,
+    selectedMonitorType
   ) => {
     setVitalSourceShow(childvitalsourcestate);
     setSelVitalSource(selectedVitalSource);
     setSelVitalFileSource(selectedVitalFileSource);
     setSelVitalSourceType(selectedVitalSourceType);
     setDropVitalFileSourceValue(dropVitalSourceFileValue);
+    setSelMonitorType(selectedMonitorType);
   };
 
   const getDatasetsbyPhysioID = (jdata, physioid) => {
@@ -783,6 +878,7 @@ const NewChart = forwardRef((props, ref) => {
         selectedVitalFileSource={selectedVitalFileSource}
         selectedVitalSourceType={selectedVitalSourceType}
         dropVitalSourceFileValue={dropVitalFileSourceValue}
+        selectedMonitorType={selectedMonitorType}
       />
       <DataTabs
         respDatasetItems={selRespDatasetItems}

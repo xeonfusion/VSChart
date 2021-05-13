@@ -22,6 +22,7 @@ const VitalSourceModal = ({
   selectedVitalFileSource,
   selectedVitalSourceType,
   dropVitalSourceFileValue,
+  selectedMonitorType,
 }) => {
   const [showVitalSource, setVitalSourceShow] = React.useState(false);
   const [vitalsourcetype, setVitalSourceType] = React.useState("URL");
@@ -34,6 +35,7 @@ const VitalSourceModal = ({
     dropvitalsourcefilevalue,
     setDropVitalSourceFileValue,
   ] = React.useState(false);
+  const [monitortype, setMonitorType] = React.useState("DatexS5");
 
   const handleClose = () => {
     setVitalSourceShow(false);
@@ -42,8 +44,13 @@ const VitalSourceModal = ({
       vitalsourceurlvalue,
       vitalsourcefilevalue,
       vitalsourcetype,
-      dropvitalsourcefilevalue
+      dropvitalsourcefilevalue,
+      monitortype
     );
+  };
+
+  const handleMonitorTypeRadioChange = (event) => {
+    setMonitorType(event.target.value);
   };
 
   const handleRadioChange = (event) => {
@@ -120,12 +127,14 @@ const VitalSourceModal = ({
     setVitalSourceFileValue(selectedVitalFileSource);
     setVitalSourceType(selectedVitalSourceType);
     setDropVitalSourceFileValue(dropVitalSourceFileValue);
+    setMonitorType(selectedMonitorType);
   }, [
     showVitalSourceDialog,
     selectedVitalURLSource,
     selectedVitalFileSource,
     selectedVitalSourceType,
     dropVitalSourceFileValue,
+    selectedMonitorType,
   ]);
 
   return (
@@ -254,6 +263,27 @@ const VitalSourceModal = ({
                           helperText={vitalsourcefilename}
                         />
                       }
+                    />
+                  </RadioGroup>
+                  <FormLabel component="legend">
+                    Set Monitor Data Type:
+                  </FormLabel>
+                  <RadioGroup
+                    aria-label="monitortype"
+                    name="monitortype"
+                    defaultValue="DatexS5"
+                    value={monitortype}
+                    onChange={handleMonitorTypeRadioChange}
+                  >
+                    <FormControlLabel
+                      value="DatexS5"
+                      control={<Radio />}
+                      label={"Datex S/5"}
+                    />
+                    <FormControlLabel
+                      value="Intellivue"
+                      control={<Radio />}
+                      label={"Philips Intellivue MP or MX"}
                     />
                   </RadioGroup>
                 </FormControl>
