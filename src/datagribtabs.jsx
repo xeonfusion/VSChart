@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
@@ -49,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  tab: {
+    "& .MuiBox-root": {
+      padding: "0px",
+    },
+  },
 }));
 
 export default function DataTabs({
@@ -76,21 +80,21 @@ export default function DataTabs({
         <Tab label="Hemodynamic" {...a11yProps(1)} />
         <Tab label="Misc" {...a11yProps(2)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} className={classes.tab}>
         <RespGrid
           respDatasetItems={respDatasetItems}
           respDefaultStartTime={respDefaultStartTime}
           respDefaultEndTime={respDefaultEndTime}
         />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1} className={classes.tab}>
         <HemoGrid
           hemoDatasetItems={hemoDatasetItems}
           hemoDefaultStartTime={hemoDefaultStartTime}
           hemoDefaultEndTime={hemoDefaultEndTime}
         />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={2} className={classes.tab}>
         <MiscGrid
           miscDatasetItems={miscDatasetItems}
           miscDefaultStartTime={miscDefaultStartTime}
