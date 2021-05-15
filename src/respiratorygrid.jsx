@@ -119,10 +119,10 @@ const RespGrid = ({
   const [allitems, setItems] = React.useState(respDatasetItems);
   const [allgroups, setGroups] = React.useState(groups);
   const [selRespDefaultStartTime, setRespDefaultStartTime] = React.useState(
-    respDefaultStartTime
+    moment().add(0, "m")
   );
   const [selRespDefaultEndTime, setRespDefaultEndTime] = React.useState(
-    respDefaultEndTime
+    moment().add(12, "m")
   );
   /*React.useEffect(() => {
     //Run only on first mount with empty array dependency
@@ -134,12 +134,9 @@ const RespGrid = ({
     if (respDatasetItems !== undefined) {
       setItems(respDatasetItems);
     }
-    //console.log(respDatasetItems);
     setRespDefaultStartTime(respDefaultStartTime);
     setRespDefaultEndTime(respDefaultEndTime);
   }, [respDatasetItems, respDefaultStartTime, respDefaultEndTime]);
-
-  //const handleLoadRespChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
     setRespDefaultStartTime(visibleTimeStart);
@@ -192,8 +189,8 @@ const RespGrid = ({
       <Timeline
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={selRespDefaultStartTime}
-        defaultTimeEnd={selRespDefaultEndTime}
+        defaultTimeStart={moment().add(0, "m")}
+        defaultTimeEnd={moment().add(12, "m")}
         visibleTimeStart={selRespDefaultStartTime}
         visibleTimeEnd={selRespDefaultEndTime}
         timeSteps={{ minute: 1 }}

@@ -118,12 +118,10 @@ const HemoGrid = ({
 
   const [allitems, setItems] = React.useState(hemoDatasetItems);
   const [allgroups, setGroups] = React.useState(groups);
-  const [selHemoDefaultStartTime, setHemoDefaultStartTime] = React.useState(
-    hemoDefaultStartTime
-  );
-  const [selHemoDefaultEndTime, setHemoDefaultEndTime] = React.useState(
-    hemoDefaultEndTime
-  );
+  const [selHemoDefaultStartTime, setHemoDefaultStartTime] =
+    React.useState(hemoDefaultStartTime);
+  const [selHemoDefaultEndTime, setHemoDefaultEndTime] =
+    React.useState(hemoDefaultEndTime);
   /*React.useEffect(() => {
     //Run only on first mount with empty array dependency
     setGroups(groups);
@@ -134,12 +132,9 @@ const HemoGrid = ({
     if (hemoDatasetItems !== undefined) {
       setItems(hemoDatasetItems);
     }
-    //console.log(hemoDatasetItems);
     setHemoDefaultStartTime(hemoDefaultStartTime);
     setHemoDefaultEndTime(hemoDefaultEndTime);
   }, [hemoDatasetItems, hemoDefaultStartTime, hemoDefaultEndTime]);
-
-  //const handleLoadhemoChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
     setHemoDefaultStartTime(visibleTimeStart);
@@ -192,8 +187,8 @@ const HemoGrid = ({
       <Timeline
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={selHemoDefaultStartTime}
-        defaultTimeEnd={selHemoDefaultEndTime}
+        defaultTimeStart={moment().add(0, "m")}
+        defaultTimeEnd={moment().add(12, "m")}
         visibleTimeStart={selHemoDefaultStartTime}
         visibleTimeEnd={selHemoDefaultEndTime}
         timeSteps={{ minute: 1 }}

@@ -78,12 +78,10 @@ const MiscGrid = ({
 
   const [allitems, setItems] = React.useState(miscDatasetItems);
   const [allgroups, setGroups] = React.useState(groups);
-  const [selMiscDefaultStartTime, setMiscDefaultStartTime] = React.useState(
-    miscDefaultStartTime
-  );
-  const [selMiscDefaultEndTime, setMiscDefaultEndTime] = React.useState(
-    miscDefaultEndTime
-  );
+  const [selMiscDefaultStartTime, setMiscDefaultStartTime] =
+    React.useState(miscDefaultStartTime);
+  const [selMiscDefaultEndTime, setMiscDefaultEndTime] =
+    React.useState(miscDefaultEndTime);
   /*React.useEffect(() => {
     //Run only on first mount with empty array dependency
     setGroups(groups);
@@ -94,12 +92,9 @@ const MiscGrid = ({
     if (miscDatasetItems !== undefined) {
       setItems(miscDatasetItems);
     }
-    //console.log(hemoDatasetItems);
     setMiscDefaultStartTime(miscDefaultStartTime);
     setMiscDefaultEndTime(miscDefaultEndTime);
   }, [miscDatasetItems, miscDefaultStartTime, miscDefaultEndTime]);
-
-  //const handleLoadhemoChart = () => {};
 
   const handleTimeChange = (visibleTimeStart, visibleTimeEnd) => {
     setMiscDefaultStartTime(visibleTimeStart);
@@ -152,8 +147,8 @@ const MiscGrid = ({
       <Timeline
         groups={allgroups}
         items={allitems}
-        defaultTimeStart={selMiscDefaultStartTime}
-        defaultTimeEnd={selMiscDefaultEndTime}
+        defaultTimeStart={moment().add(0, "m")}
+        defaultTimeEnd={moment().add(12, "m")}
         visibleTimeStart={selMiscDefaultStartTime}
         visibleTimeEnd={selMiscDefaultEndTime}
         timeSteps={{ minute: 1 }}

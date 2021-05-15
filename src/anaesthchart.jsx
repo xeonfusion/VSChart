@@ -285,7 +285,7 @@ const NewChart = forwardRef((props, ref) => {
     },
   }));
 
-  const chartContainer = useRef(null);
+  var chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
   const [chartJdata, setChartJdata] = useState(null);
 
@@ -293,14 +293,11 @@ const NewChart = forwardRef((props, ref) => {
   const [selectedVitalSource, setSelVitalSource] = React.useState(
     "http://localhost:5000/posts"
   );
-  const [selectedVitalSourceType, setSelVitalSourceType] = React.useState(
-    "URL"
-  );
+  const [selectedVitalSourceType, setSelVitalSourceType] =
+    React.useState("URL");
   const [selectedVitalFileSource, setSelVitalFileSource] = React.useState(null);
-  const [
-    dropVitalFileSourceValue,
-    setDropVitalFileSourceValue,
-  ] = React.useState(false);
+  const [dropVitalFileSourceValue, setDropVitalFileSourceValue] =
+    React.useState(false);
   const [selRespDatasetItems, setSelRespDatasetItems] = React.useState([]);
   const [selRespDefaultStartTime, setSelRespDefaultStartTime] = React.useState(
     moment().add(0, "m")
@@ -350,13 +347,8 @@ const NewChart = forwardRef((props, ref) => {
 
   const updateDataset = () => {
     if (chartJdata !== null && chartJdata !== undefined) {
-      var datasets = [];
-      var respdatasets = [];
-      var hemodatasets = [];
-      var miscdatasets = [];
-
       if (selectedMonitorType === "Intellivue") {
-        datasets = [
+        var datasets = [
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_SYS"),
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_DIA"),
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_MEAN"),
@@ -373,7 +365,7 @@ const NewChart = forwardRef((props, ref) => {
           return (chartInstance.data.datasets[index].data = e);
         });
 
-        respdatasets = [
+        var respdatasets = [
           getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_O2_INSP"),
           getDatasetsbyPhysioID(chartJdata, "NOM_CONC_AWAY_O2_ET"),
           getDatasetsbyPhysioID(chartJdata, "NOM_VOL_AWAY_INSP_TIDAL"),
@@ -395,7 +387,7 @@ const NewChart = forwardRef((props, ref) => {
 
         getRespDatasetsItems(respdatasets);
 
-        hemodatasets = [
+        var hemodatasets = [
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_SYS"),
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_DIA"),
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_MEAN"),
@@ -420,7 +412,7 @@ const NewChart = forwardRef((props, ref) => {
 
         getHemoDatasetsItems(hemodatasets);
 
-        miscdatasets = [
+        var miscdatasets = [
           getDatasetsbyPhysioID(chartJdata, "NOM_TEMP_GEN_1"),
           getDatasetsbyPhysioID(chartJdata, "NOM_TEMP_GEN_2"),
           getDatasetsbyPhysioID(chartJdata, "NOM_EEG_BISPECTRAL_INDEX"),
@@ -433,10 +425,8 @@ const NewChart = forwardRef((props, ref) => {
         ];
 
         getMiscDatasetsItems(miscdatasets);
-      }
-
-      if (selectedMonitorType === "DatexS5") {
-        datasets = [
+      } else if (selectedMonitorType === "DatexS5") {
+        var datasets2 = [
           getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
           getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
           getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
@@ -449,11 +439,11 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
         ];
 
-        datasets.map((e, index) => {
+        datasets2.map((e, index) => {
           return (chartInstance.data.datasets[index].data = e);
         });
 
-        respdatasets = [
+        var respdatasets2 = [
           getDatasetsbyPhysioID(chartJdata, "O2_FI"),
           getDatasetsbyPhysioID(chartJdata, "O2_ET"),
           getDatasetsbyPhysioID(chartJdata, "TV_Insp"),
@@ -473,9 +463,9 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "Compliance"),
         ];
 
-        getRespDatasetsItems(respdatasets);
+        getRespDatasetsItems(respdatasets2);
 
-        hemodatasets = [
+        var hemodatasets2 = [
           getDatasetsbyPhysioID(chartJdata, "NIBP_Systolic"),
           getDatasetsbyPhysioID(chartJdata, "NIBP_Diastolic"),
           getDatasetsbyPhysioID(chartJdata, "NIBP_Mean"),
@@ -495,9 +485,9 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "PVI"),
         ];
 
-        getHemoDatasetsItems(hemodatasets);
+        getHemoDatasetsItems(hemodatasets2);
 
-        miscdatasets = [
+        var miscdatasets2 = [
           getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
           getDatasetsbyPhysioID(chartJdata, "T2_Temp"),
           getDatasetsbyPhysioID(chartJdata, "BIS"),
@@ -509,7 +499,7 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "SQI_Entropy"),
         ];
 
-        getMiscDatasetsItems(miscdatasets);
+        getMiscDatasetsItems(miscdatasets2);
       }
 
       chartInstance.update();
@@ -555,7 +545,6 @@ const NewChart = forwardRef((props, ref) => {
         .then((data) => {
           jsondata = JSON.parse(JSON.stringify(data));
           setChartJdata(jsondata);
-          updateDataset();
         })
         .catch((error) => {
           console.log(error);
@@ -582,7 +571,6 @@ const NewChart = forwardRef((props, ref) => {
               jsondata = JSON.parse(JSON.stringify(strdata));
             }
             setChartJdata(jsondata);
-            updateDataset();
           })
           .catch((error) => {
             console.log(error);
@@ -618,7 +606,6 @@ const NewChart = forwardRef((props, ref) => {
             jsondata = JSON.parse(JSON.stringify(readresult));
           }
           setChartJdata(jsondata);
-          updateDataset();
         }
 
         function ErrorData(e) {
@@ -649,7 +636,6 @@ const NewChart = forwardRef((props, ref) => {
         }
         //console.log(reader.result);
         setChartJdata(jsondata);
-        updateDataset();
       };*/
     }
   };
@@ -689,6 +675,19 @@ const NewChart = forwardRef((props, ref) => {
         default:
           break;
       }
+
+      /*//filter and remove duplicates or multiple values in a minute
+      var datasets = datapoints.filter(
+        (value, index, array) =>
+          array.findIndex(
+            (t) =>
+              moment(t.x).startOf("m").valueOf() ===
+              moment(value.x).startOf("m").valueOf()
+          ) === index
+      );
+      console.log(datasets);
+      return datasets;*/
+
       return datapoints;
     }
   };
@@ -733,8 +732,6 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    //console.log(selrespdatasets);
-
     var visiblestarttime = selrespdatasets[0].start_time.clone().startOf("m");
     var visibleendtime = selrespdatasets[0].start_time
       .clone()
@@ -743,8 +740,6 @@ const NewChart = forwardRef((props, ref) => {
 
     setSelRespDefaultStartTime(visiblestarttime);
     setSelRespDefaultEndTime(visibleendtime);
-    //console.log(visiblestarttime);
-    //console.log(visibleendtime);
 
     setSelRespDatasetItems(selrespdatasets);
   };
@@ -771,8 +766,6 @@ const NewChart = forwardRef((props, ref) => {
       });
     });
 
-    //console.log(allItems);
-
     //filter and remove duplicates or multiple values in a minute
     var selhemodatasets = allItems
       .filter(
@@ -789,8 +782,6 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    //console.log(selhemodatasets);
-
     var visiblestarttime = selhemodatasets[0].start_time.clone().startOf("m");
     var visibleendtime = selhemodatasets[0].start_time
       .clone()
@@ -799,8 +790,6 @@ const NewChart = forwardRef((props, ref) => {
 
     setSelHemoDefaultStartTime(visiblestarttime);
     setSelHemoDefaultEndTime(visibleendtime);
-    //console.log(visiblestarttime);
-    //console.log(visibleendtime);
 
     setSelHemoDatasetItems(selhemodatasets);
   };
@@ -845,8 +834,6 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    //console.log(selmiscdatasets);
-
     var visiblestarttime = selmiscdatasets[0].start_time.clone().startOf("m");
     var visibleendtime = selmiscdatasets[0].start_time
       .clone()
@@ -855,8 +842,6 @@ const NewChart = forwardRef((props, ref) => {
 
     setSelMiscDefaultStartTime(visiblestarttime);
     setSelMiscDefaultEndTime(visibleendtime);
-    //console.log(visiblestarttime);
-    //console.log(visibleendtime);
 
     setSelMiscDatasetItems(selmiscdatasets);
   };

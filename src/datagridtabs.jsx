@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataTabs({
+const DataTabs = ({
   respDatasetItems,
   respDefaultStartTime,
   respDefaultEndTime,
@@ -65,7 +65,7 @@ export default function DataTabs({
   miscDatasetItems,
   miscDefaultStartTime,
   miscDefaultEndTime,
-}) {
+}) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -103,4 +103,6 @@ export default function DataTabs({
       </TabPanel>
     </Paper>
   );
-}
+};
+
+export default DataTabs;
