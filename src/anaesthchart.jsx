@@ -6,6 +6,7 @@ import Chartjs from "chart.js";
 import VitalSourceModal from "./vitalsourcedialog.jsx";
 import moment from "moment";
 import DataTabs from "./datagridtabs.jsx";
+import mqtt from "mqtt";
 
 const divStyle = {
   //position: "relative",
@@ -73,6 +74,38 @@ const getDatasetsbyPhysioID4 = (jdata, physioid) => {
       .filter((e) => e.PhysioID === physioid)
       .map((e) => datapoints.push({ x: new Date([e.Timestamp]), y: e.Value }));
   }
+  return datapoints;
+};
+
+const getDatasetsbyPhysioID5 = (jdata, physioid) => {
+  //For reading from mqtt-server url
+  var datapoints = [];
+  //console.log(jdata);
+
+  if (jdata !== null && jdata !== undefined) {
+    /*jdata
+      .filter((e) => e.PhysioID === physioid)
+      .map((e) =>
+        datapoints.push({
+          x: moment(e.Timestamp, "DD-MM-YYYY HH:mm:ss").toDate(),
+          y: e.Value,
+        })
+      );*/
+    jdata.forEach((e) =>
+      e.constructor === Array
+        ? e
+            .filter((e) => e.PhysioID === physioid)
+            .map((e) =>
+              datapoints.push({
+                x: moment(e.Timestamp, "DD-MM-YYYY HH:mm:ss").toDate(),
+                y: e.Value,
+              })
+            )
+        : null
+    );
+  }
+
+  //console.log(datapoints);
   return datapoints;
 };
 
@@ -287,14 +320,23 @@ const NewChart = forwardRef((props, ref) => {
 
   var chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
-  const [chartJdata, setChartJdata] = useState(null);
+  const [chartJdata, setChartJdata] = useState([]);
+  const [mqttJData, setMqttJdata] = useState([]);
+  const [selectedMqttTopic, setSelMqttTopic] = React.useState(
+    "/VSCapture/ASDF/numericdata/#"
+  );
+  const [selectedMqttQoS, setSelMqttQoS] = React.useState("0");
+  const [selectedMqttUser, setSelMqttUser] = React.useState("");
+  const [selectedMqttPass, setSelMqttPass] = React.useState("");
 
   const [showVitalSource, setVitalSourceShow] = React.useState(false);
+  const [selectedVitalMqttSource, setSelVitalMqttSourceURLValue] =
+    React.useState("ws://localhost:8883/");
   const [selectedVitalSource, setSelVitalSource] = React.useState(
     "http://localhost:5000/posts"
   );
   const [selectedVitalSourceType, setSelVitalSourceType] =
-    React.useState("URL");
+    React.useState("VSCSVFile");
   const [selectedVitalFileSource, setSelVitalFileSource] = React.useState(null);
   const [dropVitalFileSourceValue, setDropVitalFileSourceValue] =
     React.useState(false);
@@ -347,6 +389,7 @@ const NewChart = forwardRef((props, ref) => {
 
   const updateDataset = () => {
     if (chartJdata !== null && chartJdata !== undefined) {
+      //console.log(chartJdata);
       if (selectedMonitorType === "Intellivue") {
         var datasets = [
           getDatasetsbyPhysioID(chartJdata, "NOM_PRESS_BLD_NONINV_SYS"),
@@ -506,6 +549,162 @@ const NewChart = forwardRef((props, ref) => {
     }
   };
 
+  const [client, setClient] = React.useState(null);
+  const [isSubed, setIsSub] = React.useState(false);
+  const [mqttConnectStatus, setMqttConnectStatus] =
+    React.useState("Disconnected");
+
+  const handleMqttConnect = () => {
+    var clientId = `mqttjs_+${Math.random().toString(16).substr(2, 8)}`;
+
+    const options = {
+      clientId: clientId,
+      username: selectedMqttUser,
+      password: selectedMqttPass,
+      keepalive: 30,
+      protocolId: "MQTT",
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: "WillMsg",
+        payload: "Connection Closed abnormally..!",
+        qos: 1,
+        retain: false,
+      },
+      rejectUnauthorized: false,
+    };
+
+    mqttConnect(selectedVitalMqttSource, options);
+  };
+
+  const handleMqttSubscribe = () => {
+    const subscription = {
+      topic: selectedMqttTopic,
+      qos: parseInt(selectedMqttQoS),
+    };
+    mqttSub(subscription);
+  };
+
+  const handleMqttPayload = (payload) => {
+    try {
+      var message = JSON.parse(payload.message);
+    } catch (e) {
+      console.log("Error parsing JSON message: " + e);
+    }
+    //console.log(message);
+    setMqttJdata(message);
+    //setChartJdata(message);
+  };
+
+  useEffect(() => {
+    if (chartInstance && chartContainer && chartContainer.current) {
+      chartJdata.push(mqttJData);
+      //console.log(chartJdata);
+      updateDataset();
+    }
+  }, [mqttJData]);
+
+  const handleMqttDisconnect = () => {
+    mqttDisconnect();
+  };
+
+  const handleMqttOptions = () => {};
+
+  const mqttConnect = (host, mqttOption) => {
+    setMqttConnectStatus("Connecting");
+    setClient(mqtt.connect(host, mqttOption));
+  };
+
+  const mqttDisconnect = () => {
+    if (client) {
+      client.end(() => {
+        setMqttConnectStatus("Disconnected");
+      });
+    }
+  };
+
+  const mqttPublish = (context) => {
+    if (client) {
+      const { topic, qos, payload } = context;
+      client.publish(topic, payload, { qos }, (error) => {
+        if (error) {
+          console.log("Publish error: ", error);
+        }
+      });
+    }
+  };
+
+  const mqttSub = (subscription) => {
+    if (client) {
+      const { topic, qos } = subscription;
+      client.subscribe(topic, { qos }, (error) => {
+        if (error) {
+          console.log("Subscribe to topics error", error);
+          return;
+        }
+        setIsSub(true);
+      });
+    }
+  };
+
+  const mqttUnSub = (subscription) => {
+    if (client) {
+      const { topic } = subscription;
+      client.unsubscribe(topic, (error) => {
+        if (error) {
+          console.log("Unsubscribe error", error);
+          return;
+        }
+        setIsSub(false);
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    if (client) {
+      console.log(client);
+      client.on("connect", () => {
+        setMqttConnectStatus("Connected");
+        const subscription = {
+          topic: selectedMqttTopic,
+          qos: parseInt(selectedMqttQoS),
+        };
+        mqttSub(subscription);
+        console.log(subscription);
+      });
+      client.on("error", (err) => {
+        console.error("Connection error: ", err);
+        client.end();
+      });
+      client.on("reconnect", () => {
+        setMqttConnectStatus("Reconnecting");
+      });
+      client.on("message", (topic, message) => {
+        const payload = {
+          topic,
+          message: message.toString(),
+        };
+        setMqttConnectStatus("Receiving messages");
+        //console.log(payload);
+        handleMqttPayload(payload);
+      });
+    }
+  }, [client]);
+
+  React.useEffect(() => {
+    if (selectedVitalSourceType === "MQTTURL") handleMqttConnect();
+    else handleMqttDisconnect();
+  }, [
+    selectedVitalMqttSource,
+    selectedMqttTopic,
+    selectedMqttQoS,
+    selectedVitalSourceType,
+    selectedMqttUser,
+    selectedMqttPass,
+  ]);
+
   const handleVitalsSource = () => {
     setVitalSourceShow(true);
   };
@@ -642,6 +841,12 @@ const NewChart = forwardRef((props, ref) => {
 
   const handleVitalSourceChildState = (
     childvitalsourcestate,
+    selectedVitalMqttSource,
+    mqttConnectStatus,
+    selectedMqttTopic,
+    selectedMqttQoS,
+    selectedMqttUser,
+    selectedMqttPass,
     selectedVitalSource,
     selectedVitalFileSource,
     selectedVitalSourceType,
@@ -649,6 +854,12 @@ const NewChart = forwardRef((props, ref) => {
     selectedMonitorType
   ) => {
     setVitalSourceShow(childvitalsourcestate);
+    setSelVitalMqttSourceURLValue(selectedVitalMqttSource);
+    setMqttConnectStatus(mqttConnectStatus);
+    setSelMqttTopic(selectedMqttTopic);
+    setSelMqttQoS(selectedMqttQoS);
+    setSelMqttUser(selectedMqttUser);
+    setSelMqttPass(selectedMqttPass);
     setSelVitalSource(selectedVitalSource);
     setSelVitalFileSource(selectedVitalFileSource);
     setSelVitalSourceType(selectedVitalSourceType);
@@ -672,6 +883,9 @@ const NewChart = forwardRef((props, ref) => {
         case "VSJSONFile":
           datapoints = getDatasetsbyPhysioID4(jdata, physioid);
           break;
+        case "MQTTURL":
+          datapoints = getDatasetsbyPhysioID5(jdata, physioid);
+          break;
         default:
           break;
       }
@@ -694,7 +908,6 @@ const NewChart = forwardRef((props, ref) => {
 
   const getRespDatasetsItems = (respdatasets) => {
     var allItems = [];
-
     //convert to flat object data array
     respdatasets.map((item, index) => {
       return item.map((item2, index2) => {
@@ -732,16 +945,18 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    var visiblestarttime = selrespdatasets[0].start_time.clone().startOf("m");
-    var visibleendtime = selrespdatasets[0].start_time
-      .clone()
-      .startOf("m")
-      .add(12, "m");
+    if (selrespdatasets[0] !== null && selrespdatasets[0] !== undefined) {
+      var visiblestarttime = selrespdatasets[0].start_time.clone().startOf("m");
+      var visibleendtime = selrespdatasets[0].start_time
+        .clone()
+        .startOf("m")
+        .add(12, "m");
 
-    setSelRespDefaultStartTime(visiblestarttime);
-    setSelRespDefaultEndTime(visibleendtime);
+      setSelRespDefaultStartTime(visiblestarttime);
+      setSelRespDefaultEndTime(visibleendtime);
 
-    setSelRespDatasetItems(selrespdatasets);
+      setSelRespDatasetItems(selrespdatasets);
+    }
   };
 
   const getHemoDatasetsItems = (hemodatasets) => {
@@ -782,16 +997,18 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    var visiblestarttime = selhemodatasets[0].start_time.clone().startOf("m");
-    var visibleendtime = selhemodatasets[0].start_time
-      .clone()
-      .startOf("m")
-      .add(12, "m");
+    if (selhemodatasets[0] !== null && selhemodatasets[0] !== undefined) {
+      var visiblestarttime = selhemodatasets[0].start_time.clone().startOf("m");
+      var visibleendtime = selhemodatasets[0].start_time
+        .clone()
+        .startOf("m")
+        .add(12, "m");
 
-    setSelHemoDefaultStartTime(visiblestarttime);
-    setSelHemoDefaultEndTime(visibleendtime);
+      setSelHemoDefaultStartTime(visiblestarttime);
+      setSelHemoDefaultEndTime(visibleendtime);
 
-    setSelHemoDatasetItems(selhemodatasets);
+      setSelHemoDatasetItems(selhemodatasets);
+    }
   };
 
   const getMiscDatasetsItems = (miscdatasets) => {
@@ -834,16 +1051,18 @@ const NewChart = forwardRef((props, ref) => {
         })
       );
 
-    var visiblestarttime = selmiscdatasets[0].start_time.clone().startOf("m");
-    var visibleendtime = selmiscdatasets[0].start_time
-      .clone()
-      .startOf("m")
-      .add(12, "m");
+    if (selmiscdatasets[0] !== null && selmiscdatasets[0] !== undefined) {
+      var visiblestarttime = selmiscdatasets[0].start_time.clone().startOf("m");
+      var visibleendtime = selmiscdatasets[0].start_time
+        .clone()
+        .startOf("m")
+        .add(12, "m");
 
-    setSelMiscDefaultStartTime(visiblestarttime);
-    setSelMiscDefaultEndTime(visibleendtime);
+      setSelMiscDefaultStartTime(visiblestarttime);
+      setSelMiscDefaultEndTime(visibleendtime);
 
-    setSelMiscDatasetItems(selmiscdatasets);
+      setSelMiscDatasetItems(selmiscdatasets);
+    }
   };
 
   return (
@@ -859,6 +1078,12 @@ const NewChart = forwardRef((props, ref) => {
       <VitalSourceModal
         showVitalSourceDialog={showVitalSource}
         childVitalSourceState={handleVitalSourceChildState}
+        selectedVitalMqttURLSource={selectedVitalMqttSource}
+        selectedMqttTopic={selectedMqttTopic}
+        selectedMqttQoS={selectedMqttQoS}
+        selectedMqttUser={selectedMqttUser}
+        selectedMqttPass={selectedMqttPass}
+        mqttConnectionStatus={mqttConnectStatus}
         selectedVitalURLSource={selectedVitalSource}
         selectedVitalFileSource={selectedVitalFileSource}
         selectedVitalSourceType={selectedVitalSourceType}

@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -14,10 +15,17 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import { fileOpen } from "browser-fs-access";
+import MqttOptionsModal from "./mqttoptionsdialog.jsx";
 
 const VitalSourceModal = ({
   showVitalSourceDialog,
   childVitalSourceState,
+  selectedVitalMqttURLSource,
+  selectedMqttTopic,
+  selectedMqttQoS,
+  selectedMqttUser,
+  selectedMqttPass,
+  mqttConnectionStatus,
   selectedVitalURLSource,
   selectedVitalFileSource,
   selectedVitalSourceType,
@@ -25,22 +33,39 @@ const VitalSourceModal = ({
   selectedMonitorType,
 }) => {
   const [showVitalSource, setVitalSourceShow] = React.useState(false);
-  const [vitalsourcetype, setVitalSourceType] = React.useState("URL");
+  const [vitalsourcetype, setVitalSourceType] = React.useState("MQTTURL");
+  const [showMqttOptions, setMqttOptionsShow] = React.useState(false);
+  const [mqttConnectStatus, setMqttConnectStatus] =
+    React.useState("Disconnected");
   const [vitalsourceurlvalue, setVitalSourceURLValue] = React.useState(
     "http://localhost:5000/posts"
   );
+  const [vitalsourcemqtturlvalue, setVitalSourceMqttURLValue] = React.useState(
+    "ws://localhost:8883/"
+  );
+  const [vitalMqttTopic, setVitalMqttTopic] = React.useState(
+    "/VSCapture/ASDF/numericdata/#"
+  );
+  const [vitalMqttQoS, setVitalMqttQoS] = React.useState("0");
+  const [vitalMqttUser, setVitalMqttUser] = React.useState("");
+  const [vitalMqttPass, setVitalMqttPass] = React.useState("");
+
   const [vitalsourcefilevalue, setVitalSourceFileValue] = React.useState(null);
   const [vitalsourcefilename, setVitalSourceFilename] = React.useState();
-  const [
-    dropvitalsourcefilevalue,
-    setDropVitalSourceFileValue,
-  ] = React.useState(false);
+  const [dropvitalsourcefilevalue, setDropVitalSourceFileValue] =
+    React.useState(false);
   const [monitortype, setMonitorType] = React.useState("DatexS5");
 
   const handleClose = () => {
     setVitalSourceShow(false);
     childVitalSourceState(
       false,
+      vitalsourcemqtturlvalue,
+      mqttConnectStatus,
+      vitalMqttTopic,
+      vitalMqttQoS,
+      vitalMqttUser,
+      vitalMqttPass,
       vitalsourceurlvalue,
       vitalsourcefilevalue,
       vitalsourcetype,
@@ -60,6 +85,28 @@ const VitalSourceModal = ({
 
   const handleURLChange = (event) => {
     setVitalSourceURLValue(event.target.value);
+  };
+
+  const handleMqttURLChange = (event) => {
+    setVitalSourceMqttURLValue(event.target.value);
+  };
+
+  const handleMqttOptions = () => {
+    setMqttOptionsShow(true);
+  };
+
+  const handleMqttOptionsChildState = (
+    childmqttoptionsstate,
+    selectedMqttTopic,
+    selectedMqttQoS,
+    selectedMqttUser,
+    selectedMqttPass
+  ) => {
+    setMqttOptionsShow(childmqttoptionsstate);
+    setVitalMqttTopic(selectedMqttTopic);
+    setVitalMqttQoS(selectedMqttQoS);
+    setVitalMqttUser(selectedMqttUser);
+    setVitalMqttPass(selectedMqttPass);
   };
 
   const handleCSVButtonClick = () => {
@@ -128,6 +175,11 @@ const VitalSourceModal = ({
     setVitalSourceType(selectedVitalSourceType);
     setDropVitalSourceFileValue(dropVitalSourceFileValue);
     setMonitorType(selectedMonitorType);
+    setMqttConnectStatus(mqttConnectionStatus);
+    setVitalMqttTopic(selectedMqttTopic);
+    setVitalMqttQoS(selectedMqttQoS);
+    setVitalMqttUser(selectedMqttUser);
+    setVitalMqttPass(selectedMqttPass);
   }, [
     showVitalSourceDialog,
     selectedVitalURLSource,
@@ -135,6 +187,11 @@ const VitalSourceModal = ({
     selectedVitalSourceType,
     dropVitalSourceFileValue,
     selectedMonitorType,
+    mqttConnectionStatus,
+    selectedMqttTopic,
+    selectedMqttQoS,
+    selectedMqttUser,
+    selectedMqttPass,
   ]);
 
   return (
@@ -184,6 +241,42 @@ const VitalSourceModal = ({
                     onChange={handleRadioChange}
                   >
                     <FormControlLabel
+                      value="MQTTURL"
+                      control={<Radio />}
+                      label={
+                        <TextField
+                          id="outlined-mqtt-url"
+                          label="MQTT Server WebSocket URL"
+                          type="url"
+                          defaultValue="ws://localhost:8883"
+                          variant="outlined"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          value={vitalsourcemqtturlvalue}
+                          onChange={handleMqttURLChange}
+                          style={{ width: 450, paddingBottom: "1px" }}
+                          helperText={"Status: " + mqttConnectStatus}
+                          fullWidth
+                        />
+                      }
+                    />
+                    <ButtonGroup
+                      style={{ paddingLeft: "30px", paddingBottom: "10px" }}
+                    >
+                      <Button
+                        variant="outlined"
+                        color="default"
+                        size="small"
+                        style={{
+                          maxWidth: "100px",
+                        }}
+                        onClick={handleMqttOptions}
+                      >
+                        Options
+                      </Button>
+                    </ButtonGroup>
+                    <FormControlLabel
                       value="URL"
                       control={<Radio />}
                       label={
@@ -198,7 +291,10 @@ const VitalSourceModal = ({
                           }}
                           value={vitalsourceurlvalue}
                           onChange={handleURLChange}
-                          style={{ width: 450, paddingBottom: "10px" }}
+                          style={{
+                            width: 450,
+                            paddingBottom: "10px",
+                          }}
                           fullWidth
                         />
                       }
@@ -297,6 +393,14 @@ const VitalSourceModal = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <MqttOptionsModal
+        showMqttOptionsDialog={showMqttOptions}
+        childMqttOptionsState={handleMqttOptionsChildState}
+        selectedMqttTopic={vitalMqttTopic}
+        selectedMqttQoS={vitalMqttQoS}
+        selectedMqttUser={vitalMqttUser}
+        selectedMqttPass={vitalMqttPass}
+      />
     </>
   );
 };
