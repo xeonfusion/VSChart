@@ -565,7 +565,7 @@ const NewChart = forwardRef((props, ref) => {
       protocolId: "MQTT",
       protocolVersion: 4,
       clean: true,
-      reconnectPeriod: 1000,
+      reconnectPeriod: 5000,
       connectTimeout: 30 * 1000,
       will: {
         topic: "WillMsg",
@@ -687,7 +687,7 @@ const NewChart = forwardRef((props, ref) => {
         setMqttConnectStatus("Reconnecting");
       });
       client.on("close", () => {
-        setMqttConnectStatus("Disconnecting");
+        setMqttConnectStatus("Disconnected");
       });
       client.on("message", (topic, message) => {
         const payload = {
