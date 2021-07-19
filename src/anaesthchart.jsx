@@ -667,6 +667,11 @@ const NewChart = forwardRef((props, ref) => {
       console.log(client);
       client.on("connect", () => {
         setMqttConnectStatus("Connected");
+        const unsubscription = {
+          topic: "/#",
+          qos: parseInt(selectedMqttQoS),
+        };
+        mqttUnSub(unsubscription);
         const subscription = {
           topic: selectedMqttTopic,
           qos: parseInt(selectedMqttQoS),
@@ -680,6 +685,9 @@ const NewChart = forwardRef((props, ref) => {
       });
       client.on("reconnect", () => {
         setMqttConnectStatus("Reconnecting");
+      });
+      client.on("close", () => {
+        setMqttConnectStatus("Disconnecting");
       });
       client.on("message", (topic, message) => {
         const payload = {
