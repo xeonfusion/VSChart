@@ -2,6 +2,12 @@
 
 It supports timeline based adding or removing of intraoperative anaesthetic medications and automatic loading of monitor vital signs from the CSV or JSON file exported by VSCaptureWave or VSCaptureMP C# app (https://sourceforge.net/projects/vscapture/)
 
+<img width="1438" alt="Screenshot 2021-07-19 at 8 50 44 PM" src="https://user-images.githubusercontent.com/10882257/126343603-dea42d23-b180-42e6-9a7f-7435b410f443.png">
+
+<img width="1552" alt="Screenshot 2021-07-19 at 8 46 16 PM" src="https://user-images.githubusercontent.com/10882257/126344034-2613139c-72e4-4c22-89e0-a571ee36c337.png">
+
+![Screenshot](https://pbs.twimg.com/media/Ezp_Q4DVIAE3Au6?format=jpg&name=large)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
