@@ -478,7 +478,7 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "RR"),
           getDatasetsbyPhysioID(chartJdata, "T1_Temp"),
           getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
-          getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Diastolic"),
           getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
         ];
 
@@ -515,7 +515,7 @@ const NewChart = forwardRef((props, ref) => {
           getDatasetsbyPhysioID(chartJdata, "ECG_HR"),
           getDatasetsbyPhysioID(chartJdata, "SpO2"),
           getDatasetsbyPhysioID(chartJdata, "P1_Systolic"),
-          getDatasetsbyPhysioID(chartJdata, "P1_Disatolic"),
+          getDatasetsbyPhysioID(chartJdata, "P1_Diastolic"),
           getDatasetsbyPhysioID(chartJdata, "P1_Mean"),
           getDatasetsbyPhysioID(chartJdata, "P2_Systolic"),
           getDatasetsbyPhysioID(chartJdata, "P2_Diastolic"),
