@@ -6,7 +6,7 @@ It supports timeline based adding or removing of intraoperative anaesthetic medi
 
 <img width="1552" alt="Screenshot 2021-07-19 at 8 46 16 PM" src="https://user-images.githubusercontent.com/10882257/126344034-2613139c-72e4-4c22-89e0-a571ee36c337.png">
 
-![Screenshot](https://pbs.twimg.com/media/Ezp_Q4DVIAE3Au6?format=jpg&name=large)
+![Screen Shot 2021-04-23 at 1 08 27 PM](https://user-images.githubusercontent.com/10882257/126348055-3dd015bc-c62d-4967-a60e-7a77a3af7bb2.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
