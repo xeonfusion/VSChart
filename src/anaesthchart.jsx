@@ -2,11 +2,12 @@
 
 import React from "react";
 import { useEffect, useRef, useState, forwardRef } from "react";
-import Chartjs from "chart.js";
+import Chart from 'chart.js/auto';
+import 'chartjs-adapter-moment';
 import VitalSourceModal from "./vitalsourcedialog.jsx";
 import moment from "moment";
 import DataTabs from "./datagridtabs.jsx";
-import mqtt from "mqtt";
+import mqtt from "mqtt/dist/mqtt";
 
 const divStyle = {
   //position: "relative",
@@ -234,14 +235,18 @@ const chartConfig = {
       filler: {
         propagate: false,
       },
+      legend: {
+        display: true,
+        position: "left",
+        align: "center",
+        labels: {
+          usePointStyle: true,
+        },
+        tooltip: {
+          mode: "x",
+          intersect: true,
+        },
     },
-    legend: {
-      display: true,
-      position: "left",
-      align: "center",
-      labels: {
-        usePointStyle: true,
-      },
       onHover: (e, legendItem) => {
         if (newChartInstance != null) {
           var index = legendItem.datasetIndex;
@@ -263,30 +268,23 @@ const chartConfig = {
       mode: "index",
       intersect: false,
     },
-    tooltips: {
-      mode: "x",
-      intersect: true,
-    },
+    
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      yAxes: [
-        {
-          ticks: {
+      y: {
             beginAtZero: true,
             suggestedMax: 200,
-          },
-          scaleLabel: {
+          title: {
             display: true,
-            labelString: "Value",
+            text: "Value",
           },
         },
-      ],
-      xAxes: [
-        {
-          type: "time",
+      
+      x: {
+          type: "timeseries",
           //distribution: 'linear',
-          distribution: "series",
+          //distribution: "series",
           time: {
             unit: "minute",
             displayFormats: { minute: "HH:mm" },
@@ -298,12 +296,12 @@ const chartConfig = {
             source: "auto",
             //stepSize: 1
           },
-          scaleLabel: {
+          title: {
             display: true,
-            labelString: "Timestamp",
-          },
-        },
-      ],
+            text: "Timestamp",
+          }
+        }
+      
     },
   },
 };
@@ -382,7 +380,7 @@ const NewChart = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
-      newChartInstance = new Chartjs(chartContainer.current, chartConfig);
+      newChartInstance = new Chart(chartContainer.current, chartConfig);
       setChartInstance(newChartInstance);
     }
   }, [chartContainer]);
