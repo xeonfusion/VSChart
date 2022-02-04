@@ -190,6 +190,7 @@ const eventitems = [
 ];
 
 const MedicationGrid2 = forwardRef((props, ref) => {
+  const { respDatasetItems, hemoDatasetItems, miscDatasetItems } = props;
   //Forward Menu button actions
   React.useImperativeHandle(ref, () => ({
     handleShowMedCall: () => {
@@ -409,6 +410,10 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var groups = allgroups.map((group) => group);
     var eventitems = alleventitems.map((eventitem) => eventitem);
 
+    var respdataitems = respDatasetItems.map((item) => item);
+    var hemodataitems = hemoDatasetItems.map((item) => item);
+    var miscdataitems = miscDatasetItems.map((item) => item);
+
     /*var itemsdata = JSON.stringify(items);
     var groupsdata = JSON.stringify(groups);
     var eventitemsdata = JSON.stringify(eventitems);
@@ -423,7 +428,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
 
     var data = Object.assign(
       {},
-      { items: items, groups: groups, eventitems: eventitems }
+      {
+        items: items,
+        groups: groups,
+        eventitems: eventitems,
+        respdataitems: respdataitems,
+        hemodataitems: hemodataitems,
+        miscdataitems: miscdataitems,
+      }
     );
 
     const blob = new Blob([JSON.stringify(data)], {

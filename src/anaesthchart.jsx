@@ -8,6 +8,7 @@ import VitalSourceModal from "./vitalsourcedialog.jsx";
 import moment from "moment";
 import DataTabs from "./datagridtabs.jsx";
 import mqtt from "mqtt/dist/mqtt";
+import MedicationGrid2 from "./medicationgrid2.jsx";
 
 const divStyle = {
   //position: "relative",
@@ -320,6 +321,7 @@ const chartConfig = {
 };
 
 const NewChart = forwardRef((props, ref) => {
+  const { forwardedRef, ...rest } = props;
   React.useImperativeHandle(ref, () => ({
     handleLoadChartCall() {
       handleLoadChart();
@@ -1049,6 +1051,12 @@ const NewChart = forwardRef((props, ref) => {
 
   return (
     <>
+      <MedicationGrid2
+        ref={forwardedRef}
+        respDatasetItems={selRespDatasetItems}
+        hemoDatasetItems={selHemoDatasetItems}
+        miscDatasetItems={selMiscDatasetItems}
+      />
       <div>
         <canvas
           style={divStyle}

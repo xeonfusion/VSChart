@@ -15,7 +15,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import AnaesthesiaChart from "./anaesthchart.jsx";
-import MedicationGrid2 from "./medicationgrid2.jsx";
+//import MedicationGrid2 from "./medicationgrid2.jsx";
 import { ListItem, ListItemText } from "@material-ui/core";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
@@ -272,8 +272,7 @@ export default function AppMenu() {
       </Drawer>
       <main className={classes.content}>
         <Toolbar />
-        <MedicationGrid2 ref={medgridRef} />
-        <AnaesthesiaChart ref={chartRef} />
+        <AnaesthesiaChart ref={chartRef} forwardedRef={medgridRef} />
       </main>
     </div>
   );
