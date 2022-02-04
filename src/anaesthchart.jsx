@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useEffect, useRef, useState, forwardRef } from "react";
-import Chart from 'chart.js/auto';
-import 'chartjs-adapter-moment';
+import Chart from "chart.js/auto";
+import "chartjs-adapter-moment";
 import VitalSourceModal from "./vitalsourcedialog.jsx";
 import moment from "moment";
 import DataTabs from "./datagridtabs.jsx";
@@ -27,7 +27,10 @@ const getDatasetsbyPhysioID1 = (jdata, physioid) => {
         ? e
             .filter((e) => e.PhysioID === physioid)
             .map((e) =>
-              datapoints.push({ x: new Date([e.Timestamp]), y: e.Value })
+              datapoints.push({
+                x: moment(e.Timestamp, "DD-MM-YYYY HH:mm:ss").toDate(),
+                y: e.Value,
+              })
             )
         : null
     );
@@ -45,7 +48,10 @@ const getDatasetsbyPhysioID2 = (jdata, physioid) => {
         ? e
             .filter((e) => e.PhysioID === physioid)
             .map((e) =>
-              datapoints.push({ x: new Date([e.Timestamp]), y: e.Value })
+              datapoints.push({
+                x: moment(e.Timestamp, "DD-MM-YYYY HH:mm:ss").toDate(),
+                y: e.Value,
+              })
             )
         : null
     );
@@ -59,7 +65,10 @@ const getDatasetsbyPhysioID3 = (jdata, physioid) => {
   //console.log(jdata);
   if (jdata !== null) {
     jdata.map((e) =>
-      datapoints.push({ x: new Date([e.Time]), y: e[physioid] })
+      datapoints.push({
+        x: moment(e.Time, "DD-MM-YYYY HH:mm:ss").toDate(),
+        y: e[physioid],
+      })
     );
   }
   //console.log(datapoints);
@@ -73,7 +82,12 @@ const getDatasetsbyPhysioID4 = (jdata, physioid) => {
   if (jdata !== null) {
     jdata
       .filter((e) => e.PhysioID === physioid)
-      .map((e) => datapoints.push({ x: new Date([e.Timestamp]), y: e.Value }));
+      .map((e) =>
+        datapoints.push({
+          x: moment(e.Timestamp, "DD-MM-YYYY HH:mm:ss").toDate(),
+          y: e.Value,
+        })
+      );
   }
   return datapoints;
 };
@@ -246,7 +260,7 @@ const chartConfig = {
           mode: "x",
           intersect: true,
         },
-    },
+      },
       onHover: (e, legendItem) => {
         if (newChartInstance != null) {
           var index = legendItem.datasetIndex;
@@ -268,40 +282,39 @@ const chartConfig = {
       mode: "index",
       intersect: false,
     },
-    
+
     responsive: true,
     maintainAspectRatio: false,
     scales: {
       y: {
-            beginAtZero: true,
-            suggestedMax: 200,
-          title: {
-            display: true,
-            text: "Value",
-          },
+        beginAtZero: true,
+        suggestedMax: 200,
+        title: {
+          display: true,
+          text: "Value",
         },
-      
+      },
+
       x: {
-          type: "timeseries",
-          //distribution: 'linear',
-          //distribution: "series",
-          time: {
-            unit: "minute",
-            displayFormats: { minute: "HH:mm" },
-            parser: "YYYYMMDDTHH:mm",
-            tooltipFormat: "ll HH:mm",
-            //round:'minute'
-          },
-          ticks: {
-            source: "auto",
-            //stepSize: 1
-          },
-          title: {
-            display: true,
-            text: "Timestamp",
-          }
-        }
-      
+        type: "timeseries",
+        //distribution: 'linear',
+        //distribution: "series",
+        time: {
+          unit: "minute",
+          displayFormats: { minute: "HH:mm" },
+          parser: "YYYYMMDDTHH:mm",
+          tooltipFormat: "ll HH:mm",
+          //round:'minute'
+        },
+        ticks: {
+          source: "auto",
+          //stepSize: 1
+        },
+        title: {
+          display: true,
+          text: "Timestamp",
+        },
+      },
     },
   },
 };
@@ -759,29 +772,24 @@ const NewChart = forwardRef((props, ref) => {
       "VSJSONFile" ||
       "VSCSVFile"
     ) {
+      function ReadData(result) {
+        var readresult = CSVToJSON(result);
+        //console.log(readresult);
+        if (readresult !== null && readresult !== undefined) {
+          jsondata = JSON.parse(JSON.stringify(readresult));
+        }
+        setChartJdata(jsondata);
+      }
       if (
         dropVitalFileSourceValue === false &&
         selectedVitalFileSource !== null
       ) {
-        //var path = URL.createObjectURL(selectedVitalFileSource);
-        var path = selectedVitalFileSource.name;
-
-        fetch(path, { mode: "no-cors" })
-          .then((response) => response.text())
-          .then((data) => {
-            var strdata = CSVToJSON(data);
-            if (selectedVitalSourceType !== "VSCSVFile") {
-              jsondata = JSON.parse(data);
-            } else {
-              jsondata = JSON.parse(JSON.stringify(strdata));
-            }
-            setChartJdata(jsondata);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-        //URL.revokeObjectURL(path);
+        //var path = selectedVitalFileSource.name;
+        const reader = new FileReader();
+        reader.onload = function LoadReadData(e) {
+          ReadData(reader.result);
+        };
+        reader.readAsText(selectedVitalFileSource);
       } else if (
         dropVitalFileSourceValue === true &&
         selectedVitalFileSource !== null
@@ -804,44 +812,12 @@ const NewChart = forwardRef((props, ref) => {
           }, errorCallback);
         }
 
-        function ReadData(result) {
-          var readresult = CSVToJSON(result);
-          //console.log(readresult);
-          if (readresult !== null && readresult !== undefined) {
-            jsondata = JSON.parse(JSON.stringify(readresult));
-          }
-          setChartJdata(jsondata);
-        }
-
         function ErrorData(e) {
           console.log(e);
         }
 
         ReadFile(fileentry, ReadData, ErrorData);
       }
-
-      /*var reader = new FileReader();
-      if (selectedVitalFileSource !== undefined) {
-        reader.readAsText(selectedVitalFileSource);
-      }
-      reader.onload = () => {
-        try {
-          if (selectedVitalSourceType !== "VSCSVFile") {
-            jsondata = JSON.parse(reader.result);
-          } else {
-            var readresult = CSVToJSON(reader.result);
-            if (readresult !== null && readresult !== undefined)
-            {
-              jsondata = JSON.parse(JSON.stringify(readresult));
-            }
-            
-          }
-        } catch (e) {
-          console.log("Error reading file", e);
-        }
-        //console.log(reader.result);
-        setChartJdata(jsondata);
-      };*/
     }
   };
 

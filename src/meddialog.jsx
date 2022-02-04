@@ -488,9 +488,8 @@ const MedModal = ({
   //const [selectItem, setSelItem] = React.useState(medItems[0]);
   const [selectItem, setSelItem] = React.useState(selectedItem);
   const [selectItemIndex, setSelItemIndex] = React.useState(selectedItemIndex);
-  const [selectGroupIndex, setSelGroupIndex] = React.useState(
-    selectedGroupIndex
-  );
+  const [selectGroupIndex, setSelGroupIndex] =
+    React.useState(selectedGroupIndex);
   const [selectDose, setSelDose] = React.useState(0);
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
   const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
@@ -500,7 +499,7 @@ const MedModal = ({
   const [selectAddMeds, setSelAddMeds] = React.useState("");
   const [selectAddMedsList, setSelAddMedsList] = React.useState(medGroups);
   const [selectMedType, setSelMedType] = React.useState(medtypes[0]);
-  const [selectedDate, setSelDateChange] = React.useState(new Date());
+  const [selectedDate, setSelDateChange] = React.useState(moment());
 
   const filter = createFilterOptions();
 
@@ -1191,7 +1190,7 @@ const MedModal = ({
             spacing={2}
             direction="row"
             display="flex"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs>
@@ -1200,7 +1199,7 @@ const MedModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
               >
                 <Grid item xs>
@@ -1309,7 +1308,7 @@ const MedModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="stretch"
               >
                 <Grid item xs>
@@ -1382,7 +1381,7 @@ const MedModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="stretch"
               >
                 <Grid item xs>
@@ -1455,7 +1454,7 @@ const MedModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="stretch"
               >
                 <Grid item xs>
@@ -1512,7 +1511,7 @@ const MedModal = ({
                     labelId="Event timing"
                     variant="outlined"
                     fullWidth
-                    helperText="Get Event timing"
+                    helpertext="Get Event timing"
                     defaultValue={eventtimes[0]}
                     value={selectEvent}
                     onChange={handleEventChange}
