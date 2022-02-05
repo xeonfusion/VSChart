@@ -14,102 +14,15 @@ import Timeline, {
 import MedModal from "./meddialog.jsx";
 import EventModal from "./eventdialog.jsx";
 //import Button from "@material-ui/core/Button";
-
-const groups = [
-  {
-    id: 1,
-    title: "Propofol",
-    unit: "mg",
-    route: "Intravenous",
-    durationunit: "bolus (sec)",
-    type: "InductionAgent",
-    color: "yellow",
-  },
-  {
-    id: 2,
-    title: "Fentanyl",
-    unit: "mcg",
-    route: "Intravenous",
-    durationunit: "bolus (sec)",
-    type: "Opioid",
-    color: "deepskyblue",
-  },
-  {
-    id: 3,
-    title: "Lidocaine",
-    unit: "mg",
-    route: "Subcutaneous",
-    durationunit: "bolus (sec)",
-    type: "LocalAnaesthetic",
-    color: "grey",
-  },
-  {
-    id: 4,
-    title: "Rocuronium",
-    unit: "mg",
-    route: "Intravenous",
-    durationunit: "bolus (sec)",
-    type: "MuscleRelaxant",
-    color: "red",
-  },
-  {
-    id: 5,
-    title: "Ringers",
-    unit: "ml/hr",
-    route: "Intravenous",
-    durationunit: "min",
-    type: "IVfluid",
-    color: "white",
-  },
-];
-
-const items = [
-  {
-    id: 1,
-    group: 1,
-    title: "150",
-    start_time: moment().add(0.5, "m"),
-    end_time: moment().add(1, "m"),
-    rightTitle: "",
-  },
-  {
-    id: 2,
-    group: 1,
-    title: "50",
-    start_time: moment().add(1.5, "m"),
-    end_time: moment().add(2, "m"),
-    rightTitle: "",
-  },
-
-  {
-    id: 3,
-    group: 2,
-    title: "75",
-    start_time: moment().add(0, "m"),
-    end_time: moment().add(0.5, "m"),
-  },
-  {
-    id: 4,
-    group: 3,
-    title: "100",
-    start_time: moment().add(0, "m"),
-    end_time: moment().add(0.5, "m"),
-  },
-  {
-    id: 5,
-    group: 4,
-    title: "50",
-    start_time: moment().add(1, "m"),
-    end_time: moment().add(1.5, "m"),
-  },
-  {
-    id: 6,
-    group: 5,
-    title: "60",
-    start_time: moment().add(0, "m"),
-    end_time: moment().add(10, "m"),
-  },
-];
+import {
+  meditems,
+  medgroups,
+  eventitems,
+  eventgroups,
+  respdatagroups,
+  hemodatagroups,
+  miscdatagroups,
+} from "./dataconstants.jsx";
 
 var keys = {
   groupIdKey: "id",
@@ -122,72 +35,6 @@ var keys = {
   itemTimeStartKey: "start_time",
   itemTimeEndKey: "end_time",
 };
-
-const eventgroups = [
-  {
-    id: 1,
-    title: "Events",
-  },
-];
-
-const eventitems = [
-  {
-    id: 1,
-    group: 1,
-    title: "Equipment Check",
-    start_time: moment().subtract(4, "m"),
-    end_time: moment().subtract(3, "m"),
-    note: "",
-  },
-  {
-    id: 2,
-    group: 1,
-    title: "Patient In",
-    start_time: moment().subtract(3, "m"),
-    end_time: moment().subtract(2, "m"),
-    note: "",
-  },
-  {
-    id: 3,
-    group: 1,
-    title: "Anesthesia Start",
-    start_time: moment().subtract(2, "m"),
-    end_time: moment().subtract(1, "m"),
-    note: "",
-  },
-  {
-    id: 4,
-    group: 1,
-    title: "Preoxygenation",
-    start_time: moment().subtract(1, "m"),
-    end_time: moment().add(0, "m"),
-    note: "",
-  },
-  {
-    id: 5,
-    group: 1,
-    title: "Induction",
-    start_time: moment().add(0, "m"),
-    end_time: moment().add(1, "m"),
-    note: "",
-  },
-  {
-    id: 6,
-    group: 1,
-    title: "Intubation/SGA In",
-    start_time: moment().add(3, "m"),
-    end_time: moment().add(4, "m"),
-    note: "",
-  },
-  {
-    id: 7,
-    group: 1,
-    title: "Surgery Start",
-    start_time: moment().add(4, "m"),
-    end_time: moment().add(5, "m"),
-    note: "",
-  },
-];
 
 const MedicationGrid2 = forwardRef((props, ref) => {
   const { respDatasetItems, hemoDatasetItems, miscDatasetItems } = props;
@@ -211,14 +58,14 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   }));
 
   const [show, setShow] = React.useState(false);
-  const [allitems, setItems] = React.useState(items);
-  const [allgroups, setGroups] = React.useState(groups);
+  const [allitems, setItems] = React.useState(meditems);
+  const [allgroups, setGroups] = React.useState(medgroups);
   //const [allitems, setItems] = React.useState([]);
   //const [allgroups, setGroups] = React.useState([]);
 
-  const [selectedGroup, setSelGroup] = React.useState(groups[0]);
+  const [selectedGroup, setSelGroup] = React.useState(medgroups[0]);
   const [selectedGroupIndex, setSelGroupIndex] = React.useState(0);
-  const [selectedItem, setSelItem] = React.useState(items[0]);
+  const [selectedItem, setSelItem] = React.useState(meditems[0]);
   const [selectedItemIndex, setSelItemIndex] = React.useState(0);
 
   const [selectedDose, setSelDose] = React.useState(0);
@@ -406,8 +253,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   };
 
   const handleExportData = () => {
-    var items = allitems.map((item) => item);
-    var groups = allgroups.map((group) => group);
+    var meddataitems = allitems.map((item) => item);
+    var meddatagroups = allgroups.map((group) => group);
     var eventitems = alleventitems.map((eventitem) => eventitem);
 
     var respdataitems = respDatasetItems.map((item) => item);
@@ -429,12 +276,16 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var data = Object.assign(
       {},
       {
-        items: items,
-        groups: groups,
+        meditems: meddataitems,
+        medgroups: meddatagroups,
         eventitems: eventitems,
+        eventgroups: eventgroups,
         respdataitems: respdataitems,
+        respdatagroups: respdatagroups,
         hemodataitems: hemodataitems,
+        hemodatagroups: hemodatagroups,
         miscdataitems: miscdataitems,
+        miscdatagroups: miscdatagroups,
       }
     );
 

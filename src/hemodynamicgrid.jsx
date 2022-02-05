@@ -9,93 +9,7 @@ import Timeline, {
   TodayMarker,
 } from "react-calendar-timeline/lib";
 
-const groups = [
-  {
-    id: 1,
-    title: "NIBP_Systolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 2,
-    title: "NIBP_Diastolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 3,
-    title: "NIBP_Mean",
-    unit: "mm Hg",
-  },
-  {
-    id: 4,
-    title: "ECG_HR",
-    unit: "/min",
-  },
-  {
-    id: 5,
-    title: "SpO2",
-    unit: "%",
-  },
-  {
-    id: 6,
-    title: "P1_Systolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 7,
-    title: "P1_Diastolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 8,
-    title: "P1_Mean",
-    unit: "mm Hg",
-  },
-  {
-    id: 9,
-    title: "P2_Systolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 10,
-    title: "P2_Diastolic",
-    unit: "mm Hg",
-  },
-  {
-    id: 11,
-    title: "P2_Mean",
-    unit: "mm Hg",
-  },
-  {
-    id: 12,
-    title: "CVP",
-    unit: "mm Hg",
-  },
-  {
-    id: 13,
-    title: "ST_II",
-    unit: "mm",
-  },
-  {
-    id: 14,
-    title: "ST_V5",
-    unit: "mm",
-  },
-  {
-    id: 15,
-    title: "ST_avL",
-    unit: "mm",
-  },
-  {
-    id: 16,
-    title: "PPV",
-    unit: "%",
-  },
-  {
-    id: 17,
-    title: "PVI",
-    unit: "%",
-  },
-];
+import { hemodatagroups } from "./dataconstants.jsx";
 
 const HemoGrid = ({
   hemoDatasetItems,
@@ -117,7 +31,7 @@ const HemoGrid = ({
   };
 
   const [allitems, setItems] = React.useState(hemoDatasetItems);
-  const [allgroups, setGroups] = React.useState(groups);
+  const [allgroups, setGroups] = React.useState(hemodatagroups);
   const [selHemoDefaultStartTime, setHemoDefaultStartTime] =
     React.useState(hemoDefaultStartTime);
   const [selHemoDefaultEndTime, setHemoDefaultEndTime] =

@@ -9,53 +9,7 @@ import Timeline, {
   TodayMarker,
 } from "react-calendar-timeline/lib";
 
-const groups = [
-  {
-    id: 1,
-    title: "T1_Temp",
-    unit: "deg C",
-  },
-  {
-    id: 2,
-    title: "T2_Temp",
-    unit: "deg C",
-  },
-  {
-    id: 3,
-    title: "BIS",
-    unit: "",
-  },
-  {
-    id: 4,
-    title: "BIS_BSR",
-    unit: "",
-  },
-  {
-    id: 5,
-    title: "BIS_EMG",
-    unit: "",
-  },
-  {
-    id: 6,
-    title: "BIS_SQI",
-    unit: "mm Hg",
-  },
-  {
-    id: 7,
-    title: "EEG_Entropy",
-    unit: "",
-  },
-  {
-    id: 8,
-    title: "EMG_Entropy",
-    unit: "",
-  },
-  {
-    id: 9,
-    title: "BSR_Entropy",
-    unit: "",
-  },
-];
+import { miscdatagroups } from "./dataconstants.jsx";
 
 const MiscGrid = ({
   miscDatasetItems,
@@ -77,7 +31,7 @@ const MiscGrid = ({
   };
 
   const [allitems, setItems] = React.useState(miscDatasetItems);
-  const [allgroups, setGroups] = React.useState(groups);
+  const [allgroups, setGroups] = React.useState(miscdatagroups);
   const [selMiscDefaultStartTime, setMiscDefaultStartTime] =
     React.useState(miscDefaultStartTime);
   const [selMiscDefaultEndTime, setMiscDefaultEndTime] =
