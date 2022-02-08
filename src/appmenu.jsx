@@ -25,6 +25,8 @@ import AutorenewIcon from "@material-ui/icons/Autorenew";
 import ArchiveIcon from "@material-ui/icons/Archive";
 import BuildIcon from "@material-ui/icons/Build";
 import PrintIcon from "@material-ui/icons/Print";
+import ReactToPrint from "react-to-print";
+import JsonDataDisplay from "./jsondatadisplay.jsx";
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -121,9 +123,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AppMenu() {
-  const medgridRef = React.useRef();
-  const chartRef = React.useRef();
-  //const respgridRef = React.useRef();
+  const medgridRef = React.useRef(null);
+  const chartRef = React.useRef(null);
+  const printDataRef = React.useRef(null);
+  const [openPrintData, setOpenPrintData] = React.useState(false);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -147,7 +150,12 @@ export default function AppMenu() {
         console.log(error);
       } 
     }*/
-    window.print();
+    //window.print();
+    setOpenPrintData(true);
+  };
+
+  const handlePrintChildState = (isPrintDataDisplayed) => {
+    setOpenPrintData(isPrintDataDisplayed);
   };
 
   return (
@@ -273,6 +281,11 @@ export default function AppMenu() {
       <main className={classes.content}>
         <Toolbar />
         <AnaesthesiaChart ref={chartRef} forwardedRef={medgridRef} />
+        <JsonDataDisplay
+          ref={printDataRef}
+          isDataDisplayed={openPrintData}
+          childState={handlePrintChildState}
+        />
       </main>
     </div>
   );
