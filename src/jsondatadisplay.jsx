@@ -37,7 +37,7 @@ import {
 import { SettingsInputAntennaTwoTone } from "@material-ui/icons";
 
 const JsonDataDisplay = forwardRef((props, ref) => {
-  const { isDataDisplayed, childState } = props;
+  const { isDataDisplayed, childState, chartImage } = props;
   const DisplayData = meditems.map((info) => {
     var group = medgroups.filter((e) => e.id === info.group);
     //console.log(group);
@@ -50,6 +50,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     );
   });
   const [show, setShow] = React.useState(false);
+  const [showImageData, setShowImageData] = React.useState(null);
 
   const handleClose = () => {
     setShow(false);
@@ -59,6 +60,10 @@ const JsonDataDisplay = forwardRef((props, ref) => {
   React.useEffect(() => {
     setShow(isDataDisplayed);
   }, [isDataDisplayed]);
+
+  React.useEffect(() => {
+    setShowImageData(chartImage);
+  }, [chartImage]);
 
   return (
     <div>
@@ -95,16 +100,19 @@ const JsonDataDisplay = forwardRef((props, ref) => {
               trigger={() => <button>Print this</button>}
               content={() => ref.current}
             />
-            <table class="table table-striped" ref={ref}>
-              <thead>
-                <tr>
-                  <th>Medication</th>
-                  <th>Dose</th>
-                  <th>Time</th>
-                </tr>
-              </thead>
-              <tbody>{DisplayData}</tbody>
-            </table>
+            <div ref={ref}>
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Medication</th>
+                    <th>Dose</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>{DisplayData}</tbody>
+              </table>
+              <img src={showImageData} height="300" />
+            </div>
           </Fragment>
         </DialogContent>
       </Dialog>

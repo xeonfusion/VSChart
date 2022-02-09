@@ -125,203 +125,8 @@ const getDatasetsbyPhysioID5 = (jdata, physioid) => {
   return datapoints;
 };
 
-const chartConfig = {
-  type: "line",
-  data: {
-    datasets: [
-      {
-        label: "Systolic NIBP",
-        borderColor: "#ff9933",
-        //borderColor: "#8f8786",
-        //fill: false,
-        fill: "+1",
-        //backgroundColor: 'rgba(244,242,245,0)',
-        backgroundColor: "rgba(255, 153, 51,0)",
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "triangle",
-        pointRotation: 180,
-        pointBackgroundColor: "#ff9933",
-        hoverRadius: 9,
-        showLine: true,
-      },
-      {
-        label: "Diastolic NIBP",
-        borderColor: "#ff9933",
-        //borderColor: "#8f8786",
-        //fill: false,
-        fill: "-1",
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "triangle",
-        pointBackgroundColor: "#ff9933",
-        hoverRadius: 9,
-        showLine: true,
-      },
-      {
-        label: "Mean NIBP",
-        borderColor: "#8e5ea2",
-        fill: false,
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "crossRot",
-        hoverRadius: 9,
-      },
-      {
-        label: "HR",
-        borderColor: "#c45850",
-        fill: false,
-        radius: 3,
-        pointBorderWidth: 2,
-        pointStyle: "circle",
-        pointBackgroundColor: "#c45850",
-        hoverRadius: 5,
-      },
-      {
-        label: "SPO2",
-        borderColor: "#3cba9f",
-        fill: false,
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "star",
-        hoverRadius: 9,
-        borderDash: [5, 5],
-      },
-      {
-        label: "Respiratory Rate",
-        borderColor: "#e8ad0c",
-        fill: false,
-        radius: 3,
-        pointBorderWidth: 2,
-        pointStyle: "circle",
-        hoverRadius: 5,
-      },
-      {
-        label: "Temperature",
-        borderColor: "#ae4ae8",
-        fill: false,
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "rectRot",
-        hoverRadius: 9,
-      },
-      {
-        label: "IBP Systolic",
-        borderColor: "#3e95cd",
-        //fill: false,
-        fill: "+1",
-        backgroundColor: "rgba(62,149,205,0.2)",
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "triangle",
-        pointRotation: 180,
-        hoverRadius: 9,
-        showLine: true,
-      },
-      {
-        label: "IBP Diastolic",
-        borderColor: "#3e95cd",
-        //fill: false,
-        fill: "-1",
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "triangle",
-        hoverRadius: 9,
-        showLine: true,
-      },
-      {
-        label: "IBP Mean",
-        borderColor: "#8e5ea2",
-        fill: false,
-        radius: 5,
-        pointBorderWidth: 2,
-        pointStyle: "cross",
-        hoverRadius: 9,
-      },
-    ],
-  },
-  options: {
-    elements: {
-      line: {
-        tension: 0,
-      },
-    },
-    plugins: {
-      filler: {
-        propagate: false,
-      },
-      legend: {
-        display: true,
-        position: "left",
-        align: "center",
-        labels: {
-          usePointStyle: true,
-        },
-        tooltip: {
-          mode: "x",
-          intersect: true,
-        },
-      },
-      onHover: (e, legendItem) => {
-        if (newChartInstance != null) {
-          var index = legendItem.datasetIndex;
-          var dataset = newChartInstance.data.datasets[index];
-          dataset.showLine = true;
-          newChartInstance.update();
-        }
-      },
-      onLeave: (e, legendItem) => {
-        if (newChartInstance != null) {
-          var index = legendItem.datasetIndex;
-          var dataset = newChartInstance.data.datasets[index];
-          dataset.showLine = false;
-          newChartInstance.update();
-        }
-      },
-    },
-    hover: {
-      mode: "index",
-      intersect: false,
-    },
-
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
-        suggestedMax: 200,
-        title: {
-          display: true,
-          text: "Value",
-        },
-      },
-
-      x: {
-        type: "timeseries",
-        //distribution: 'linear',
-        //distribution: "series",
-        time: {
-          unit: "minute",
-          displayFormats: { minute: "HH:mm" },
-          parser: "YYYYMMDDTHH:mm",
-          tooltipFormat: "ll HH:mm",
-          //round:'minute'
-        },
-        ticks: {
-          source: "auto",
-          //stepSize: 1
-        },
-        title: {
-          display: true,
-          text: "Timestamp",
-        },
-      },
-    },
-  },
-};
-
 const NewChart = forwardRef((props, ref) => {
-  const { forwardedRef, ...rest } = props;
+  const { forwardedRef, printDataRef, ...rest } = props;
   React.useImperativeHandle(ref, () => ({
     handleLoadChartCall() {
       handleLoadChart();
@@ -330,6 +135,208 @@ const NewChart = forwardRef((props, ref) => {
       handleVitalsSource();
     },
   }));
+
+  const chartConfig = {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Systolic NIBP",
+          borderColor: "#ff9933",
+          //borderColor: "#8f8786",
+          //fill: false,
+          fill: "+1",
+          //backgroundColor: 'rgba(244,242,245,0)',
+          backgroundColor: "rgba(255, 153, 51,0)",
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "triangle",
+          pointRotation: 180,
+          pointBackgroundColor: "#ff9933",
+          hoverRadius: 9,
+          showLine: true,
+        },
+        {
+          label: "Diastolic NIBP",
+          borderColor: "#ff9933",
+          //borderColor: "#8f8786",
+          //fill: false,
+          fill: "-1",
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "triangle",
+          pointBackgroundColor: "#ff9933",
+          hoverRadius: 9,
+          showLine: true,
+        },
+        {
+          label: "Mean NIBP",
+          borderColor: "#8e5ea2",
+          fill: false,
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "crossRot",
+          hoverRadius: 9,
+        },
+        {
+          label: "HR",
+          borderColor: "#c45850",
+          fill: false,
+          radius: 3,
+          pointBorderWidth: 2,
+          pointStyle: "circle",
+          pointBackgroundColor: "#c45850",
+          hoverRadius: 5,
+        },
+        {
+          label: "SPO2",
+          borderColor: "#3cba9f",
+          fill: false,
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "star",
+          hoverRadius: 9,
+          borderDash: [5, 5],
+        },
+        {
+          label: "Respiratory Rate",
+          borderColor: "#e8ad0c",
+          fill: false,
+          radius: 3,
+          pointBorderWidth: 2,
+          pointStyle: "circle",
+          hoverRadius: 5,
+        },
+        {
+          label: "Temperature",
+          borderColor: "#ae4ae8",
+          fill: false,
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "rectRot",
+          hoverRadius: 9,
+        },
+        {
+          label: "IBP Systolic",
+          borderColor: "#3e95cd",
+          //fill: false,
+          fill: "+1",
+          backgroundColor: "rgba(62,149,205,0.2)",
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "triangle",
+          pointRotation: 180,
+          hoverRadius: 9,
+          showLine: true,
+        },
+        {
+          label: "IBP Diastolic",
+          borderColor: "#3e95cd",
+          //fill: false,
+          fill: "-1",
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "triangle",
+          hoverRadius: 9,
+          showLine: true,
+        },
+        {
+          label: "IBP Mean",
+          borderColor: "#8e5ea2",
+          fill: false,
+          radius: 5,
+          pointBorderWidth: 2,
+          pointStyle: "cross",
+          hoverRadius: 9,
+        },
+      ],
+    },
+    options: {
+      animation: {
+        onComplete: () => {
+          if (newChartInstance != null) {
+            setChartImage(newChartInstance.toBase64Image());
+          }
+        },
+      },
+      elements: {
+        line: {
+          tension: 0,
+        },
+      },
+      plugins: {
+        filler: {
+          propagate: false,
+        },
+        legend: {
+          display: true,
+          position: "left",
+          align: "center",
+          labels: {
+            usePointStyle: true,
+          },
+          tooltip: {
+            mode: "x",
+            intersect: true,
+          },
+        },
+        onHover: (e, legendItem) => {
+          if (newChartInstance != null) {
+            var index = legendItem.datasetIndex;
+            var dataset = newChartInstance.data.datasets[index];
+            dataset.showLine = true;
+            newChartInstance.update();
+          }
+        },
+        onLeave: (e, legendItem) => {
+          if (newChartInstance != null) {
+            var index = legendItem.datasetIndex;
+            var dataset = newChartInstance.data.datasets[index];
+            dataset.showLine = false;
+            newChartInstance.update();
+          }
+        },
+      },
+      hover: {
+        mode: "index",
+        intersect: false,
+      },
+
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: 200,
+          title: {
+            display: true,
+            text: "Value",
+          },
+        },
+
+        x: {
+          type: "timeseries",
+          //distribution: 'linear',
+          //distribution: "series",
+          time: {
+            unit: "minute",
+            displayFormats: { minute: "HH:mm" },
+            parser: "YYYYMMDDTHH:mm",
+            tooltipFormat: "ll HH:mm",
+            //round:'minute'
+          },
+          ticks: {
+            source: "auto",
+            //stepSize: 1
+          },
+          title: {
+            display: true,
+            text: "Timestamp",
+          },
+        },
+      },
+    },
+  };
 
   var chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
@@ -375,6 +382,8 @@ const NewChart = forwardRef((props, ref) => {
     moment().add(12, "m")
   );
   const [selectedMonitorType, setSelMonitorType] = React.useState("DatexS5");
+
+  const [chartImage, setChartImage] = useState(null);
 
   useEffect(() => {
     if (chartInstance && chartContainer && chartContainer.current) {
@@ -1053,6 +1062,8 @@ const NewChart = forwardRef((props, ref) => {
     <>
       <MedicationGrid2
         ref={forwardedRef}
+        printDataRef={printDataRef}
+        chartImage={chartImage}
         respDatasetItems={selRespDatasetItems}
         hemoDatasetItems={selHemoDatasetItems}
         miscDatasetItems={selMiscDatasetItems}

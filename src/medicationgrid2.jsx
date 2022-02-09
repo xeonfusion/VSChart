@@ -14,6 +14,9 @@ import Timeline, {
 import MedModal from "./meddialog.jsx";
 import EventModal from "./eventdialog.jsx";
 //import Button from "@material-ui/core/Button";
+
+import JsonDataDisplay from "./jsondatadisplay.jsx";
+
 import {
   meditems,
   medgroups,
@@ -37,7 +40,13 @@ var keys = {
 };
 
 const MedicationGrid2 = forwardRef((props, ref) => {
-  const { respDatasetItems, hemoDatasetItems, miscDatasetItems } = props;
+  const {
+    printDataRef,
+    chartImage,
+    respDatasetItems,
+    hemoDatasetItems,
+    miscDatasetItems,
+  } = props;
   //Forward Menu button actions
   React.useImperativeHandle(ref, () => ({
     handleShowMedCall: () => {
@@ -54,6 +63,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     },
     handleExportDataCall: () => {
       handleExportData();
+    },
+    handlePrintDataCall: () => {
+      handlePrintData();
     },
   }));
 
@@ -301,6 +313,16 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     document.body.appendChild(link);
     link.click();
     link.parentNode.removeChild(link);
+  };
+
+  const [openPrintData, setOpenPrintData] = React.useState(false);
+
+  const handlePrintData = () => {
+    setOpenPrintData(true);
+  };
+
+  const handlePrintChildState = (isPrintDataDisplayed) => {
+    setOpenPrintData(isPrintDataDisplayed);
   };
 
   const groupRenderer = ({ group, isRightSidebar }) => {
@@ -747,6 +769,12 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventItemTime={selectedEventItemTime}
         selectedEventType={selectedEventType}
         selectedEventNote={selectedEventNote}
+      />
+      <JsonDataDisplay
+        ref={printDataRef}
+        isDataDisplayed={openPrintData}
+        childState={handlePrintChildState}
+        chartImage={chartImage}
       />
     </>
   );
