@@ -25,19 +25,11 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import ReactToPrint from "react-to-print";
 
-import {
-  meditems,
-  medgroups,
-  eventitems,
-  eventgroups,
-  respdatagroups,
-  hemodatagroups,
-  miscdatagroups,
-} from "./dataconstants.jsx";
 import { SettingsInputAntennaTwoTone } from "@material-ui/icons";
 
 const JsonDataDisplay = forwardRef((props, ref) => {
-  const { isDataDisplayed, childState, chartImage } = props;
+  const { isDataDisplayed, childState, chartImage, medgroups, meditems } =
+    props;
   const DisplayData = meditems.map((info) => {
     var group = medgroups.filter((e) => e.id === info.group);
     //console.log(group);

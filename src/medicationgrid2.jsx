@@ -775,6 +775,16 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         isDataDisplayed={openPrintData}
         childState={handlePrintChildState}
         chartImage={chartImage}
+        medgroups={allgroups}
+        meditems={allitems}
+        eventgroups={eventgroups}
+        eventitems={alleventitems}
+        respdatagroups={respdatagroups}
+        respdataitems={respDatasetItems}
+        hemodatagroups={hemodatagroups}
+        hemodataitems={hemoDatasetItems}
+        miscdatagroups={miscdatagroups}
+        miscdataitems={miscDatasetItems}
       />
     </>
   );
