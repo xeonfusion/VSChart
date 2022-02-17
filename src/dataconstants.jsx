@@ -286,7 +286,7 @@ export const meditems = [
     title: "150",
     start_time: moment().add(0.5, "m"),
     end_time: moment().add(1, "m"),
-    rightTitle: "",
+    //rightTitle: "",
   },
   {
     id: 2,
@@ -294,7 +294,7 @@ export const meditems = [
     title: "50",
     start_time: moment().add(1.5, "m"),
     end_time: moment().add(2, "m"),
-    rightTitle: "",
+    //rightTitle: "",
   },
 
   {
