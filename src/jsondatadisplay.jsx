@@ -27,12 +27,15 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import ReactToPrint from "react-to-print";
 import moment from "moment";
-import * as dfd from "danfojs";
-
 import Plot from "react-plotly.js";
 
 import { Info, SettingsInputAntennaTwoTone } from "@material-ui/icons";
-import { Series } from "danfojs/dist/danfojs-base";
+
+const divStyle = {
+  //position: "relative",
+  width: 800,
+  //height: 300,
+};
 
 const JsonDataDisplay = forwardRef((props, ref) => {
   const { isDataDisplayed, childState, chartImage, medgroups, meditems } =
@@ -44,22 +47,49 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         data={[
           {
             type: "table",
+            columnwidth: [
+              500, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150,
+              300,
+            ],
             header: {
               values: headerarray,
               align: "center",
               line: { width: 1, color: "black" },
               fill: { color: "grey" },
-              font: { family: "Arial", size: 12, color: "white" },
+              font: { family: "Arial", size: 15, color: "white" },
             },
             cells: {
               values: cellarray,
               align: "center",
               line: { color: "black", width: 1 },
               fill: {},
-              font: { family: "Arial", size: 11, color: ["black"] },
+              font: { family: "Arial", size: 14, color: ["black"] },
             },
           },
         ]}
+        config={{
+          responsive: true,
+          displayModeBar: true,
+          toImageButtonOptions: {
+            format: "svg",
+            filename: "custom_image",
+            height: 500,
+            width: 700,
+            scale: 2,
+          },
+        }}
+        layout={{
+          autosize: true,
+          width: 1300,
+          height: 400,
+          margin: {
+            l: 50,
+            r: 50,
+            b: 20,
+            t: 20,
+            pad: 4,
+          },
+        }}
       />
     );
   };
@@ -80,45 +110,40 @@ const JsonDataDisplay = forwardRef((props, ref) => {
 
       return Object.assign({}, item, {
         group: group[0].title,
-        start_time: moment(item.start_time)
-        .toString(),
-        end_time: moment(item.end_time)
-        .toString(),
+        start_time: moment(item.start_time).toString(),
+        end_time: moment(item.end_time).toString(),
       });
     });
 
-    var df = new dfd.DataFrame(dfitems);
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
 
-    var dg1 = df
-      .groupby(["start_time"])
-      .col(["group", "title"])
-      .apply((x) => x);
-
-    dg1.sortValues("start_time", { inplace: true });
-
-    var dg = df
-      .groupby(["group"])
-      .col(["start_time", "title"])
-      .apply((x) => x);
-
-    var data = new dfd.dateRange({
-      start: dg1.at(0, "start_time"),
-      period: dg["group"].count(),
-      //period: 60,
-      freq: "m",
-    });
+    var data = getDateRange(mindate, 12);
     //console.log(data);
 
     data.map((item) => {
-      var ditem = moment(item, "MM/DD/YYYY HH:mm:ss")
-        .format("HH:mm")
-        .toString();
+      var ditem = moment(item).format("HH:mm").toString();
       values.push([ditem]);
     });
 
     values.push(["Totals"]);
     setSelHeaderData(values);
+    //console.log(values);
     //return values;
+  };
+
+  const getDateRange = (startdate, interval) => {
+    var data = [];
+    var date = startdate.clone();
+    var maxdate = startdate.clone().add(interval, "m");
+    while (maxdate > date) {
+      data.push(date.format("MM/DD/YYYY HH:mm:ss"));
+      date = moment(date).add(1, "m");
+    }
+    return data;
   };
 
   const loadcellData = () => {
@@ -146,33 +171,14 @@ const JsonDataDisplay = forwardRef((props, ref) => {
       });
     });
 
-    var df = new dfd.DataFrame(dfitems);
-    
-    //var dg1 = df.groupby(["start_time"]).col(["group", "title"]).agg({title:"min", group:"count"});
-    var dg1 = df
-      .groupby(["start_time"])
-      .col(["group", "title"])
-      .apply((x) => x);
-    dg1.sortValues("start_time", { inplace: true });
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
 
-    //dg1.print();
-
-    var dg = df
-      .groupby(["group"])
-      .col(["start_time", "title"])
-      .apply((x) => x);
-    //var dg = df.groupby(["group"]).col(["start_time", "title"]).agg({title:"min", start_time:"min"});
-    //dg.print();
-    //console.log(dg.values)
-    //values.push(dg.values[0])
-
-    var data = new dfd.dateRange({
-      start: dg1.at(0, "start_time"),
-      period: dg["group"].count(),
-      //period: 60,
-      freq: "m",
-    });
-
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
     //console.log(dfitems);
 
     var dtdata = data.map((dtime) => {
@@ -181,8 +187,10 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         var ditem = dfitems
           .filter(
             (e) =>
-              moment(e.start_time, "MM/DD/YYYY HH:mm:ss").startOf("m").valueOf() ===
-                moment(dtime, "MM/DD/YYYY HH:mm:ss a").startOf("m").valueOf() &&
+              moment(e.start_time, "MM/DD/YYYY HH:mm:ss")
+                .startOf("m")
+                .valueOf() ===
+                moment(dtime, "MM/DD/YYYY HH:mm:ss").startOf("m").valueOf() &&
               e.group === group
           )
           .map((item) => {
@@ -295,13 +303,20 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                 </thead>
                 <tbody></tbody>
               </table>
-              <div>
+              <div style={divStyle}>
                 <PlotJData
                   headerarray={selHeaderData}
                   cellarray={selCellData}
                 />
               </div>
-              <img src={showImageData} alt="chart" height="300" />
+              <div style={{ margin: 50 }}>
+                <img
+                  src={showImageData}
+                  alt="chart"
+                  height="300"
+                  width="1300"
+                />
+              </div>
             </div>
           </Fragment>
         </DialogContent>
