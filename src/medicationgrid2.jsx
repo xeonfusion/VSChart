@@ -413,6 +413,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const handleExportData = () => {
     var meddataitems = allitems.map((item) => item);
     var meddatagroups = allgroups.map((group) => group);
+    var outputgroups = alloutputgroups.map((group) => group);
+    var outputitems = alloutputitems.map((item) => item);
     var eventitems = alleventitems.map((eventitem) => eventitem);
 
     var respdataitems = respDatasetItems.map((item) => item);
@@ -436,6 +438,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
       {
         meditems: meddataitems,
         medgroups: meddatagroups,
+        outputgroups: outputgroups,
+        outputitems: outputitems,
         eventitems: eventitems,
         eventgroups: eventgroups,
         respdataitems: respdataitems,
@@ -1116,6 +1120,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         chartImage={chartImage}
         medgroups={allgroups}
         meditems={allitems}
+        outputgroups={alloutputgroups}
+        outputitems={alloutputitems}
         eventgroups={eventgroups}
         eventitems={alleventitems}
         respdatagroups={respdatagroups}
