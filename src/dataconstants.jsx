@@ -385,3 +385,110 @@ export const eventitems = [
     note: "",
   },
 ];
+
+export const addevents = [
+  "Equipment Check",
+  "Patient In",
+  "Anesthesia Start",
+  "Preoxygenation",
+  "Induction",
+  "Intubation/SGA In",
+  "Surgery Start",
+  "Surgery Stop",
+  "Extubation/SGA Out",
+  "Patient Out",
+  "Anaesthesia Stop",
+  "Blood Loss",
+  "Add Note",
+  "Other",
+];
+
+export const outputitems = [
+  {
+    id: 1,
+    group: 1,
+    title: "50",
+    start_time: moment().add(0, "m"),
+    end_time: moment().add(1, "m"),
+    note: "",
+  },
+  {
+    id: 2,
+    group: 2,
+    title: "100",
+    start_time: moment().add(0, "m"),
+    end_time: moment().add(1, "m"),
+    note: "",
+  },
+]
+
+export const addoutputs = [
+  { title: "Est. Blood Loss" },
+  { title: "Urine" },
+  { title: "CSF" },
+  { title: "ICD"},
+  { title: "Other" },
+]
+
+export const outputunits = [
+  "ml",
+  "L",
+];
+
+export const outputdurations = ["min", "sec"];
+
+
+export const outputgroups = [
+  {
+    id: 1,
+    title: "Est. Blood Loss",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 2,
+    title: "Urine",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 3,
+    title: "Other",
+    unit: "ml",
+    durationunit: "min",
+  },
+]
+
+export const outputGroups = [
+  {
+    id: 1,
+    title: "Est. Blood Loss",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 2,
+    title: "Urine",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 3,
+    title: "Other",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 4,
+    title: "CSF",
+    unit: "ml",
+    durationunit: "min",
+  },
+  {
+    id: 5,
+    title: "ICD",
+    unit: "ml",
+    durationunit: "min",
+  },
+
+]

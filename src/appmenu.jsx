@@ -1,30 +1,31 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-//import Divider from "@material-ui/core/Divider";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import List from "@mui/material/List";
+//import Divider from "@mui/material/Divider";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import clsx from "clsx";
 
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import AnaesthesiaChart from "./anaesthchart.jsx";
 //import MedicationGrid2 from "./medicationgrid2.jsx";
-import { ListItem, ListItemText } from "@material-ui/core";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import AddCommentIcon from "@material-ui/icons/AddComment";
-import AutorenewIcon from "@material-ui/icons/Autorenew";
-import ArchiveIcon from "@material-ui/icons/Archive";
-import BuildIcon from "@material-ui/icons/Build";
-import PrintIcon from "@material-ui/icons/Print";
+import { ListItem, ListItemText } from "@mui/material/";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import BuildIcon from "@mui/icons-material/Build";
+import PrintIcon from '@mui/icons-material/Print';
+import BloodtypeIcon from '@mui/icons-material/Bloodtype';
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -216,6 +217,15 @@ export default function AppMenu() {
               <ZoomInIcon />
             </ListItemIcon>
             <ListItemText>Change Timesteps</ListItemText>
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => medgridRef.current.handleShowOutputsCall()}
+          >
+            <ListItemIcon>
+              <BloodtypeIcon />
+            </ListItemIcon>
+            <ListItemText>Add Output</ListItemText>
           </ListItem>
           <ListItem
             button

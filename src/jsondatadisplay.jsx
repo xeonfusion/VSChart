@@ -17,19 +17,19 @@ import {
   TableRow,
   TableHead,
   TableFooter,
-} from "@material-ui/core";
+} from "@mui/material/";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import CloseIcon from "@material-ui/icons/Close";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import CloseIcon from "@mui/icons-material/Close";
 
 import ReactToPrint from "react-to-print";
 import moment from "moment";
 import Plot from "react-plotly.js";
 
-import { Info, SettingsInputAntennaTwoTone } from "@material-ui/icons";
+import { Info, SettingsInputAntennaTwoTone } from "@mui/icons-material/";
 
 const divStyle = {
   //position: "relative",
@@ -81,7 +81,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         layout={{
           autosize: true,
           width: 1300,
-          height: 400,
+          height: 200,
           margin: {
             l: 50,
             r: 50,
@@ -300,23 +300,30 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                   <tr>
                     <th>Anaesthesia Chart</th>
                   </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-              <div style={divStyle}>
-                <PlotJData
-                  headerarray={selHeaderData}
-                  cellarray={selCellData}
-                />
-              </div>
-              <div style={{ margin: 50 }}>
-                <img
-                  src={showImageData}
-                  alt="chart"
-                  height="300"
-                  width="1300"
-                />
-              </div>
+                  <tr>
+                    <td>
+                        <PlotJData
+                          headerarray={selHeaderData}
+                          cellarray={selCellData}
+                        />
+                    </td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <div style={{ margin: 50 }}>
+                        <img
+                          src={showImageData}
+                          alt="chart"
+                          height="300"
+                          width="1300"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+               </table>
             </div>
           </Fragment>
         </DialogContent>

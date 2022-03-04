@@ -24,6 +24,8 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 
+import {addevents} from "./dataconstants.jsx"
+
 const EventModal = ({
   showEventDialog,
   childEventState,
@@ -35,22 +37,6 @@ const EventModal = ({
   selectedEventNote,
 }) => {
   const [showEvent, setEventShow] = React.useState(false);
-
-  const addevents = [
-    "Equipment Check",
-    "Patient In",
-    "Anesthesia Start",
-    "Preoxygenation",
-    "Induction",
-    "Intubation/SGA In",
-    "Surgery Start",
-    "Surgery Stop",
-    "Extubation/SGA Out",
-    "Patient Out",
-    "Anaesthesia Stop",
-    "Add Note",
-    "Other",
-  ];
 
   const handleClose = () => {
     var finalallEventItems = handleAllEventsChange();
@@ -120,7 +106,7 @@ const EventModal = ({
           <StyledListItem
             itemcolor={index % 2 ? "#ffffff" : "#dbe7f4"}
             itemtitle={listitem.title}
-            itemtime={listitem.start_time.format("hh:mm")}
+            itemtime={listitem.start_time.format("HH:mm")}
             itemindex={listitem.id}
             itemselected={
               typeof itemselected[0] === "undefined"

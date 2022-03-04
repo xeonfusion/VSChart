@@ -14,6 +14,7 @@ import Timeline, {
 import MedModal from "./meddialog.jsx";
 import EventModal from "./eventdialog.jsx";
 //import Button from "@material-ui/core/Button";
+import OutputModal from "./outputdialog.jsx";
 
 import JsonDataDisplay from "./jsondatadisplay.jsx";
 
@@ -22,6 +23,8 @@ import {
   medgroups,
   eventitems,
   eventgroups,
+  outputitems,
+  outputgroups,
   respdatagroups,
   hemodatagroups,
   miscdatagroups,
@@ -51,6 +54,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   React.useImperativeHandle(ref, () => ({
     handleShowMedCall: () => {
       handleShowMed();
+    },
+    handleShowOutputsCall: () => {
+      handleShowOutputs();
     },
     handleShowEventsCall: () => {
       handleShowEvents();
@@ -103,6 +109,20 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedEventType, setSelEventType] = React.useState("");
   const [selectedEventNote, setSelEventNote] = React.useState("");
 
+  const [showOutput, setOutputShow] = React.useState(false);
+  const [alloutputitems, setOutputItems] = React.useState(outputitems);
+  const [alloutputgroups, setOutputGroups] = React.useState(outputgroups);
+  const [selectedOutputItem, setSelOutputItem] = React.useState(outputitems[0]);
+  const [selectedOutputGroup, setSelOutputGroup] = React.useState(outputgroups[0]);
+  const [selectedOutputGroupIndex, setSelOutputGroupIndex] = React.useState(0);
+  const [selectedOutputItemIndex, setSelOutputItemIndex] = React.useState(0);
+  const [selectedOutputUnit, setSelOutputUnit] = React.useState(0);
+    
+  const [selectedOutputValue, setSelOutputValue] = React.useState(0);
+  const [selectedOutputItemTime, setSelOutputItemTime] = React.useState(moment());
+  const [selectedOutputDuration, setSelOutputDuration] = React.useState(0);
+  const [selectedOutputDurationUnit, setSelOutputDurationUnit] = React.useState(0);
+  
   const [showItemInfo, setShowItemInfo] = React.useState(false);
 
   const handleItemDoubleClick = (itemId, e, time) => {
@@ -262,6 +282,132 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     });
 
     return sum;
+  };
+
+  const getOutputItemUnitFromGroup = (groupId) => {
+    var group = alloutputgroups.filter((e) => e.id === groupId);
+    var unit = group[0].unit;
+    return unit;
+  };
+
+  const getOutputItemTotalsFromGroup = (groupId) => {
+    var items = alloutputitems.filter((e) => e.group === groupId);
+
+    var sum = 0;
+    items.forEach((item) => {
+      sum += parseFloat(item.title);
+    });
+
+    return sum;
+  };
+
+  const handleOutputCanvasContextMenu = (groupId, time, e) => {
+    var group = alloutputgroups.filter((e) => e.id === groupId);
+    var items = alloutputitems.filter((e) => e.group === groupId);
+
+    //select last item
+    var item = items.slice(-1);
+    //console.log(item);
+    var itemindex = items.indexOf(item[0]);
+
+    setSelOutputItem(item);
+    setSelOutputGroup(group);
+    setSelOutputGroupIndex(groupId);
+    setSelOutputItemIndex(itemindex);
+    //console.log(time);
+
+    var value = parseFloat(item[0].title);
+    var unit = group[0].unit;
+    var start_time = item[0].start_time;
+    var end_time = item[0].end_time;
+    var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    
+    setSelOutputValue(value);
+    setSelOutputUnit(unit);
+    setSelOutputItemTime(start_time);
+    setSelOutputDuration(duration);
+    setSelDurationUnit(durationunit);
+    
+    setOutputShow(true);
+  };
+
+  const handleOutputItemDoubleClick = (itemId, e, time) => {
+    var item = alloutputitems.filter((e) => e.id === itemId);
+    var groupid = item[0].group;
+    var group = alloutputgroups.filter((e) => e.id === groupid);
+
+    setSelOutputItem(item);
+    setSelOutputItemIndex(itemId);
+    //console.log(item);
+    setSelOutputItemTime(item[0].start_time);
+    setSelOutputGroup(group);
+    setSelOutputGroupIndex(groupid);
+    
+
+    var value = parseFloat(item[0].title);
+    var unit = group[0].unit;
+    var start_time = item[0].start_time;
+    var end_time = item[0].end_time;
+    var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    
+    setSelOutputValue(value);
+    setSelOutputUnit(unit);
+    setSelOutputItemTime(start_time);
+    setSelOutputDuration(duration);
+    setSelOutputDurationUnit(durationunit);
+   
+    setOutputShow(true);
+  };
+
+  const handleOutputCanvasDoubleClick = (groupId, time, e) => {
+    var group = alloutputgroups.filter((e) => e.id === groupId);
+
+    var selitemindex = alloutputitems.length + 1;
+
+    const item = [
+      {
+        id: selitemindex,
+        group: groupId,
+        title: "0",
+        start_time: moment(time),
+        end_time: moment(time).clone().add(1, "m"),
+      },
+    ];
+    //console.log(time);
+
+    alloutputitems.push(item[0]);
+
+    var finalitems = alloutputitems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
+
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelOutputItem(finalitem);
+    setSelOutputItemIndex(selitemindex);
+    setSelOutputGroup(group);
+    setSelOutputGroupIndex(groupId);
+
+    setOutputItems(finalitems);
+
+    var value = parseFloat(finalitem[0].title);
+    var unit = group[0].unit;
+    var start_time = finalitem[0].start_time;
+    var end_time = finalitem[0].end_time;
+    var durationunit = group[0].durationunit;
+    var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
+    
+    
+    setSelOutputValue(value);
+    setSelOutputUnit(unit);
+    setSelOutputItemTime(start_time);
+    setSelOutputDuration(duration);
+    setSelDurationUnit(durationunit);
+    
+    setOutputShow(true);
   };
 
   const handleExportData = () => {
@@ -489,6 +635,89 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     }
   };
 
+  const groupOutputRenderer = ({ group, isRightSidebar }) => {
+    if (group.title !== "" && !isRightSidebar) {
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>{group.title + " (" + group.unit + ")"}</td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    } else if (group.title !== "" && isRightSidebar) {
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>{getOutputItemTotalsFromGroup(group.id) + " " + group.unit}</td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }
+  };
+
+  const itemOutputRenderer = ({
+    item,
+    timelineContext,
+    itemContext,
+    getItemProps,
+    getResizeProps,
+  }) => {
+    return (
+      <div
+        {...getItemProps({
+          style: {
+            borderStyle: "solid",
+            borderWidth: 1,
+            borderRadius: 4,
+            borderLeftWidth: itemContext.selected ? 3 : 1,
+            borderRightWidth: itemContext.selected ? 3 : 1,
+            color: item.color,
+            backgroundColor: "#2196f3",
+            //backgroundColor: "rgba(0, 0, 0, 0)",
+          },
+        })}
+        onMouseOver={() => {
+          //setShowItemInfo(true);
+        }}
+        onMouseLeave={() => {
+          //setShowItemInfo(false);
+        }}
+      >
+        <div
+          style={{
+            height: itemContext.dimensions.height,
+            width: itemContext.width,
+            overflow: "hidden",
+            paddingLeft: 3,
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "white",
+            textAlign: "left",
+          }}
+        >
+          {item.title}
+          {" " + getOutputItemUnitFromGroup(item.group)}
+        </div>
+        {showItemInfo && (
+          <div
+            className="itemModal"
+            style={{
+              minWidth: "160px",
+            }}
+          >
+            {item.start_time.format("hh:mm a") +
+              " - " +
+              item.end_time.format("hh:mm a")}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const handleEventItemDoubleClick = (itemId, e, time) => {
     var item = alleventitems.filter((e) => e.id === itemId);
 
@@ -626,6 +855,41 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setEventShow(true);
   };
 
+  const handleOutputChildState = (
+    childoutputstate,
+    selectedOutputs,
+    selectedOutputItems,
+    selectedOutputItem,
+    selectedOutputItemIndex,
+    selectedOutputItemTime,
+    selectedOutputGroup,
+    selectedOutputGroupIndex,
+    selectedOutputValue,
+    selectedOutputUnit,
+    selectedOutputDuration,
+    selectedOutputDurationUnit,
+  
+  ) => {
+    setOutputGroups(selectedOutputs);
+    setOutputItems(selectedOutputItems);
+
+    setSelOutputItem(selectedOutputItem);
+    setSelOutputItemIndex(selectedOutputItemIndex);
+    setSelOutputItemTime(selectedOutputItemTime);
+    setSelOutputGroup(selectedOutputGroup);
+    setSelOutputGroupIndex(selectedOutputGroupIndex);
+    setSelOutputValue(selectedOutputValue);
+    setSelOutputUnit(selectedOutputUnit);
+    setSelOutputDuration(selectedOutputDuration);
+    setSelDurationUnit(selectedOutputDurationUnit);
+
+    setOutputShow(childoutputstate);
+  };
+
+  const handleShowOutputs = () => {
+    setOutputShow(true);
+  };
+
   return (
     <>
       <MedModal
@@ -707,6 +971,80 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         </TimelineMarkers>
       </Timeline>
       <Timeline
+        key={keys}
+        groups={alloutputgroups}
+        items={alloutputitems}
+        defaultTimeStart={moment().add(0, "m")}
+        defaultTimeEnd={moment().add(12, "m")}
+        sidebarWidth={150}
+        rightSidebarWidth={100}
+        showCursorLine
+        stackItems={true}
+        canResize={true}
+        dragSnap={1 * 60 * 1000}
+        itemTouchSendsClick={true}
+        onItemDoubleClick={handleOutputItemDoubleClick}
+        onCanvasContextMenu={handleOutputCanvasContextMenu}
+        onCanvasDoubleClick={handleOutputCanvasDoubleClick}
+        groupRenderer={groupOutputRenderer}
+        itemRenderer={itemOutputRenderer}
+        timeSteps={selectedTimeSteps}
+        visibleTimeStart={selTimeStart}
+        visibleTimeEnd={selTimeEnd}
+        onTimeChange={handleTimeChange}
+      >
+        <TimelineHeaders className="sticky">
+          <SidebarHeader>
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#F0F0F0",
+                width: 150,
+              };
+              return <div style={sideStyles}>Outputs</div>;
+            }}
+          </SidebarHeader>
+          <SidebarHeader variant="right">
+            {({ getRootProps }) => {
+              const sideStyles = {
+                ...getRootProps(),
+                backgroundColor: "#F0F0F0",
+                width: 100,
+              };
+              return <div style={sideStyles}>Totals</div>;
+            }}
+          </SidebarHeader>
+        </TimelineHeaders>
+        <TimelineMarkers>
+          <TodayMarker interval={10000} />
+          <TodayMarker>
+            {({ styles, date }) => {
+              const customStyles = {
+                ...styles,
+                backgroundColor: "red",
+                width: "2px",
+              };
+              return <div style={customStyles} />;
+            }}
+          </TodayMarker>
+        </TimelineMarkers>
+      </Timeline>
+      <OutputModal
+      showOutputDialog={showOutput}
+      childOutputState={handleOutputChildState}
+      selectedOutputs={alloutputgroups}
+      selectedOutputItems={alloutputitems}
+      selectedOutputItem={selectedOutputItem}
+      selectedOutputItemIndex={selectedOutputItemIndex}
+      selectedOutputItemTime={selectedOutputItemTime}
+      selectedOutputGroup={selectedOutputGroup}
+      selectedOutputGroupIndex={selectedOutputGroupIndex} 
+      selectedOutputUnit={selectedOutputUnit}     
+      selectedOutputValue={selectedOutputValue}
+      selectedDuration={selectedOutputDuration}
+      selectedDurationUnit={selectedDurationUnit}
+      />
+      <Timeline
         groups={eventgroups}
         items={alleventitems}
         timeSteps={selectedTimeSteps}
@@ -770,6 +1108,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventType={selectedEventType}
         selectedEventNote={selectedEventNote}
       />
+      
       <JsonDataDisplay
         ref={printDataRef}
         isDataDisplayed={openPrintData}
