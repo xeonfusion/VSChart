@@ -46,6 +46,15 @@ export const medgroups = [
     type: "IVfluid",
     color: "white",
   },
+  {
+    id: 6,
+    title: "Saline 0.9%",
+    unit: "ml/hr",
+    route: "Intravenous",
+    durationunit: "min",
+    type: "IVfluid",
+    color: "white",
+  },
 ];
 
 export const eventgroups = [

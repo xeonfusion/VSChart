@@ -587,7 +587,7 @@ const OutputModal = ({
       setSelOutputGroupIndex(selgroupindex);
 
       handleGetSelItemDetail(finalitem, group);
-      return finalitems;
+      //return finalitems;
     //}
   };
 
