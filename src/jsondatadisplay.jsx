@@ -268,11 +268,10 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         fullWidth={true}
         maxWidth="md"
         scroll="body"
-        disableBackdropClick={true}
         disableEscapeKeyDown={true}
         className="align-top"
       >
-        <DialogTitle disableTypography>
+        <DialogTitle>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={12} md={12} lg={12}>
               <Typography variant="h6">Print Chart</Typography>
@@ -283,6 +282,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
               aria-label="close"
               className="dialogCloseButton"
               onClick={handleClose}
+              size="large"
             >
               <CloseIcon />
             </IconButton>
@@ -302,14 +302,14 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                   </tr>
                   <tr>
                     <td>
-                        <PlotJData
-                          headerarray={selHeaderData}
-                          cellarray={selCellData}
-                        />
+                      <PlotJData
+                        headerarray={selHeaderData}
+                        cellarray={selCellData}
+                      />
                     </td>
                   </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                   <tr>
                     <td>
                       <div style={{ margin: 50 }}>
@@ -322,8 +322,8 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       </div>
                     </td>
                   </tr>
-                  </tbody>
-               </table>
+                </tbody>
+              </table>
             </div>
           </Fragment>
         </DialogContent>

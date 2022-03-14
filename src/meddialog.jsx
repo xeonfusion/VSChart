@@ -1,32 +1,35 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/styles";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { makeStyles } from "@mui/styles";
 
-import MomentUtils from "@date-io/moment";
+//import MomentUtils from "@date-io/moment";
+import DateAdapter from "@mui/lab/AdapterDateFns";
 import moment from "moment";
-import Grid from "@material-ui/core/Grid";
-//import NumPad from "react-numpad";
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
+import Grid from "@mui/material/Grid";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 
-import {
+/*import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+} from "@material-ui/pickers";*/
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import AlarmIcon from "@mui/icons-material/Alarm";
+import SnoozeIcon from "@mui/icons-material/Snooze";
+import ClockIcon from "@mui/icons-material/AccessTime";
 
 const MedModal = ({
   showMedDialog,
@@ -455,7 +458,7 @@ const MedModal = ({
   const MedListItems = ({ list, itemselected }) => (
     <List
       dense={true}
-      style={{
+      sx={{
         maxHeight: 300,
         maxWidth: 160,
         minWidth: 160,
@@ -549,8 +552,7 @@ const MedModal = ({
     var group = allGroups.filter((e) => e.id === index).map((group) => group);
     var items = allItems.filter((e) => e.group === index).map((item) => item);
 
-    if(items[0] === null || items[0] === undefined)
-    {
+    if (items[0] === null || items[0] === undefined) {
       handleAddMedDoseAtIndex(index, group);
       return;
     }
@@ -861,44 +863,44 @@ const MedModal = ({
     }
   };
 
-  const handleAddMedDoseAtIndex= (index, group) => {
+  const handleAddMedDoseAtIndex = (index, group) => {
     //if (selectOutputGroupIndex !== 0) {
-      var selgroupindex = index;
+    var selgroupindex = index;
 
-      //console.log(selgroupindex);
+    //console.log(selgroupindex);
 
-      var selitemindex = allItems.length + 1;
+    var selitemindex = allItems.length + 1;
 
-      const item = [
-        {
-          id: selitemindex,
-          group: selgroupindex,
-          title: "0",
-          start_time: moment().add(0, "m"),
-          end_time: moment().clone().add(0.5, "m"),
-        },
-      ];
+    const item = [
+      {
+        id: selitemindex,
+        group: selgroupindex,
+        title: "0",
+        start_time: moment().add(0, "m"),
+        end_time: moment().clone().add(0.5, "m"),
+      },
+    ];
 
-      allItems.push(item[0]);
+    allItems.push(item[0]);
 
-      var finalitems = allItems.map((item, index) =>
-        Object.assign({}, item, {
-          id: index + 1,
-        })
-      );
+    var finalitems = allItems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
 
-      //console.log(finalitems)
-      var finalitem = finalitems.filter((e) => e.id === selitemindex);
-      setSelItem(finalitem);
-      setSelItemIndex(selitemindex);
+    //console.log(finalitems)
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelItem(finalitem);
+    setSelItemIndex(selitemindex);
 
-      setAllItems(finalitems);
-      
-      setSelGroup(group);
-      setSelGroupIndex(selgroupindex);
+    setAllItems(finalitems);
 
-      handleGetSelItemDetail(finalitem, group);
-      //return finalitems;
+    setSelGroup(group);
+    setSelGroupIndex(selgroupindex);
+
+    handleGetSelItemDetail(finalitem, group);
+    //return finalitems;
     //}
   };
 
@@ -1270,7 +1272,7 @@ const MedModal = ({
                       }
                       return option.title;
                     }}
-                    style={{
+                    sx={{
                       minWidth: "160px",
                     }}
                     filterOptions={(options, params) => {
@@ -1286,22 +1288,21 @@ const MedModal = ({
                       return filtered;
                     }}
                     onChange={handleMedSelChange}
-                    renderOption={(option) => option.title}
+                    renderOption={(props, option) => (
+                      <li {...props}>{option.title}</li>
+                    )}
                     selectOnFocus
                     clearOnBlur
                     handleHomeEndKeys
-                    renderInput={(params) => (
-                      <TextField {...params} label="" variant="outlined" />
-                    )}
+                    renderInput={(params) => <TextField {...params} label="" />}
                   />
                 </Grid>
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Meds">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleAddMeds}
@@ -1310,9 +1311,8 @@ const MedModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleRemoveMeds}
@@ -1324,9 +1324,8 @@ const MedModal = ({
                     <ButtonGroup aria-label="Up/Down Meds">
                       <Button
                         variant="outlined"
-                        color="default"
                         size="large"
-                        style={{
+                        sx={{
                           maxWidth: "80px",
                         }}
                         onClick={handleUpMeds}
@@ -1335,9 +1334,8 @@ const MedModal = ({
                       </Button>
                       <Button
                         variant="outlined"
-                        color="default"
                         size="large"
-                        style={{
+                        sx={{
                           maxWidth: "80px",
                         }}
                         onClick={handleDownMeds}
@@ -1366,7 +1364,7 @@ const MedModal = ({
                     id="outlined-dose"
                     label="Dosage"
                     type="number"
-                    variant="outlined"
+                    //variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -1383,7 +1381,7 @@ const MedModal = ({
                     id="outlined-duration"
                     label="Duration"
                     type="number"
-                    variant="outlined"
+                    //variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -1398,9 +1396,8 @@ const MedModal = ({
                   <ButtonGroup aria-label="Last doses">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handlePreviousDose}
@@ -1409,9 +1406,8 @@ const MedModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleNextDose}
@@ -1438,7 +1434,7 @@ const MedModal = ({
                   <Select
                     id="dose-unit"
                     labelId="Dose unit"
-                    variant="outlined"
+                    //variant="outlined"
                     fullWidth
                     value={selectUnit}
                     onChange={handleUnitChange}
@@ -1455,7 +1451,7 @@ const MedModal = ({
                   <Select
                     id="duration-entry"
                     labelId="Duration"
-                    variant="outlined"
+                    //variant="outlined"
                     fullWidth
                     defaultValue={durations[0]}
                     value={selectDurationUnit}
@@ -1466,14 +1462,13 @@ const MedModal = ({
                     ))}
                   </Select>
                 </Grid>
-                <Grid items xs>
+                <Grid item xs>
                   Add/Remove Doses
                   <ButtonGroup aria-label="Add/Remove doses">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleAddMedDose}
@@ -1482,9 +1477,8 @@ const MedModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleRemoveMedDose}
@@ -1511,7 +1505,7 @@ const MedModal = ({
                   <Select
                     id="route"
                     labelId="Route"
-                    variant="outlined"
+                    //variant="outlined"
                     fullWidth
                     defaultValue={doseroutes[0]}
                     value={selectRoute}
@@ -1529,7 +1523,7 @@ const MedModal = ({
                   <Select
                     id="med-type"
                     labelId="Medication type"
-                    variant="outlined"
+                    //variant="outlined"
                     fullWidth
                     defaultValue={medtypes[0]}
                     value={selectMedType}
@@ -1542,15 +1536,24 @@ const MedModal = ({
                 </Grid>
                 <Grid item xs>
                   Timestamp
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDateTimePicker
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <DateTimePicker
+                      disableFuture
+                      hideTabs
+                      showTodayButton
+                      todayText="now"
+                      openTo="minutes"
+                      inputFormat="dd/MM/yyyy HH:mm"
                       value={selectedDate}
                       onChange={handleDateChange}
-                      openTo="minutes"
-                      format="DD/MM/YYYY hh:mm a"
-                      variant="dialog"
+                      renderInput={(params) => <TextField {...params} />}
+                      components={{
+                        LeftArrowIcon: AlarmIcon,
+                        RightArrowIcon: SnoozeIcon,
+                        OpenPickerIcon: ClockIcon,
+                      }}
                     />
-                  </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item xs>
                   <Select
@@ -1573,9 +1576,7 @@ const MedModal = ({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </>

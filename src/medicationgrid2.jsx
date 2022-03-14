@@ -13,7 +13,6 @@ import Timeline, {
 
 import MedModal from "./meddialog.jsx";
 import EventModal from "./eventdialog.jsx";
-//import Button from "@material-ui/core/Button";
 import OutputModal from "./outputdialog.jsx";
 
 import JsonDataDisplay from "./jsondatadisplay.jsx";

@@ -1,19 +1,19 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import { fileOpen } from "browser-fs-access";
 import MqttOptionsModal from "./mqttoptionsdialog.jsx";
 
@@ -204,6 +204,7 @@ const VitalSourceModal = ({
         onDrop={(e) => handleFileDrop(e)}
         fullWidth
         maxWidth={"sm"}
+        scroll={"body"}
       >
         <DialogTitle id="simple-dialog-title-3">Vitals Source</DialogTitle>
         <DialogContent>
@@ -212,7 +213,7 @@ const VitalSourceModal = ({
             spacing={2}
             direction="row"
             display="flex"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs>
@@ -221,16 +222,19 @@ const VitalSourceModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
               >
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">
+                  <FormLabel
+                    component="legend"
+                    sx={{ paddingTop: "12px", paddingBottom: "10px" }}
+                  >
                     Set Vital Signs Data Source (URL or File Input):
                   </FormLabel>
                   <FormLabel
                     component="legend"
-                    style={{ paddingTop: "5px", paddingBottom: "10px" }}
+                    sx={{ paddingTop: "5px", paddingBottom: "10px" }}
                   >
                     (use drag and drop for reading files in real-time)
                   </FormLabel>
@@ -255,7 +259,7 @@ const VitalSourceModal = ({
                           }}
                           value={vitalsourcemqtturlvalue}
                           onChange={handleMqttURLChange}
-                          style={{ width: 450, paddingBottom: "1px" }}
+                          sx={{ width: 450, paddingBottom: "1px" }}
                           helperText={"Status: " + mqttConnectStatus}
                           fullWidth
                         />
@@ -266,9 +270,8 @@ const VitalSourceModal = ({
                     >
                       <Button
                         variant="outlined"
-                        color="default"
                         size="small"
-                        style={{
+                        sx={{
                           maxWidth: "100px",
                         }}
                         onClick={handleMqttOptions}
@@ -291,7 +294,7 @@ const VitalSourceModal = ({
                           }}
                           value={vitalsourceurlvalue}
                           onChange={handleURLChange}
-                          style={{
+                          sx={{
                             width: 450,
                             paddingBottom: "10px",
                           }}
@@ -313,7 +316,7 @@ const VitalSourceModal = ({
                             shrink: true,
                           }}
                           onChange={handleFileChange}
-                          style={{ width: 450, paddingBottom: "10px" }}
+                          sx={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
                           helperText={vitalsourcefilename}
                         />
@@ -333,7 +336,7 @@ const VitalSourceModal = ({
                             shrink: true,
                           }}
                           onChange={handleFileChange}
-                          style={{ width: 450, paddingBottom: "10px" }}
+                          sx={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
                           helperText={vitalsourcefilename}
                         />
@@ -354,7 +357,7 @@ const VitalSourceModal = ({
                             shrink: true,
                           }}
                           onChange={handleFileChange}
-                          style={{ width: 450, paddingBottom: "10px" }}
+                          sx={{ width: 450, paddingBottom: "10px" }}
                           fullWidth
                           helperText={vitalsourcefilename}
                         />
@@ -388,9 +391,7 @@ const VitalSourceModal = ({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
       <MqttOptionsModal

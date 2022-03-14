@@ -1,34 +1,39 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/styles";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { makeStyles } from "@mui/styles";
 
-import MomentUtils from "@date-io/moment";
+//import MomentUtils from "@date-io/moment";
+import DateAdapter from "@mui/lab/AdapterDateFns";
 import moment from "moment";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import AlarmIcon from "@mui/icons-material/Alarm";
+import SnoozeIcon from "@mui/icons-material/Snooze";
+import ClockIcon from "@mui/icons-material/AccessTime";
 
 import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-
-import {addoutputs, outputunits, outputdurations, outputGroups} from "./dataconstants.jsx";
+  addoutputs,
+  outputunits,
+  outputdurations,
+  outputGroups,
+} from "./dataconstants.jsx";
 
 const OutputModal = ({
   showOutputDialog,
@@ -44,14 +49,12 @@ const OutputModal = ({
   selectedOutputItemTime,
   selectedDuration,
   selectedDurationUnit,
-  
 }) => {
   const [showOutput, setOutputShow] = React.useState(false);
 
   const handleClose = () => {
     var finalallOutputItems = handleAllOutputItemsChange();
     var finalallOutputGroups = handleAllOutputGroupsChange();
-
 
     setOutputShow(false);
     childOutputState(
@@ -66,7 +69,7 @@ const OutputModal = ({
       selectOutputValue,
       selectOutputUnit,
       selectDuration,
-      selectDurationUnit,
+      selectDurationUnit
     );
   };
 
@@ -75,8 +78,7 @@ const OutputModal = ({
     React.useState(selectedOutputItems);
   const [selectOutputGroup, setSelOutputGroup] =
     React.useState(selectedOutputGroup);
-  const [selectOutputItem, 
-    setSelOutputItem] =
+  const [selectOutputItem, setSelOutputItem] =
     React.useState(selectedOutputItem);
   const [selectOutputItemIndex, setSelOutputItemIndex] = React.useState(
     selectedOutputItemIndex
@@ -87,12 +89,14 @@ const OutputModal = ({
 
   const [selectOutputValue, setSelOutputValue] = React.useState(0);
   const [selectOutputUnit, setSelOutputUnit] = React.useState(outputunits[0]);
-  const [selectDurationUnit, setSelDurationUnit] = React.useState(outputdurations[0]);
+  const [selectDurationUnit, setSelDurationUnit] = React.useState(
+    outputdurations[0]
+  );
   const [selectDuration, setSelDuration] = React.useState(0);
   const [selectAddOutputs, setSelAddOutputs] = React.useState("");
-  const [selectAddOutputsList, setSelAddOutputsList] = React.useState(outputGroups);
+  const [selectAddOutputsList, setSelAddOutputsList] =
+    React.useState(outputGroups);
   const [selectedDate, setSelDateChange] = React.useState(moment());
-
 
   const filter = createFilterOptions();
 
@@ -134,7 +138,7 @@ const OutputModal = ({
   const OutputListItems = ({ list, itemselected }) => (
     <List
       dense={true}
-      style={{
+      sx={{
         maxHeight: 300,
         maxWidth: 160,
         minWidth: 160,
@@ -164,14 +168,13 @@ const OutputModal = ({
     setAllOutputItems(selectedOutputItems);
   }, []);
 
-
   React.useEffect(() => {
     setSelOutputGroup(selectedOutputGroup);
     setSelOutputGroupIndex(selectedOutputGroupIndex);
     setSelOutputItem(selectedOutputItem);
     setSelOutputItemIndex(selectedOutputItemIndex);
     setSelDateChange(selectedOutputItemTime);
-   
+
     setSelOutputValue(selectedOutputValue);
     setSelOutputUnit(selectedOutputUnit);
     setSelDuration(selectedDuration);
@@ -333,14 +336,17 @@ const OutputModal = ({
   };
 
   const handleOutputListItemClick = (index) => {
-    var group = allOutputGroups.filter((e) => e.id === index).map((group) => group);
-    var items = allOutputItems.filter((e) => e.group === index).map((item) => item);
+    var group = allOutputGroups
+      .filter((e) => e.id === index)
+      .map((group) => group);
+    var items = allOutputItems
+      .filter((e) => e.group === index)
+      .map((item) => item);
 
-    if(items[0] === null || items[0] === undefined)
-    {
+    if (items[0] === null || items[0] === undefined) {
       handleAddOutputAtIndex(index, group);
       return;
-    } 
+    }
 
     //select last item
     var item = items.slice(-1);
@@ -367,7 +373,7 @@ const OutputModal = ({
     var end_time = selitem[0].end_time;
     var duration = end_time.diff(start_time, "m");
     var durationunit = selgroup[0].durationunit;
-    
+
     setSelOutputValue(value);
     setSelOutputUnit(unit);
     setSelDateChange(start_time);
@@ -375,7 +381,7 @@ const OutputModal = ({
     setSelDurationUnit(durationunit);
   };
 
-  const handleOutputSelChange= (event, value) => {
+  const handleOutputSelChange = (event, value) => {
     if (typeof value === "string") {
       setSelAddOutputs({
         title: value,
@@ -402,7 +408,7 @@ const OutputModal = ({
     }
   };
 
-  const handleOutputChange= (event) => {
+  const handleOutputChange = (event) => {
     if (selectOutputItemIndex !== 0) {
       setSelOutputValue(event.target.value);
 
@@ -436,7 +442,7 @@ const OutputModal = ({
     return durationconverted;
   };
 
-  const handleDurationChange= (event) => {
+  const handleDurationChange = (event) => {
     if (selectOutputItemIndex !== 0) {
       setSelDuration(event.target.value);
 
@@ -458,7 +464,7 @@ const OutputModal = ({
     }
   };
 
-  const handlePreviousOutput= () => {
+  const handlePreviousOutput = () => {
     if (selectOutputGroupIndex !== 0) {
       var selgroupindex = selectOutputGroup[0].id;
 
@@ -492,7 +498,7 @@ const OutputModal = ({
     }
   };
 
-  const handleNextOutput= () => {
+  const handleNextOutput = () => {
     if (selectOutputGroupIndex !== 0) {
       var selgroupindex = selectOutputGroup[0].id;
 
@@ -526,7 +532,7 @@ const OutputModal = ({
     }
   };
 
-  const handleOutputUnitChange= (event) => {
+  const handleOutputUnitChange = (event) => {
     if (selectOutputItemIndex !== 0) {
       setSelOutputUnit(event.target.value);
 
@@ -543,55 +549,55 @@ const OutputModal = ({
     }
   };
 
-  const handleDurationUnitChange= (event) => {
+  const handleDurationUnitChange = (event) => {
     if (selectOutputItemIndex !== 0) {
       setSelDurationUnit(event.target.value);
     }
   };
 
-  const handleAddOutputAtIndex= (index, group) => {
+  const handleAddOutputAtIndex = (index, group) => {
     //if (selectOutputGroupIndex !== 0) {
-      var selgroupindex = index;
+    var selgroupindex = index;
 
-      //console.log(selgroupindex);
+    //console.log(selgroupindex);
 
-      var selitemindex = allOutputItems.length + 1;
+    var selitemindex = allOutputItems.length + 1;
 
-      const item = [
-        {
-          id: selitemindex,
-          group: selgroupindex,
-          title: "0",
-          start_time: moment().add(0, "m"),
-          end_time: moment().clone().add(0.5, "m"),
-          note: "",
-        },
-      ];
+    const item = [
+      {
+        id: selitemindex,
+        group: selgroupindex,
+        title: "0",
+        start_time: moment().add(0, "m"),
+        end_time: moment().clone().add(0.5, "m"),
+        note: "",
+      },
+    ];
 
-      allOutputItems.push(item[0]);
+    allOutputItems.push(item[0]);
 
-      var finalitems = allOutputItems.map((item, index) =>
-        Object.assign({}, item, {
-          id: index + 1,
-        })
-      );
+    var finalitems = allOutputItems.map((item, index) =>
+      Object.assign({}, item, {
+        id: index + 1,
+      })
+    );
 
-      //console.log(finalitems)
-      var finalitem = finalitems.filter((e) => e.id === selitemindex);
-      setSelOutputItem(finalitem);
-      setSelOutputItemIndex(selitemindex);
+    //console.log(finalitems)
+    var finalitem = finalitems.filter((e) => e.id === selitemindex);
+    setSelOutputItem(finalitem);
+    setSelOutputItemIndex(selitemindex);
 
-      setAllOutputItems(finalitems);
-      
-      setSelOutputGroup(group);
-      setSelOutputGroupIndex(selgroupindex);
+    setAllOutputItems(finalitems);
 
-      handleGetSelItemDetail(finalitem, group);
-      //return finalitems;
+    setSelOutputGroup(group);
+    setSelOutputGroupIndex(selgroupindex);
+
+    handleGetSelItemDetail(finalitem, group);
+    //return finalitems;
     //}
   };
 
-  const handleAddOutput= () => {
+  const handleAddOutput = () => {
     if (selectOutputGroupIndex !== 0) {
       var selgroupindex = selectOutputGroup[0].id;
 
@@ -625,7 +631,7 @@ const OutputModal = ({
     }
   };
 
-  const handleRemoveOutput= () => {
+  const handleRemoveOutput = () => {
     if (selectOutputGroupIndex !== 0) {
       var selgroupindex = selectOutputGroup[0].id;
 
@@ -684,7 +690,7 @@ const OutputModal = ({
       var itemId = selectOutputItem[0].id;
       //console.log(itemId);
       //console.log(allOutputItems)
-      
+
       var items = allOutputItems.map((item) =>
         item.id === itemId
           ? Object.assign({}, item, {
@@ -709,7 +715,6 @@ const OutputModal = ({
               title: selectOutputGroup[0].title,
               unit: selectOutputGroup[0].unit,
               durationunit: selectOutputGroup[0].durationunit,
-             
             })
           : group
       );
@@ -717,7 +722,6 @@ const OutputModal = ({
       return groups;
     } else return selectedOutputs;
   };
-
 
   return (
     <>
@@ -771,7 +775,7 @@ const OutputModal = ({
                       }
                       return option.title;
                     }}
-                    style={{
+                    sx={{
                       minWidth: "160px",
                     }}
                     filterOptions={(options, params) => {
@@ -787,22 +791,21 @@ const OutputModal = ({
                       return filtered;
                     }}
                     onChange={handleOutputSelChange}
-                    renderOption={(option) => option.title}
+                    renderOption={(props, option) => (
+                      <li {...props}>{option.title}</li>
+                    )}
                     selectOnFocus
                     clearOnBlur
                     handleHomeEndKeys
-                    renderInput={(params) => (
-                      <TextField {...params} label="" variant="outlined" />
-                    )}
+                    renderInput={(params) => <TextField {...params} label="" />}
                   />
                 </Grid>
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Outputs">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleAddOutputs}
@@ -811,9 +814,8 @@ const OutputModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleRemoveOutputs}
@@ -821,9 +823,7 @@ const OutputModal = ({
                       Remove Output types
                     </Button>
                   </ButtonGroup>
-                  <Grid item xs>
-                    
-                  </Grid>
+                  <Grid item xs></Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -876,9 +876,8 @@ const OutputModal = ({
                   <ButtonGroup aria-label="Last values">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handlePreviousOutput}
@@ -887,9 +886,8 @@ const OutputModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleNextOutput}
@@ -944,14 +942,13 @@ const OutputModal = ({
                     ))}
                   </Select>
                 </Grid>
-                <Grid items xs>
+                <Grid item xs>
                   Add/Remove Outputs
                   <ButtonGroup aria-label="Add/Remove Outputs">
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleAddOutput}
@@ -960,9 +957,8 @@ const OutputModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      color="default"
                       size="small"
-                      style={{
+                      sx={{
                         maxWidth: "80px",
                       }}
                       onClick={handleRemoveOutput}
@@ -983,30 +979,34 @@ const OutputModal = ({
                 alignItems="stretch"
               >
                 <Grid item xs>
-                </Grid>
-                <Grid item xs>
-                </Grid>
-                <Grid item xs>
                   Timestamp
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDateTimePicker
+                </Grid>
+                <Grid item xs>
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <DateTimePicker
+                      disableFuture
+                      hideTabs
+                      showTodayButton
+                      todayText="now"
+                      openTo="minutes"
+                      inputFormat="dd/MM/yyyy HH:mm"
                       value={selectedDate}
                       onChange={handleDateChange}
-                      openTo="minutes"
-                      format="DD/MM/YYYY hh:mm a"
-                      variant="dialog"
+                      renderInput={(params) => <TextField {...params} />}
+                      components={{
+                        LeftArrowIcon: AlarmIcon,
+                        RightArrowIcon: SnoozeIcon,
+                        OpenPickerIcon: ClockIcon,
+                      }}
                     />
-                  </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
                 </Grid>
-                
               </Grid>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -1,17 +1,17 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const MqttOptionsModal = ({
   showMqttOptionsDialog,
@@ -83,6 +83,7 @@ const MqttOptionsModal = ({
         }}
         fullWidth
         maxWidth={"sm"}
+        scroll={"body"}
       >
         <DialogTitle id="simple-dialog-title-3">MQTT Options</DialogTitle>
         <DialogContent>
@@ -91,7 +92,7 @@ const MqttOptionsModal = ({
             spacing={2}
             direction="row"
             display="flex"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs>
@@ -100,13 +101,13 @@ const MqttOptionsModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
               >
                 <FormControl component="fieldset">
                   <FormLabel
                     component="legend"
-                    style={{ paddingTop: "5px", paddingBottom: "10px" }}
+                    sx={{ paddingTop: "12px", paddingBottom: "10px" }}
                   >
                     Set MQTT WebSocket Options:
                   </FormLabel>
@@ -121,7 +122,7 @@ const MqttOptionsModal = ({
                       }}
                       value={selectMqttUser}
                       onChange={handleMqttUserChange}
-                      style={{
+                      sx={{
                         width: 250,
                         paddingBottom: "10px",
                       }}
@@ -138,7 +139,7 @@ const MqttOptionsModal = ({
                       }}
                       value={selectMqttPass}
                       onChange={handleMqttPassChange}
-                      style={{ width: 250, paddingBottom: "10px" }}
+                      sx={{ width: 250, paddingBottom: "10px" }}
                     />
                   </Grid>
                   <Grid item xs>
@@ -152,7 +153,7 @@ const MqttOptionsModal = ({
                       value={mqttTopic}
                       onChange={handleMqttTopicChange}
                       fullWidth
-                      style={{ width: 450, paddingBottom: "10px" }}
+                      sx={{ width: 450, paddingBottom: "10px" }}
                     />
                   </Grid>
                   <Grid item xs>
@@ -165,7 +166,7 @@ const MqttOptionsModal = ({
                       variant="outlined"
                       value={selectMqttQoS}
                       onChange={handleQoSChange}
-                      style={{ width: 100, paddingBottom: "10px" }}
+                      sx={{ width: 100, paddingBottom: "10px" }}
                     >
                       {mqttqos.map((item) => (
                         <MenuItem value={item}>{item}</MenuItem>

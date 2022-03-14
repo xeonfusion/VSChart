@@ -3,7 +3,7 @@ import React, { Component } from "react";
 //import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import AppMenu from "./appmenu.jsx";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, StyledEngineProvider, createTheme } from "@mui/material/styles";
 
 class App extends Component {
   constructor(props) {
@@ -12,13 +12,15 @@ class App extends Component {
   }
 
   render() {
-    const theme = createMuiTheme();
+    const theme = createTheme();
 
     return (
       <div className="App" id="App">
-        <ThemeProvider theme={theme}>
-          <AppMenu />
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme} >
+            <AppMenu />
+          </ThemeProvider>
+        </StyledEngineProvider>
         ;
       </div>
     );

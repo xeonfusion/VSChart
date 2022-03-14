@@ -1,30 +1,32 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/styles";
+import TextField from "@mui/material/TextField";
+//import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { makeStyles } from "@mui/styles";
 
-import MomentUtils from "@date-io/moment";
+//import MomentUtils from "@date-io/moment";
+import DateAdapter from "@mui/lab/AdapterDateFns";
 import moment from "moment";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 
-import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import AlarmIcon from "@mui/icons-material/Alarm";
+import SnoozeIcon from "@mui/icons-material/Snooze";
+import ClockIcon from "@mui/icons-material/AccessTime";
 
-import {addevents} from "./dataconstants.jsx"
+import { addevents } from "./dataconstants.jsx";
 
 const EventModal = ({
   showEventDialog,
@@ -93,7 +95,7 @@ const EventModal = ({
   const EventListItems = ({ list, itemselected }) => (
     <List
       dense={true}
-      style={{
+      sx={{
         maxHeight: 270,
         maxWidth: 200,
         minWidth: 200,
@@ -360,7 +362,7 @@ const EventModal = ({
             spacing={2}
             direction="row"
             display="flex"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-start"
           >
             <Grid item xs>
@@ -369,7 +371,7 @@ const EventModal = ({
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
               >
                 <Grid item xs>
@@ -385,8 +387,8 @@ const EventModal = ({
                     select
                     label=""
                     helperText="Add Event"
-                    variant="outlined"
-                    style={{
+                    variant="standard"
+                    sx={{
                       minWidth: "200px",
                     }}
                     value={selectAddEvents}
@@ -400,10 +402,8 @@ const EventModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Events">
                     <Button
-                      variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "100px",
                       }}
                       onClick={handleAddEvents}
@@ -411,10 +411,8 @@ const EventModal = ({
                       Add Events
                     </Button>
                     <Button
-                      variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "100px",
                       }}
                       onClick={handleRemoveEvents}
@@ -426,10 +424,8 @@ const EventModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Change Events">
                     <Button
-                      variant="outlined"
-                      color="default"
                       size="large"
-                      style={{
+                      sx={{
                         maxWidth: "200px",
                       }}
                       onClick={handleChangeEventType}
@@ -440,13 +436,13 @@ const EventModal = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs>
+            <Grid item xs={9}>
               <Grid
                 container
                 spacing={2}
                 direction="column"
                 display="flex"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="flex-start"
               >
                 <Grid item xs>
@@ -457,10 +453,10 @@ const EventModal = ({
                     id="outlined-eventnote"
                     label="EventNote"
                     multiline={true}
-                    style={{ width: 650 }}
-                    rows={12}
+                    sx={{ width: 650 }}
+                    minRows={12}
                     maxRows={16}
-                    variant="outlined"
+                    //variant="standard"
                     margin="dense"
                     InputLabelProps={{
                       shrink: true,
@@ -470,24 +466,31 @@ const EventModal = ({
                   />
                 </Grid>
                 <Grid item xs>
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDateTimePicker
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <DateTimePicker
+                      disableFuture
+                      hideTabs
+                      showTodayButton
+                      todayText="now"
+                      openTo="minutes"
+                      inputFormat="dd/MM/yyyy HH:mm"
                       value={selectedDate}
                       onChange={handleDateChange}
-                      openTo="minutes"
-                      format="DD/MM/YYYY hh:mm a"
-                      variant="dialog"
+                      renderInput={(params) => <TextField {...params} />}
+                      components={{
+                        LeftArrowIcon: AlarmIcon,
+                        RightArrowIcon: SnoozeIcon,
+                        OpenPickerIcon: ClockIcon,
+                      }}
                     />
-                  </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </>
