@@ -38,8 +38,23 @@ const divStyle = {
 };
 
 const JsonDataDisplay = forwardRef((props, ref) => {
-  const { isDataDisplayed, childState, chartImage, medgroups, meditems } =
-    props;
+  const {
+    isDataDisplayed,
+    childState,
+    chartImage,
+    medgroups,
+    meditems,
+    outputgroups,
+    outputitems,
+    eventgroups,
+    eventitems,
+    respdatagroups,
+    respdataitems,
+    hemodatagroups,
+    hemodataitems,
+    miscdatagroups,
+    miscdataitems,
+  } = props;
 
   const PlotJData = ({ headerarray, cellarray }) => {
     return (
@@ -231,14 +246,35 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     return total;
   };
 
-  const DisplayData = meditems.map((info) => {
-    var group = medgroups.filter((e) => e.id === info.group);
+  const DisplayEventData = eventitems.map((info) => {
+    //var group = eventgroups.filter((e) => e.id === info.group);
     //console.log(group);
     return (
       <tr>
-        <td>{group[0].title + " (" + group[0].unit + ")"}</td>
         <td>{info.title}</td>
-        <td>{info.start_time.toString()}</td>
+        <td>
+          {moment(info.start_time).format("DD/MM/YYYY HH:mm:ss").toString()}
+        </td>
+      </tr>
+    );
+  });
+
+  const getOutputItemTotalsFromGroup = (groupId) => {
+    var items = outputitems.filter((e) => e.group === groupId);
+
+    var sum = 0;
+    items.forEach((item) => {
+      sum += parseFloat(item.title);
+    });
+
+    return sum;
+  };
+
+  const DisplayOutputData = outputgroups.map((group) => {
+    return (
+      <tr>
+        <td>{group.title}</td>
+        <td>{getOutputItemTotalsFromGroup(group.id) + " " + group.unit}</td>
       </tr>
     );
   });
@@ -298,7 +334,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th>Anaesthesia Chart</th>
+                    <div style={{ marginLeft: 50 }}>
+                      <th>Anaesthesia Chart</th>
+                    </div>
                   </tr>
                   <tr>
                     <td>
@@ -308,6 +346,15 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       />
                     </td>
                   </tr>
+                  <div style={{ marginLeft: 50 }}>
+                    <th>Events</th>
+                    <th>Outputs</th>
+                    <tr>
+                      <td>{DisplayEventData}</td>
+                      <td>{DisplayOutputData}</td>
+                    </tr>
+                    <tr></tr>
+                  </div>
                 </thead>
                 <tbody>
                   <tr>

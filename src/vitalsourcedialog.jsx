@@ -228,7 +228,7 @@ const VitalSourceModal = ({
                 <FormControl component="fieldset">
                   <FormLabel
                     component="legend"
-                    sx={{ paddingTop: "12px", paddingBottom: "10px" }}
+                    sx={{ paddingTop: "12px", paddingBottom: "0px" }}
                   >
                     Set Vital Signs Data Source (URL or File Input):
                   </FormLabel>
