@@ -436,7 +436,7 @@ const EventModal = ({
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs>
               <Grid
                 container
                 spacing={2}
@@ -453,7 +453,7 @@ const EventModal = ({
                     id="outlined-eventnote"
                     label="EventNote"
                     multiline={true}
-                    sx={{ width: 650 }}
+                    sx={{ width: 600 }}
                     minRows={12}
                     maxRows={16}
                     //variant="standard"
