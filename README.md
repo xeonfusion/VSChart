@@ -2,11 +2,11 @@
 
 It supports timeline based adding or removing of intraoperative anaesthetic medications and automatic loading of monitor vital signs from the CSV or JSON file exported by VSCaptureWave or VSCaptureMP C# app (https://sourceforge.net/projects/vscapture/)
 
-<img width="1438" alt="Screenshot 2021-07-19 at 8 50 44 PM" src="https://user-images.githubusercontent.com/10882257/126343603-dea42d23-b180-42e6-9a7f-7435b410f443.png">
-
-<img width="1552" alt="Screenshot 2021-07-19 at 8 46 16 PM" src="https://user-images.githubusercontent.com/10882257/126344034-2613139c-72e4-4c22-89e0-a571ee36c337.png">
-
-![Screen Shot 2021-04-23 at 1 08 27 PM](https://user-images.githubusercontent.com/10882257/126348055-3dd015bc-c62d-4967-a60e-7a77a3af7bb2.png)
+<img width="1440" alt="Screen Shot 2022-03-25 at 12 33 53 PM" src="https://user-images.githubusercontent.com/10882257/160087345-ccea5420-b89e-49a5-a534-9856a3b652b8.png">
+<img width="1440" alt="Screen Shot 2022-03-25 at 12 35 21 PM" src="https://user-images.githubusercontent.com/10882257/160087369-62052ed5-2221-4486-8b90-7af9b674784b.png">
+<img width="1440" alt="Screen Shot 2022-03-25 at 12 38 16 PM" src="https://user-images.githubusercontent.com/10882257/160087376-ce68409e-e3e2-423e-b092-653c17dc596c.png">
+<img width="1440" alt="Screen Shot 2022-03-25 at 12 37 58 PM" src="https://user-images.githubusercontent.com/10882257/160087371-b1399dfa-a25a-4306-873f-aa44f2d05db1.png">
+<img width="1440" alt="Screen Shot 2022-03-25 at 12 38 37 PM" src="https://user-images.githubusercontent.com/10882257/160087379-39a38020-d86c-411a-a1e4-ac283e4603e7.png">
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
