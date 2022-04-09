@@ -236,14 +236,80 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     medgroups.map((group) => {
       var items = meditems.filter((e) => e.group === group.id);
 
-      var sum = 0;
-      items.forEach((item) => {
-        sum += parseFloat(item.title);
-      });
-      total.push([sum + " (" + group.unit + ")"]);
+      var infsum = 0;
+      if (items[0] !== undefined) {
+        items.forEach((item) => {
+          var duration = 0;
+          if (
+            group.durationunit === "bolus (sec)" ||
+            group.durationunit === "bolus (min)"
+          )
+            duration = 1;
+          else
+            duration = item.end_time.diff(
+              item.start_time,
+              getGroupUnit(group).time,
+              true
+            );
+          var infrate = parseFloat(item.title);
+          var totalinf = infrate * duration;
+          infsum += totalinf;
+        });
+        if (
+          group.durationunit !== "bolus (sec)" &&
+          group.durationunit !== "bolus (min)"
+        )
+          infsum = infsum.toFixed(1);
+        //console.log(infsum);
+      }
+      total.push([infsum + " " + getGroupUnit(group).unit]);
+      return infsum;
     });
-    //console.log(total);
+
     return total;
+  };
+
+  const getGroupUnit = (group) => {
+    var unit = "";
+    var time = "";
+    switch (group.unit) {
+      case "ml/hr":
+        unit = "ml";
+        time = "h";
+        break;
+      case "mg/kg/hr":
+        unit = "mg/kg";
+        time = "h";
+        break;
+      case "mg/hr":
+        unit = "mg";
+        time = "h";
+        break;
+      case "mcg/kg/hr":
+        unit = "mcg/kg";
+        time = "h";
+        break;
+      case "mcg/kg/min":
+        unit = "mcg/kg";
+        time = "m";
+        break;
+      case "U/hr":
+        unit = "U";
+        time = "h";
+        break;
+      case "L/min":
+        unit = "L";
+        time = "m";
+        break;
+      default:
+        unit = group.unit;
+        time = "m";
+        break;
+    }
+    return {
+      unit: unit,
+      time: time,
+    };
   };
 
   const DisplayEventData = eventitems.map((info) => {

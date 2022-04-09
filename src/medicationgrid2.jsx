@@ -112,16 +112,21 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [alloutputitems, setOutputItems] = React.useState(outputitems);
   const [alloutputgroups, setOutputGroups] = React.useState(outputgroups);
   const [selectedOutputItem, setSelOutputItem] = React.useState(outputitems[0]);
-  const [selectedOutputGroup, setSelOutputGroup] = React.useState(outputgroups[0]);
+  const [selectedOutputGroup, setSelOutputGroup] = React.useState(
+    outputgroups[0]
+  );
   const [selectedOutputGroupIndex, setSelOutputGroupIndex] = React.useState(0);
   const [selectedOutputItemIndex, setSelOutputItemIndex] = React.useState(0);
   const [selectedOutputUnit, setSelOutputUnit] = React.useState(0);
-    
+
   const [selectedOutputValue, setSelOutputValue] = React.useState(0);
-  const [selectedOutputItemTime, setSelOutputItemTime] = React.useState(moment());
+  const [selectedOutputItemTime, setSelOutputItemTime] = React.useState(
+    moment()
+  );
   const [selectedOutputDuration, setSelOutputDuration] = React.useState(0);
-  const [selectedOutputDurationUnit, setSelOutputDurationUnit] = React.useState(0);
-  
+  const [selectedOutputDurationUnit, setSelOutputDurationUnit] =
+    React.useState(0);
+
   const [showItemInfo, setShowItemInfo] = React.useState(false);
 
   const handleItemDoubleClick = (itemId, e, time) => {
@@ -160,6 +165,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     switch (duration) {
       case "bolus (sec)":
         durationconverted = "s";
+        break;
+      case "bolus (min)":
+        durationconverted = "m";
         break;
       case "min":
         durationconverted = "m";
@@ -273,14 +281,85 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   };
 
   const getItemTotalsFromGroup = (groupId) => {
+    var group = allgroups.filter((e) => e.id === groupId);
     var items = allitems.filter((e) => e.group === groupId);
 
-    var sum = 0;
-    items.forEach((item) => {
-      sum += parseFloat(item.title);
-    });
+    var infsum = 0;
+    if (items[0] !== undefined) {
+      items.forEach((item) => {
+        var duration = 0;
+        if (
+          group[0].durationunit === "bolus (sec)" ||
+          group[0].durationunit === "bolus (min)"
+        )
+          duration = 1;
+        else
+          duration = item.end_time.diff(
+            item.start_time,
+            getGroupUnit(group[0]).time,
+            true
+          );
+        var infrate = parseFloat(item.title);
+        var totalinf = infrate * duration;
+        infsum += totalinf;
+      });
+      if (
+        group[0].durationunit !== "bolus (sec)" &&
+        group[0].durationunit !== "bolus (min)"
+      )
+        infsum = infsum.toFixed(1);
+      //console.log(infsum);
+    }
+    return infsum;
+  };
 
-    return sum;
+  const getGroupUnit = (group) => {
+    var unit = "";
+    var time = "";
+    switch (group.unit) {
+      case "ml/hr":
+        unit = "ml";
+        time = "h";
+        break;
+      case "mg/kg/hr":
+        unit = "mg/kg";
+        time = "h";
+        break;
+      case "mg/hr":
+        unit = "mg";
+        time = "h";
+        break;
+      case "mcg/kg/hr":
+        unit = "mcg/kg";
+        time = "h";
+        break;
+      case "mcg/kg/min":
+        unit = "mcg/kg";
+        time = "m";
+        break;
+      case "U/hr":
+        unit = "U";
+        time = "h";
+        break;
+      case "L/min":
+        unit = "L";
+        time = "m";
+        break;
+      default:
+        unit = group.unit;
+        time = "m";
+        break;
+    }
+    return {
+      unit: unit,
+      time: time,
+    };
+  };
+
+  const getItemColorFromGroup = (groupId) => {
+    var group = allgroups.filter((e) => e.id === groupId);
+    var color = group[0].color;
+    return color;
   };
 
   const getOutputItemUnitFromGroup = (groupId) => {
@@ -321,13 +400,13 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var end_time = item[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
-    
+
     setSelOutputValue(value);
     setSelOutputUnit(unit);
     setSelOutputItemTime(start_time);
     setSelOutputDuration(duration);
     setSelDurationUnit(durationunit);
-    
+
     setOutputShow(true);
   };
 
@@ -342,7 +421,6 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setSelOutputItemTime(item[0].start_time);
     setSelOutputGroup(group);
     setSelOutputGroupIndex(groupid);
-    
 
     var value = parseFloat(item[0].title);
     var unit = group[0].unit;
@@ -350,13 +428,13 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var end_time = item[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
-    
+
     setSelOutputValue(value);
     setSelOutputUnit(unit);
     setSelOutputItemTime(start_time);
     setSelOutputDuration(duration);
     setSelOutputDurationUnit(durationunit);
-   
+
     setOutputShow(true);
   };
 
@@ -398,14 +476,13 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var end_time = finalitem[0].end_time;
     var durationunit = group[0].durationunit;
     var duration = end_time.diff(start_time, convertDurationUnit(durationunit));
-    
-    
+
     setSelOutputValue(value);
     setSelOutputUnit(unit);
     setSelOutputItemTime(start_time);
     setSelOutputDuration(duration);
     setSelDurationUnit(durationunit);
-    
+
     setOutputShow(true);
   };
 
@@ -490,7 +567,11 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         <table>
           <tbody>
             <tr>
-              <td>{getItemTotalsFromGroup(group.id) + " " + group.unit}</td>
+              <td>
+                {getItemTotalsFromGroup(group.id) +
+                  " " +
+                  getGroupUnit(group).unit}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -505,6 +586,22 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     getItemProps,
     getResizeProps,
   }) => {
+    const itemcolor = getItemColorFromGroup(item.group);
+    const backgroundColor = itemContext.selected
+      ? itemContext.dragging
+        ? itemcolor
+        : "#f7c144"
+      : itemcolor;
+
+    const defaultbordercolor = itemcolor === "white" ? "#2196f3" : itemcolor;
+    const borderColor = itemContext.selected
+      ? itemContext.dragging
+        ? defaultbordercolor
+        : "#f7c144"
+      : "#2196f3";
+    
+    const defaultfontcolor = itemcolor === "grey" || itemcolor === "red" ? "white" : "black";
+    
     return (
       <div
         {...getItemProps({
@@ -514,9 +611,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
             borderRadius: 4,
             borderLeftWidth: itemContext.selected ? 3 : 1,
             borderRightWidth: itemContext.selected ? 3 : 1,
-            color: item.color,
-            backgroundColor: "#2196f3",
-            //backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: borderColor,
+            //backgroundColor: "#2196f3",
+            backgroundColor: backgroundColor,
           },
         })}
         onMouseOver={() => {
@@ -529,12 +626,13 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         <div
           style={{
             height: itemContext.dimensions.height,
-            width: itemContext.width,
+            width: itemContext.dimensions.width,
             overflow: "hidden",
             paddingLeft: 3,
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
-            color: "white",
+            //color: "white",
+            color: defaultfontcolor,
             textAlign: "left",
           }}
         >
@@ -654,7 +752,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         <table>
           <tbody>
             <tr>
-              <td>{getOutputItemTotalsFromGroup(group.id) + " " + group.unit}</td>
+              <td>
+                {getOutputItemTotalsFromGroup(group.id) + " " + group.unit}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -870,8 +970,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     selectedOutputValue,
     selectedOutputUnit,
     selectedOutputDuration,
-    selectedOutputDurationUnit,
-  
+    selectedOutputDurationUnit
   ) => {
     setOutputGroups(selectedOutputs);
     setOutputItems(selectedOutputItems);
@@ -1033,19 +1132,19 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         </TimelineMarkers>
       </Timeline>
       <OutputModal
-      showOutputDialog={showOutput}
-      childOutputState={handleOutputChildState}
-      selectedOutputs={alloutputgroups}
-      selectedOutputItems={alloutputitems}
-      selectedOutputItem={selectedOutputItem}
-      selectedOutputItemIndex={selectedOutputItemIndex}
-      selectedOutputItemTime={selectedOutputItemTime}
-      selectedOutputGroup={selectedOutputGroup}
-      selectedOutputGroupIndex={selectedOutputGroupIndex} 
-      selectedOutputUnit={selectedOutputUnit}     
-      selectedOutputValue={selectedOutputValue}
-      selectedDuration={selectedOutputDuration}
-      selectedDurationUnit={selectedDurationUnit}
+        showOutputDialog={showOutput}
+        childOutputState={handleOutputChildState}
+        selectedOutputs={alloutputgroups}
+        selectedOutputItems={alloutputitems}
+        selectedOutputItem={selectedOutputItem}
+        selectedOutputItemIndex={selectedOutputItemIndex}
+        selectedOutputItemTime={selectedOutputItemTime}
+        selectedOutputGroup={selectedOutputGroup}
+        selectedOutputGroupIndex={selectedOutputGroupIndex}
+        selectedOutputUnit={selectedOutputUnit}
+        selectedOutputValue={selectedOutputValue}
+        selectedDuration={selectedOutputDuration}
+        selectedDurationUnit={selectedDurationUnit}
       />
       <Timeline
         groups={eventgroups}
@@ -1111,7 +1210,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventType={selectedEventType}
         selectedEventNote={selectedEventNote}
       />
-      
+
       <JsonDataDisplay
         ref={printDataRef}
         isDataDisplayed={openPrintData}

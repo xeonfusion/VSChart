@@ -31,6 +31,17 @@ import AlarmIcon from "@mui/icons-material/Alarm";
 import SnoozeIcon from "@mui/icons-material/Snooze";
 import ClockIcon from "@mui/icons-material/AccessTime";
 
+import {
+  medGroups,
+  medItems,
+  doseunits,
+  doseroutes,
+  eventtimes,
+  durations,
+  addmeds,
+  medtypes,
+} from "./dataconstants.jsx";
+
 const MedModal = ({
   showMedDialog,
   childState,
@@ -72,353 +83,6 @@ const MedModal = ({
       selectMedType
     );
   };
-
-  const medGroups = [
-    {
-      id: 1,
-      title: "Propofol",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "InductionAgent",
-      color: "yellow",
-    },
-    {
-      id: 2,
-      title: "Fentanyl",
-      unit: "mcg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Opioid",
-      color: "deepskyblue",
-    },
-    {
-      id: 3,
-      title: "Lidocaine",
-      unit: "mg",
-      route: "Subcutaneous",
-      durationunit: "bolus (sec)",
-      type: "LocalAnaesthetic",
-      color: "grey",
-    },
-    {
-      id: 4,
-      title: "Rocuronium",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "MuscleRelaxant",
-      color: "red",
-    },
-    {
-      id: 5,
-      title: "Ringers",
-      unit: "ml/hr",
-      route: "Intravenous",
-      durationunit: "min",
-      type: "IVfluid",
-      color: "white",
-    },
-    {
-      id: 6,
-      title: "Midazolam",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Hypnotic",
-      color: "orange",
-    },
-    {
-      id: 6,
-      title: "Suxamethonium",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "MuscleRelaxant",
-      color: "red",
-    },
-    {
-      id: 7,
-      title: "Morphine",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Opioid",
-      color: "deepskyblue",
-    },
-    {
-      id: 8,
-      title: "Cisatracurium",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "MuscleRelaxant",
-      color: "red",
-    },
-    {
-      id: 9,
-      title: "Thiopentone",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "InductionAgent",
-      color: "yellow",
-    },
-    {
-      id: 10,
-      title: "Saline 0.9%",
-      unit: "ml/hr",
-      route: "Intravenous",
-      durationunit: "min",
-      type: "IVfluid",
-      color: "white",
-    },
-    {
-      id: 11,
-      title: "Glycopyrrolate",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Anticholinergic",
-      color: "lawngreen",
-    },
-    {
-      id: 12,
-      title: "Ephedrine",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Vasopressor",
-      color: "#debfd9",
-    },
-    {
-      id: 13,
-      title: "Ondansetron",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Antiemetic",
-      color: "#edc282",
-    },
-    {
-      id: 14,
-      title: "Remifentanil",
-      unit: "mcg/kg/min",
-      route: "Intravenous",
-      durationunit: "continuous",
-      type: "Opioid",
-      color: "deepskyblue",
-    },
-    {
-      id: 15,
-      title: "Ketamine",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "InductionAgent",
-      color: "yellow",
-    },
-    {
-      id: 16,
-      title: "Dexmedetomidine",
-      unit: "mcg/kg/hr",
-      route: "Intravenous",
-      durationunit: "continuous",
-      type: "Other",
-      color: "white",
-    },
-    {
-      id: 17,
-      title: "Phenylephrine",
-      unit: "mcg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Vasopressor",
-      color: "#debfd9",
-    },
-    {
-      id: 18,
-      title: "Sugammadex",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Other",
-      color: "white",
-    },
-    {
-      id: 19,
-      title: "Neostigmine",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Other",
-      color: "white",
-    },
-    {
-      id: 20,
-      title: "Dexamethasone",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Other",
-      color: "white",
-    },
-    {
-      id: 21,
-      title: "Atropine",
-      unit: "mg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Anticholinergic",
-      color: "lawngreen",
-    },
-    {
-      id: 22,
-      title: "Norepinephrine",
-      unit: "mcg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Vasopressor",
-      color: "debfd9",
-    },
-    {
-      id: 23,
-      title: "Epinephrine",
-      unit: "mcg",
-      route: "Intravenous",
-      durationunit: "bolus (sec)",
-      type: "Vasopressor",
-      color: "debfd9",
-    },
-  ];
-
-  const medItems = [
-    {
-      id: 1,
-      group: 1,
-      title: "150",
-      start_time: moment().add(0.5, "m"),
-      end_time: moment().add(1, "m"),
-      rightTitle: "",
-    },
-    {
-      id: 2,
-      group: 2,
-      title: "75",
-      start_time: moment().add(0, "m"),
-      end_time: moment().add(0.5, "m"),
-    },
-    {
-      id: 3,
-      group: 3,
-      title: "100",
-      start_time: moment().add(0, "m"),
-      end_time: moment().add(0.5, "m"),
-    },
-    {
-      id: 4,
-      group: 4,
-      title: "50",
-      start_time: moment().add(1, "m"),
-      end_time: moment().add(1.5, "m"),
-    },
-    {
-      id: 5,
-      group: 5,
-      title: "60",
-      start_time: moment().add(0, "m"),
-      end_time: moment().add(10, "m"),
-    },
-  ];
-
-  const medItem = [
-    {
-      id: 1,
-      group: 1,
-      title: "",
-      start_time: moment().add(0.5, "m"),
-      end_time: moment().add(1, "m"),
-    },
-  ];
-
-  const doseunits = [
-    "mg",
-    "mcg",
-    "mcg/kg/min",
-    "ml/hr",
-    "mg/kg/hr",
-    "mcg/kg/hr",
-    "mg/hr",
-    "U",
-    "U/hr",
-    "%",
-    "L/min",
-  ];
-
-  const doseroutes = [
-    "Intravenous",
-    "Subcutaneous",
-    "Intramuscular",
-    "Intranasal",
-    "Endotracheal",
-    "Topical",
-    "Mucosal",
-  ];
-
-  const eventtimes = [
-    "Equipment Check",
-    "Patient In",
-    "Anesthesia Start",
-    "Preoxygenation",
-    "Induction",
-    "Intubation/SGA In",
-    "Surgery Start",
-    "Surgery Stop",
-    "Emergence",
-    "Extubation/SGA Out",
-    "Patient Out",
-    "Anaesthesia Stop",
-    "Add Note",
-    "Other",
-  ];
-
-  const durations = ["bolus (sec)", "min", "sec", "continuous"];
-
-  const addmeds = [
-    { title: "Atropine" },
-    { title: "Cisatracurium" },
-    { title: "Dexamethasone" },
-    { title: "Dexmedetomidine" },
-    { title: "Ephedrine" },
-    { title: "Epinephrine" },
-    { title: "Glycopyrrolate" },
-    { title: "Ketamine" },
-    { title: "Midazolam" },
-    { title: "Morphine" },
-    { title: "Nesotigmine" },
-    { title: "Norepinephrine" },
-    { title: "Ondansetron" },
-    { title: "Phenylephrine" },
-    { title: "Remifentanil" },
-    { title: "Saline 0.9%" },
-    { title: "Sugammadex" },
-    { title: "Suxamethonium" },
-    { title: "Thiopentone" },
-  ];
-
-  const medtypes = [
-    { type: "Other", color: "white", pattern: "solid" },
-    { type: "InductionAgent", color: "yellow", pattern: "solid" },
-    { type: "Hypnotic", color: "orange", pattern: "solid" },
-    { type: "IVfluid", color: "white", pattern: "solid" },
-    { type: "Opioid", color: "deepskyblue", pattern: "solid" },
-    { type: "LocalAnaesthetic", color: "grey", pattern: "solid" },
-    { type: "MuscleRelaxant", color: "red", pattern: "solid" },
-    { type: "Anticholinergic", color: "lawngreen", pattern: "solid" },
-    { type: "Vasopressor", color: "#debfd9", pattern: "solid" },
-    { type: "Antiemetic", color: "#edc282", pattern: "solid" },
-    { type: "Vasodilators", color: "#debfd9", pattern: "striped" },
-  ];
 
   const StyledListItem = ({
     itemcolor,
@@ -666,6 +330,9 @@ const MedModal = ({
       case "bolus (sec)":
         durationconverted = "s";
         break;
+    case "bolus (min)":
+        durationconverted = "m";
+        break;
       case "min":
         durationconverted = "m";
         break;
@@ -743,6 +410,16 @@ const MedModal = ({
   const handleDurationUnitChange = (event) => {
     if (selectItemIndex !== 0) {
       setSelDurationUnit(event.target.value);
+      var groupId = selectGroup[0].id;
+
+      var group = selectGroup.map((group) =>
+        group.id === groupId
+          ? Object.assign({}, group, {
+              durationunit: event.target.value,
+            })
+          : group
+      );
+      setSelGroup(group);
     }
   };
 
