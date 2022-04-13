@@ -247,8 +247,6 @@ const EventModal = ({
         })
       );
 
-      //console.log(finalitems);
-
       var finaleventindex = 0;
       switch (seleventindex) {
         case 1:
@@ -266,6 +264,44 @@ const EventModal = ({
       if (finaleventindex !== 0) handleGetSelEventDetail(finalitem);
       setSelListFocus(true);
     }
+  };
+
+  const handleNextEvent = () => {
+    var seladdeventindex = addevents.findIndex((e) => e === selectAddEvents);
+
+    var finaleventindex = 0;
+    switch (seladdeventindex) {
+      case addevents.length - 1:
+        if (addevents.length > 0) finaleventindex = 0;
+        break;
+      case -1:
+        if (addevents.length > 0) finaleventindex = 0;
+        break;
+      default:
+        finaleventindex = seladdeventindex + 1;
+    }
+
+    var finalevent = addevents[finaleventindex];
+    setSelAddEvents(finalevent);
+  };
+
+  const handlePreviousEvent = () => {
+    var seladdeventindex = addevents.findIndex((e) => e === selectAddEvents);
+
+    var finaleventindex = 0;
+    switch (seladdeventindex) {
+      case 0:
+        if (addevents.length > 0) finaleventindex = addevents.length - 1;
+        break;
+      case -1:
+        if (addevents.length > 0) finaleventindex = addevents.length - 1;
+        break;
+      default:
+        finaleventindex = seladdeventindex - 1;
+    }
+
+    var finalevent = addevents[finaleventindex];
+    setSelAddEvents(finalevent);
   };
 
   const handleChangeEventType = (event) => {
@@ -418,6 +454,28 @@ const EventModal = ({
                       onClick={handleRemoveEvents}
                     >
                       Remove Events
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
+                <Grid item xs>
+                  <ButtonGroup aria-label="Browse Events">
+                    <Button
+                      size="large"
+                      sx={{
+                        maxWidth: "100px",
+                      }}
+                      onClick={handleNextEvent}
+                    >
+                      Next Event
+                    </Button>
+                    <Button
+                      size="large"
+                      sx={{
+                        maxWidth: "100px",
+                      }}
+                      onClick={handlePreviousEvent}
+                    >
+                      Previous Event
                     </Button>
                   </ButtonGroup>
                 </Grid>

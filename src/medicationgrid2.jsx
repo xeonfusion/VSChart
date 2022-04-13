@@ -1010,6 +1010,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedDuration={selectedDuration}
         selectedDurationUnit={selectedDurationUnit}
         selectedMedType={selectedMedType}
+        selectedEventItems={alleventitems}
+        selectedEventItem={selectedEventItem}
+        selectedEventItemIndex={selectedEventItemIndex}
       />
       <Timeline
         key={keys}

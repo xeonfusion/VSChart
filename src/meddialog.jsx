@@ -58,6 +58,9 @@ const MedModal = ({
   selectedDuration,
   selectedDurationUnit,
   selectedMedType,
+  selectedEventItems,
+  selectedEventItem,
+  selectedEventItemIndex,
 }) => {
   const [show, setShow] = React.useState(false);
 
@@ -161,7 +164,9 @@ const MedModal = ({
   const [selectUnit, setSelUnit] = React.useState(doseunits[0]);
   const [selectRoute, setSelRoute] = React.useState(doseroutes[0]);
   const [selectDurationUnit, setSelDurationUnit] = React.useState(durations[0]);
-  const [selectEvent, setSelEvent] = React.useState(eventtimes[4]);
+  //const [selectEvent, setSelEvent] = React.useState(eventtimes[4]);
+  const [alleventitems, setSelEventItems] = React.useState(selectedEventItems);
+  const [selectEvent, setSelEvent] = React.useState(selectedEventItem);
   const [selectDuration, setSelDuration] = React.useState(0);
   const [selectAddMeds, setSelAddMeds] = React.useState("");
   const [selectAddMedsList, setSelAddMedsList] = React.useState(medGroups);
@@ -188,6 +193,8 @@ const MedModal = ({
     setSelDurationUnit(selectedDurationUnit);
     setSelDuration(selectedDuration);
     setSelMedType(selectedMedType);
+    setSelEventItems(selectedEventItems);
+    setSelEvent(selectedEventItem);
     setSelDateChange(selectedItemTime);
     setShow(showMedDialog);
   }, [
@@ -201,6 +208,8 @@ const MedModal = ({
     selectedDuration,
     selectedDurationUnit,
     selectedMedType,
+    selectedEventItems,
+    selectedEventItem,
     selectedItemTime,
     showMedDialog,
   ]);
@@ -330,7 +339,7 @@ const MedModal = ({
       case "bolus (sec)":
         durationconverted = "s";
         break;
-    case "bolus (min)":
+      case "bolus (min)":
         durationconverted = "m";
         break;
       case "min":
@@ -425,7 +434,7 @@ const MedModal = ({
 
   const handleEventChange = (event) => {
     if (selectItemIndex !== 0) {
-      setSelEvent(event.target.value);
+    setSelEvent(event.target.value);
     }
   };
 
@@ -900,6 +909,16 @@ const MedModal = ({
     }
   };
 
+  const handleGetEventTime = () => {
+    if (selectEvent !== null || selectEvent !== undefined) {
+      handleDateChange(selectEvent.start_time);
+    }
+  };
+
+  const handleGetCurrentTime = () => {
+    handleDateChange(moment());
+  };
+
   return (
     <>
       <Dialog
@@ -1093,6 +1112,31 @@ const MedModal = ({
                     </Button>
                   </ButtonGroup>
                 </Grid>
+                <Grid item xs>
+                  Add/Remove Doses
+                  <ButtonGroup aria-label="Add/Remove doses">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleAddMedDose}
+                    >
+                      Add Doses
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        maxWidth: "80px",
+                      }}
+                      onClick={handleRemoveMedDose}
+                    >
+                      Remove Doses
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs>
@@ -1139,18 +1183,38 @@ const MedModal = ({
                     ))}
                   </Select>
                 </Grid>
+
                 <Grid item xs>
-                  Add/Remove Doses
-                  <ButtonGroup aria-label="Add/Remove doses">
+                  Event times
+                  <Select
+                    id="event-timing"
+                    labelId="Event timing"
+                    variant="outlined"
+                    fullWidth
+                    helpertext="Get Event timing"
+                    defaultValue={""}
+                    value={selectEvent}
+                    onChange={handleEventChange}
+                  >
+                    {alleventitems.map((item) => (
+                      <MenuItem value={item}>
+                        {item.title + " " + item.start_time.format("HH:mm")}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid item xs>
+                  Get Timestamp From
+                  <ButtonGroup aria-label="Get Timestamp">
                     <Button
                       variant="outlined"
                       size="small"
                       sx={{
                         maxWidth: "80px",
                       }}
-                      onClick={handleAddMedDose}
+                      onClick={handleGetEventTime}
                     >
-                      Add Doses
+                      Event Time
                     </Button>
                     <Button
                       variant="outlined"
@@ -1158,9 +1222,9 @@ const MedModal = ({
                       sx={{
                         maxWidth: "80px",
                       }}
-                      onClick={handleRemoveMedDose}
+                      onClick={handleGetCurrentTime}
                     >
-                      Remove Doses
+                      Current Time
                     </Button>
                   </ButtonGroup>
                 </Grid>
@@ -1231,22 +1295,6 @@ const MedModal = ({
                       }}
                     />
                   </LocalizationProvider>
-                </Grid>
-                <Grid item xs>
-                  <Select
-                    id="event-timing"
-                    labelId="Event timing"
-                    variant="outlined"
-                    fullWidth
-                    helpertext="Get Event timing"
-                    defaultValue={eventtimes[0]}
-                    value={selectEvent}
-                    onChange={handleEventChange}
-                  >
-                    {eventtimes.map((item) => (
-                      <MenuItem value={item}>{item}</MenuItem>
-                    ))}
-                  </Select>
                 </Grid>
               </Grid>
             </Grid>
