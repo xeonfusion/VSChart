@@ -64,6 +64,13 @@ export const eventgroups = [
   },
 ];
 
+export const proceduregroups = [
+  {
+    id: 1,
+    title: "Procedures",
+  },
+];
+
 export const respdatagroups = [
   {
     id: 1,
@@ -295,7 +302,6 @@ export const meditems = [
     title: "150",
     start_time: moment().add(0.5, "m"),
     end_time: moment().add(1, "m"),
-    //rightTitle: "",
   },
   {
     id: 2,
@@ -303,7 +309,6 @@ export const meditems = [
     title: "50",
     start_time: moment().add(1.5, "m"),
     end_time: moment().add(2, "m"),
-    //rightTitle: "",
   },
 
   {
@@ -395,6 +400,35 @@ export const eventitems = [
   },
 ];
 
+export const procedureitems = [
+  {
+    id: 1,
+    group: 1,
+    title: "Peripheral IV Line",
+    start_time: moment().subtract(2, "m"),
+    end_time: moment().subtract(1, "m"),
+    note: "",
+  },
+  {
+    id: 2,
+    group: 1,
+    title: "Intubation/SGA In",
+    start_time: moment().add(3, "m"),
+    end_time: moment().add(4, "m"),
+    note: "",
+  },
+  {
+    id: 3,
+    group: 1,
+    title: "Arterial line",
+    start_time: moment().add(5, "m"),
+    end_time: moment().add(6, "m"),
+    note: "",
+  },
+  
+
+];
+
 export const addevents = [
   "Equipment Check",
   "Patient In",
@@ -403,6 +437,7 @@ export const addevents = [
   "Preoxygenation",
   "Induction",
   "Intubation/SGA In",
+  "Positioning",
   "Surgery Start",
   "Surgery Stop",
   "Emergence",
@@ -419,6 +454,8 @@ export const addevents = [
   "Cross Clamp On",
   "Cross Clamp Off",
   "Protamine",
+  "Mayfield Pin In",
+  "Mayfield Pin Out",
   "Temporary Clip On",
   "Temporary Clip Off",
   "Permanent Clip On",
@@ -429,6 +466,26 @@ export const addevents = [
   "Call For Help",
   "CPR",
   "Add Note",
+  "Other",
+];
+
+export const addprocedures = [
+  "Peripheral IV Line",
+  "Arterial line",
+  "Central venous line",
+  "Midline catheter insertion",
+  "OPA/NPA insertion",
+  "Mask ventilation",
+  "Intubation",
+  "SGA insertion",
+  "Spinal Anaesthesia",
+  "Epidural Anaesthesia",
+  "Nerve Block",
+  "Drain insertion",
+  "TOE/TEE",
+  "Nerve Monitor",
+  "Processed EEG",
+  "Fibreoptic Bronchoscopy",
   "Other",
 ];
 

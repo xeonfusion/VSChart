@@ -48,6 +48,8 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     outputitems,
     eventgroups,
     eventitems,
+    proceduregroups,
+    procedureitems,
     respdatagroups,
     respdataitems,
     hemodatagroups,
@@ -319,7 +321,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
       <tr>
         <td>{info.title}</td>
         <td>
-          {moment(info.start_time).format("DD/MM/YYYY HH:mm:ss").toString()}
+        {moment(info.start_time).format("DD/MM/YYYY HH:mm:ss").toString()}
         </td>
       </tr>
     );

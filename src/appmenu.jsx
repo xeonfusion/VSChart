@@ -26,6 +26,7 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import BuildIcon from "@mui/icons-material/Build";
 import PrintIcon from "@mui/icons-material/Print";
 import BloodtypeIcon from "@mui/icons-material/Bloodtype";
+import AccessibilityIcon from '@mui/icons-material/Accessibility';
 
 const drawerWidth = 240;
 const minidrawerWidth = 70;
@@ -146,6 +147,15 @@ export default function AppMenu() {
           </DrawerHeader>
           <Divider />
           <List>
+          <ListItem
+              button
+              onClick={() => medgridRef.current.handleShowEventsCall()}
+            >
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText>Add Event</ListItemText>
+            </ListItem>
             <ListItem
               button
               onClick={() => medgridRef.current.handleShowMedCall()}
@@ -175,21 +185,21 @@ export default function AppMenu() {
             </ListItem>
             <ListItem
               button
-              onClick={() => medgridRef.current.handleShowEventsCall()}
-            >
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText>Add Event</ListItemText>
-            </ListItem>
-            <ListItem
-              button
               onClick={() => medgridRef.current.handleShowNoteCall()}
             >
               <ListItemIcon>
                 <AddCommentIcon />
               </ListItemIcon>
               <ListItemText>Add Note</ListItemText>
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => medgridRef.current.handleShowProceduresCall()}
+            >
+              <ListItemIcon>
+                <AccessibilityIcon />
+              </ListItemIcon>
+              <ListItemText>Add Procedure</ListItemText>
             </ListItem>
             <ListItem
               button

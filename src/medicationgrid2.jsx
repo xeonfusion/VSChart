@@ -14,6 +14,7 @@ import Timeline, {
 import MedModal from "./meddialog.jsx";
 import EventModal from "./eventdialog.jsx";
 import OutputModal from "./outputdialog.jsx";
+import ProcedureModal from "./proceduredialog.jsx";
 
 import JsonDataDisplay from "./jsondatadisplay.jsx";
 
@@ -24,6 +25,8 @@ import {
   eventgroups,
   outputitems,
   outputgroups,
+  proceduregroups,
+  procedureitems,
   respdatagroups,
   hemodatagroups,
   miscdatagroups,
@@ -62,6 +65,9 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     },
     handleShowNoteCall: () => {
       handleShowEventAddNote();
+    },
+    handleShowProceduresCall: () => {
+      handleShowProcedures();
     },
     handleTimeStepsCall: () => {
       handleTimeSteps();
@@ -126,6 +132,19 @@ const MedicationGrid2 = forwardRef((props, ref) => {
   const [selectedOutputDuration, setSelOutputDuration] = React.useState(0);
   const [selectedOutputDurationUnit, setSelOutputDurationUnit] =
     React.useState(0);
+
+  const [showProcedure, setProcedureShow] = React.useState(false);
+  const [allprocedureitems, setProcedureItems] = React.useState(procedureitems);
+  const [selectedProcedureItem, setSelProcedureItem] = React.useState(
+    procedureitems[0]
+  );
+  const [selectedProcedureItemIndex, setSelProcedureItemIndex] =
+    React.useState(0);
+  const [selectedProcedureItemTime, setSelProcedureItemTime] = React.useState(
+    moment()
+  );
+  const [selectedProcedureType, setSelProcedureType] = React.useState("");
+  const [selectedProcedureNote, setSelProcedureNote] = React.useState("");
 
   const [showItemInfo, setShowItemInfo] = React.useState(false);
 
@@ -492,6 +511,7 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     var outputgroups = alloutputgroups.map((group) => group);
     var outputitems = alloutputitems.map((item) => item);
     var eventitems = alleventitems.map((eventitem) => eventitem);
+    var procedureitems = allprocedureitems.map((procedureitem) => procedureitem);
 
     var respdataitems = respDatasetItems.map((item) => item);
     var hemodataitems = hemoDatasetItems.map((item) => item);
@@ -518,6 +538,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         outputitems: outputitems,
         eventitems: eventitems,
         eventgroups: eventgroups,
+        proceduregroups: proceduregroups,
+        procedureitems: procedureitems,
         respdataitems: respdataitems,
         respdatagroups: respdatagroups,
         hemodataitems: hemodataitems,
@@ -599,9 +621,10 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         ? defaultbordercolor
         : "#f7c144"
       : "#2196f3";
-    
-    const defaultfontcolor = itemcolor === "grey" || itemcolor === "red" ? "white" : "black";
-    
+
+    const defaultfontcolor =
+      itemcolor === "grey" || itemcolor === "red" ? "white" : "black";
+
     return (
       <div
         {...getItemProps({
@@ -958,6 +981,30 @@ const MedicationGrid2 = forwardRef((props, ref) => {
     setEventShow(true);
   };
 
+  const handleShowProcedures = () => {
+    setProcedureShow(true);
+  };
+
+  const handleProcedureChildState = (
+    childprocedurestate,
+    selectedProcedureItems,
+    selectedProcedureItem,
+    selectedProcedureItemIndex,
+    selectedProcedureItemTime,
+    selectedProcedureType,
+    selectedProcedureNote
+  ) => {
+    setProcedureItems(selectedProcedureItems);
+
+    setSelProcedureItem(selectedProcedureItem);
+    setSelProcedureItemIndex(selectedProcedureItemIndex);
+    setSelProcedureItemTime(selectedProcedureItemTime);
+    setSelProcedureType(selectedProcedureType);
+    setSelProcedureNote(selectedProcedureNote);
+
+    setProcedureShow(childprocedurestate);
+  };
+
   const handleOutputChildState = (
     childoutputstate,
     selectedOutputs,
@@ -1213,7 +1260,16 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         selectedEventType={selectedEventType}
         selectedEventNote={selectedEventNote}
       />
-
+      <ProcedureModal
+        showProcedureDialog={showProcedure}
+        childProcedureState={handleProcedureChildState}
+        selectedProcedureItems={allprocedureitems}
+        selectedProcedureItem={selectedProcedureItem}
+        selectedProcedureItemIndex={selectedProcedureItemIndex}
+        selectedProcedureItemTime={selectedProcedureItemTime}
+        selectedProcedureType={selectedProcedureType}
+        selectedProcedureNote={selectedProcedureNote}
+      />
       <JsonDataDisplay
         ref={printDataRef}
         isDataDisplayed={openPrintData}
@@ -1225,6 +1281,8 @@ const MedicationGrid2 = forwardRef((props, ref) => {
         outputitems={alloutputitems}
         eventgroups={eventgroups}
         eventitems={alleventitems}
+        proceduregroups={proceduregroups}
+        procedureitems={allprocedureitems}
         respdatagroups={respdatagroups}
         respdataitems={respDatasetItems}
         hemodatagroups={hemodatagroups}
