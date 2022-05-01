@@ -37,6 +37,12 @@ const divStyle = {
   //height: 300,
 };
 
+const tableStyle = {
+  border: "1px solid black",
+  padding: "1px",
+  borderCollapse: "collapse",
+};
+
 const JsonDataDisplay = forwardRef((props, ref) => {
   const {
     isDataDisplayed,
@@ -58,7 +64,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     miscdataitems,
   } = props;
 
-  const PlotJData = ({ headerarray, cellarray }) => {
+  const PlotJData = ({ headerarray, cellarray, tableheight }) => {
     return (
       <Plot
         data={[
@@ -98,7 +104,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         layout={{
           autosize: true,
           width: 1300,
-          height: 200,
+          height: tableheight,
           margin: {
             l: 50,
             r: 50,
@@ -110,9 +116,15 @@ const JsonDataDisplay = forwardRef((props, ref) => {
       />
     );
   };
-
+  
   const [selHeaderData, setSelHeaderData] = React.useState([]);
   const [selCellData, setSelCellData] = React.useState([]);
+  const [selHeaderRespData, setSelHeaderRespData] = React.useState([]);
+  const [selCellRespData, setSelCellRespData] = React.useState([]);
+  const [selHeaderMiscData, setSelHeaderMiscData] = React.useState([]);
+  const [selCellMiscData, setSelCellMiscData] = React.useState([]);
+
+
   React.useEffect(() => {
     loadheaderData();
     loadcellData();
@@ -314,14 +326,242 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     };
   };
 
+  React.useEffect(() => {
+    loadheaderRespData();
+    loadcellRespData();
+  }, [respdatagroups, respdataitems]);
+
+  React.useEffect(() => {
+    loadheaderMiscData();
+    loadcellMiscData();
+  }, [miscdatagroups, miscdataitems]);
+
+
+  const loadheaderRespData = () => {
+    var values = [];
+    values.push(["Respiratory"]);
+
+    if (respdataitems[0] === undefined || respdataitems[0] === null) return [];
+
+    var dfitems = respdataitems.map((item) => {
+      var group = respdatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time).toString(),
+        end_time: moment(item.end_time).toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+
+    data.map((item) => {
+      var ditem = moment(item).format("HH:mm").toString();
+      values.push([ditem]);
+    });
+
+    setSelHeaderRespData(values);
+    //console.log(values);
+    //return values;
+  };
+
+  const loadcellRespData = () => {
+    var values = [];
+    var resplabels = [];
+
+    if (respdataitems[0] === undefined || respdataitems[0] === null) return [];
+
+    respdatagroups.map((info) => {
+      const item = info.title + "(" + info.unit + ")";
+      resplabels.push(item);
+    });
+
+    values.push(resplabels);
+
+    var dfitems = respdataitems.map((item) => {
+      var group = respdatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+        end_time: moment(item.end_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+    //console.log(dfitems);
+
+    var dtdata = data.map((dtime) => {
+      var columns = respdatagroups.map((info) => {
+        const group = info.title;
+        var ditem = dfitems
+          .filter(
+            (e) =>
+              moment(e.start_time, "MM/DD/YYYY HH:mm:ss")
+                .startOf("m")
+                .valueOf() ===
+                moment(dtime, "MM/DD/YYYY HH:mm:ss").startOf("m").valueOf() &&
+              e.group === group
+          )
+          .map((item) => {
+            return item.title;
+          });
+        //console.log(ditem[0])
+        if (ditem[0] === undefined || ditem[0] === null) ditem[0] = "";
+        return ditem[0];
+      });
+      return columns;
+    });
+    //console.log(dtdata);
+
+    dtdata.map((item) => {
+      values.push(item);
+    });
+
+    //console.log(values);
+    setSelCellRespData(values);
+    //return values;
+  };
+
+  const loadheaderMiscData = () => {
+    var values = [];
+    values.push(["Misc"]);
+
+    if (miscdataitems[0] === undefined || miscdataitems[0] === null) return [];
+
+    var dfitems = miscdataitems.map((item) => {
+      var group = miscdatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time).toString(),
+        end_time: moment(item.end_time).toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+
+    data.map((item) => {
+      var ditem = moment(item).format("HH:mm").toString();
+      values.push([ditem]);
+    });
+
+    setSelHeaderMiscData(values);
+    //console.log(values);
+    //return values;
+  };
+
+  const loadcellMiscData = () => {
+    var values = [];
+    var misclabels = [];
+
+    if (miscdataitems[0] === undefined || miscdataitems[0] === null) return [];
+
+    miscdatagroups.map((info) => {
+      const item = info.title + "(" + info.unit + ")";
+      misclabels.push(item);
+    });
+
+    values.push(misclabels);
+
+    var dfitems = miscdataitems.map((item) => {
+      var group = miscdatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+        end_time: moment(item.end_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+    //console.log(dfitems);
+
+    var dtdata = data.map((dtime) => {
+      var columns = miscdatagroups.map((info) => {
+        const group = info.title;
+        var ditem = dfitems
+          .filter(
+            (e) =>
+              moment(e.start_time, "MM/DD/YYYY HH:mm:ss")
+                .startOf("m")
+                .valueOf() ===
+                moment(dtime, "MM/DD/YYYY HH:mm:ss").startOf("m").valueOf() &&
+              e.group === group
+          )
+          .map((item) => {
+            return item.title;
+          });
+        //console.log(ditem[0])
+        if (ditem[0] === undefined || ditem[0] === null) ditem[0] = "";
+        return ditem[0];
+      });
+      return columns;
+    });
+    //console.log(dtdata);
+
+    dtdata.map((item) => {
+      values.push(item);
+    });
+
+    //console.log(values);
+    setSelCellMiscData(values);
+    //return values;
+  };
+
   const DisplayEventData = eventitems.map((info) => {
-    //var group = eventgroups.filter((e) => e.id === info.group);
-    //console.log(group);
     return (
       <tr>
-        <td>{info.title}</td>
-        <td>
-        {moment(info.start_time).format("DD/MM/YYYY HH:mm:ss").toString()}
+        <td style={tableStyle}>{info.title}</td>
+        <td style={tableStyle}>
+          {moment(info.start_time).format("DD/MM/YYYY HH:mm").toString()}
+        </td>
+      </tr>
+    );
+  });
+
+  const DisplayProcedureData = procedureitems.map((info) => {
+    return (
+      <tr>
+        <td style={tableStyle}>{info.title}</td>
+        <td style={tableStyle}>
+          {moment(info.start_time).format("DD/MM/YYYY HH:mm").toString()}
         </td>
       </tr>
     );
@@ -341,8 +581,10 @@ const JsonDataDisplay = forwardRef((props, ref) => {
   const DisplayOutputData = outputgroups.map((group) => {
     return (
       <tr>
-        <td>{group.title}</td>
-        <td>{getOutputItemTotalsFromGroup(group.id) + " " + group.unit}</td>
+        <td style={tableStyle}>{group.title}</td>
+        <td style={tableStyle}>
+          {getOutputItemTotalsFromGroup(group.id) + " " + group.unit}
+        </td>
       </tr>
     );
   });
@@ -411,15 +653,18 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       <PlotJData
                         headerarray={selHeaderData}
                         cellarray={selCellData}
+                        tableheight={200}
                       />
                     </td>
                   </tr>
                   <div style={{ marginLeft: 50 }}>
                     <th>Events</th>
+                    <th>Procedures</th>
                     <th>Outputs</th>
                     <tr>
-                      <td>{DisplayEventData}</td>
-                      <td>{DisplayOutputData}</td>
+                      <td style={tableStyle}>{DisplayEventData}</td>
+                      <td style={tableStyle}>{DisplayProcedureData}</td>
+                      <td style={tableStyle}>{DisplayOutputData}</td>
                     </tr>
                     <tr></tr>
                   </div>
@@ -435,6 +680,24 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                           width="1300"
                         />
                       </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <PlotJData
+                        headerarray={selHeaderRespData}
+                        cellarray={selCellRespData}
+                        tableheight={500}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <PlotJData
+                        headerarray={selHeaderMiscData}
+                        cellarray={selCellMiscData}
+                        tableheight={500}
+                      />
                     </td>
                   </tr>
                 </tbody>

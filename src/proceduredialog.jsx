@@ -451,7 +451,7 @@ const ProcedureModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Procedures">
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -460,7 +460,7 @@ const ProcedureModal = ({
                       Add Procedure
                     </Button>
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -473,7 +473,7 @@ const ProcedureModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Browse Procedures">
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -482,7 +482,7 @@ const ProcedureModal = ({
                       Next Procedure
                     </Button>
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -495,7 +495,7 @@ const ProcedureModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Change Procedures">
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "200px",
                       }}

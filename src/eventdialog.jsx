@@ -438,7 +438,7 @@ const EventModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Add/Remove Events">
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -447,7 +447,7 @@ const EventModal = ({
                       Add Events
                     </Button>
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -460,7 +460,7 @@ const EventModal = ({
                 <Grid item xs>
                   <ButtonGroup aria-label="Browse Events">
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}
@@ -469,7 +469,7 @@ const EventModal = ({
                       Next Event
                     </Button>
                     <Button
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "100px",
                       }}

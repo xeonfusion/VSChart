@@ -124,7 +124,7 @@ const MiscGrid = ({
                 backgroundColor: "#F0F0F0",
                 width: 150,
               };
-              return <div style={sideStyles}>Hemodynamic</div>;
+              return <div style={sideStyles}>Misc</div>;
             }}
           </SidebarHeader>
           <DateHeader unit="minute" labelFormat="HH:mm" />

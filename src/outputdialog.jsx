@@ -804,7 +804,7 @@ const OutputModal = ({
                   <ButtonGroup aria-label="Add/Remove Outputs">
                     <Button
                       variant="outlined"
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "80px",
                       }}
@@ -814,7 +814,7 @@ const OutputModal = ({
                     </Button>
                     <Button
                       variant="outlined"
-                      size="large"
+                      size="medium"
                       sx={{
                         maxWidth: "80px",
                       }}
