@@ -1,0 +1,19 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+  text-align: left;
+}
+
+th {
+  text-align: left;
+}
+
+@media print {
+  .hide-on-print {
+    display: none;
+  }
+}
