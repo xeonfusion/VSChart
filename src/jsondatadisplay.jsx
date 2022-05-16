@@ -30,6 +30,7 @@ import moment from "moment";
 import Plot from "react-plotly.js";
 
 import { Info, SettingsInputAntennaTwoTone } from "@mui/icons-material/";
+import "./tablestyle.css";
 
 const divStyle = {
   //position: "relative",
@@ -116,19 +117,35 @@ const JsonDataDisplay = forwardRef((props, ref) => {
       />
     );
   };
-  
+
   const [selHeaderData, setSelHeaderData] = React.useState([]);
   const [selCellData, setSelCellData] = React.useState([]);
   const [selHeaderRespData, setSelHeaderRespData] = React.useState([]);
   const [selCellRespData, setSelCellRespData] = React.useState([]);
+  const [selHeaderHemoData, setSelHeaderHemoData] = React.useState([]);
+  const [selCellHemoData, setSelCellHemoData] = React.useState([]);
   const [selHeaderMiscData, setSelHeaderMiscData] = React.useState([]);
   const [selCellMiscData, setSelCellMiscData] = React.useState([]);
-
 
   React.useEffect(() => {
     loadheaderData();
     loadcellData();
   }, [medgroups, meditems]);
+
+  React.useEffect(() => {
+    loadheaderRespData();
+    loadcellRespData();
+  }, [respdatagroups, respdataitems]);
+
+  React.useEffect(() => {
+    loadheaderHemoData();
+    loadcellHemoData();
+  }, [hemodatagroups, hemodataitems]);
+
+  React.useEffect(() => {
+    loadheaderMiscData();
+    loadcellMiscData();
+  }, [miscdatagroups, miscdataitems]);
 
   const loadheaderData = () => {
     var values = [];
@@ -326,17 +343,6 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     };
   };
 
-  React.useEffect(() => {
-    loadheaderRespData();
-    loadcellRespData();
-  }, [respdatagroups, respdataitems]);
-
-  React.useEffect(() => {
-    loadheaderMiscData();
-    loadcellMiscData();
-  }, [miscdatagroups, miscdataitems]);
-
-
   const loadheaderRespData = () => {
     var values = [];
     values.push(["Respiratory"]);
@@ -438,6 +444,110 @@ const JsonDataDisplay = forwardRef((props, ref) => {
 
     //console.log(values);
     setSelCellRespData(values);
+    //return values;
+  };
+
+  const loadheaderHemoData = () => {
+    var values = [];
+    values.push(["Hemodynamic"]);
+
+    if (hemodataitems[0] === undefined || hemodataitems[0] === null) return [];
+
+    var dfitems = hemodataitems.map((item) => {
+      var group = hemodatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time).toString(),
+        end_time: moment(item.end_time).toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+
+    data.map((item) => {
+      var ditem = moment(item).format("HH:mm").toString();
+      values.push([ditem]);
+    });
+
+    setSelHeaderHemoData(values);
+    //console.log(values);
+    //return values;
+  };
+
+  const loadcellHemoData = () => {
+    var values = [];
+    var hemolabels = [];
+
+    if (hemodataitems[0] === undefined || hemodataitems[0] === null) return [];
+
+    hemodatagroups.map((info) => {
+      const item = info.title + "(" + info.unit + ")";
+      hemolabels.push(item);
+    });
+
+    values.push(hemolabels);
+
+    var dfitems = hemodataitems.map((item) => {
+      var group = hemodatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        group: group[0].title,
+        start_time: moment(item.start_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+        end_time: moment(item.end_time)
+          .format("MM/DD/YYYY HH:mm:ss")
+          .toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+
+    var data = getDateRange(mindate, 12);
+    //console.log(data);
+    //console.log(dfitems);
+
+    var dtdata = data.map((dtime) => {
+      var columns = hemodatagroups.map((info) => {
+        const group = info.title;
+        var ditem = dfitems
+          .filter(
+            (e) =>
+              moment(e.start_time, "MM/DD/YYYY HH:mm:ss")
+                .startOf("m")
+                .valueOf() ===
+                moment(dtime, "MM/DD/YYYY HH:mm:ss").startOf("m").valueOf() &&
+              e.group === group
+          )
+          .map((item) => {
+            return item.title;
+          });
+        //console.log(ditem[0])
+        if (ditem[0] === undefined || ditem[0] === null) ditem[0] = "";
+        return ditem[0];
+      });
+      return columns;
+    });
+    //console.log(dtdata);
+
+    dtdata.map((item) => {
+      values.push(item);
+    });
+
+    //console.log(values);
+    setSelCellHemoData(values);
     //return values;
   };
 
@@ -662,9 +772,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                     <th>Procedures</th>
                     <th>Outputs</th>
                     <tr>
-                      <td style={tableStyle}>{DisplayEventData}</td>
-                      <td style={tableStyle}>{DisplayProcedureData}</td>
-                      <td style={tableStyle}>{DisplayOutputData}</td>
+                      <td>{DisplayEventData}</td>
+                      <td>{DisplayProcedureData}</td>
+                      <td>{DisplayOutputData}</td>
                     </tr>
                     <tr></tr>
                   </div>
@@ -687,6 +797,15 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       <PlotJData
                         headerarray={selHeaderRespData}
                         cellarray={selCellRespData}
+                        tableheight={500}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <PlotJData
+                        headerarray={selHeaderHemoData}
+                        cellarray={selCellHemoData}
                         tableheight={500}
                       />
                     </td>
