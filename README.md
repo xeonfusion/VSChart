@@ -2,11 +2,12 @@
 
 It supports timeline based adding or removing of intraoperative anaesthetic medications and automatic loading of monitor vital signs from the CSV or JSON file exported by VSCaptureWave or VSCaptureMP C# app (https://sourceforge.net/projects/vscapture/)
 
-<img width="1440" alt="Screen Shot 2022-03-25 at 12 33 53 PM" src="https://user-images.githubusercontent.com/10882257/160087345-ccea5420-b89e-49a5-a534-9856a3b652b8.png">
-<img width="1440" alt="Screen Shot 2022-03-25 at 12 35 21 PM" src="https://user-images.githubusercontent.com/10882257/160087369-62052ed5-2221-4486-8b90-7af9b674784b.png">
-<img width="1440" alt="Screen Shot 2022-03-25 at 12 38 16 PM" src="https://user-images.githubusercontent.com/10882257/160087376-ce68409e-e3e2-423e-b092-653c17dc596c.png">
-<img width="1440" alt="Screen Shot 2022-03-25 at 12 37 58 PM" src="https://user-images.githubusercontent.com/10882257/160087371-b1399dfa-a25a-4306-873f-aa44f2d05db1.png">
-<img width="1440" alt="Screen Shot 2022-03-25 at 12 38 37 PM" src="https://user-images.githubusercontent.com/10882257/160087379-39a38020-d86c-411a-a1e4-ac283e4603e7.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 15 41 PM" src="https://user-images.githubusercontent.com/10882257/170272620-52da8e62-021f-47d5-b2df-c1fb6399faa9.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 17 27 PM" src="https://user-images.githubusercontent.com/10882257/170272651-d32195fc-b403-4cec-a70f-840a253a4175.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 18 34 PM" src="https://user-images.githubusercontent.com/10882257/170272660-9b8fde34-d18b-468b-86c1-42a4332df822.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 19 17 PM" src="https://user-images.githubusercontent.com/10882257/170272668-7bcd0ca1-2166-4cce-855f-f6369d20b961.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 19 32 PM" src="https://user-images.githubusercontent.com/10882257/170272673-85ff0d53-2ef4-47ae-acf7-1a8c15d6c251.png">
+<img width="1440" alt="Screen Shot 2022-05-25 at 5 20 32 PM" src="https://user-images.githubusercontent.com/10882257/170272679-5320a2f8-3665-4388-85b8-e61757ed03a7.png">
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
