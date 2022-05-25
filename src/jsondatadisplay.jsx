@@ -3,40 +3,19 @@ import { forwardRef, Fragment } from "react";
 
 import {
   Grid,
-  Divider,
   Typography,
   IconButton,
-  Button,
-  withStyles,
-  TextField,
-  FormControl,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TableHead,
-  TableFooter,
 } from "@mui/material/";
 
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
 
 import ReactToPrint from "react-to-print";
 import moment from "moment";
 import Plot from "react-plotly.js";
-
-import { Info, SettingsInputAntennaTwoTone } from "@mui/icons-material/";
 import "./tablestyle.css";
-
-const divStyle = {
-  //position: "relative",
-  width: 800,
-  //height: 300,
-};
 
 const tableStyle = {
   border: "1px solid black",
@@ -66,7 +45,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
   } = props;
 
   const PlotJData = ({ headerarray, cellarray, tableheight }) => {
-    return (
+    return cellarray.length === 0 || cellarray === undefined ? null : (
       <Plot
         data={[
           {
@@ -109,10 +88,11 @@ const JsonDataDisplay = forwardRef((props, ref) => {
           margin: {
             l: 50,
             r: 50,
-            b: 20,
-            t: 20,
+            b: 10,
+            t: 10,
             pad: 4,
           },
+          title: false,
         }}
       />
     );
@@ -126,26 +106,32 @@ const JsonDataDisplay = forwardRef((props, ref) => {
   const [selCellHemoData, setSelCellHemoData] = React.useState([]);
   const [selHeaderMiscData, setSelHeaderMiscData] = React.useState([]);
   const [selCellMiscData, setSelCellMiscData] = React.useState([]);
+  const [selectedMinDate, setSelMinDate] = React.useState();
+  const [selectedMinGridDate, setSelMinGridDate] = React.useState();
+
+  React.useEffect(() => {
+    setSelMinGridDate(loadMinGridDate());
+  }, [respdatagroups, respdataitems]);
 
   React.useEffect(() => {
     loadheaderData();
     loadcellData();
-  }, [medgroups, meditems]);
+  }, [medgroups, meditems, selectedMinDate]);
 
   React.useEffect(() => {
     loadheaderRespData();
     loadcellRespData();
-  }, [respdatagroups, respdataitems]);
+  }, [respdatagroups, respdataitems, selectedMinGridDate]);
 
   React.useEffect(() => {
     loadheaderHemoData();
     loadcellHemoData();
-  }, [hemodatagroups, hemodataitems]);
+  }, [hemodatagroups, hemodataitems, selectedMinGridDate]);
 
   React.useEffect(() => {
     loadheaderMiscData();
     loadcellMiscData();
-  }, [miscdatagroups, miscdataitems]);
+  }, [miscdatagroups, miscdataitems, selectedMinGridDate]);
 
   const loadheaderData = () => {
     var values = [];
@@ -167,7 +153,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
 
     data.map((item) => {
@@ -223,7 +211,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
     //console.log(dfitems);
 
@@ -365,7 +355,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
 
     data.map((item) => {
@@ -411,7 +403,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
     //console.log(dfitems);
 
@@ -469,7 +463,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
 
     data.map((item) => {
@@ -515,7 +511,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
     //console.log(dfitems);
 
@@ -573,7 +571,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
 
     data.map((item) => {
@@ -619,7 +619,9 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         .reduce((a, b) => (b < a ? b : a))
     );
 
-    var data = getDateRange(mindate, 12);
+    var selmindate = selectedMinGridDate ?? mindate;
+    var data = getDateRange(selmindate, 12);
+
     //console.log(data);
     //console.log(dfitems);
 
@@ -699,6 +701,42 @@ const JsonDataDisplay = forwardRef((props, ref) => {
     );
   });
 
+  const loadMinGridDate = () => {
+    if (respdataitems[0] === undefined || respdataitems[0] === null)
+      return selectedMinDate;
+
+    var dfitems = respdataitems.map((item) => {
+      //var group = respdatagroups.filter((e) => e.id === item.group);
+
+      return Object.assign({}, item, {
+        //group: group[0].title,
+        start_time: moment(item.start_time).toString(),
+        //end_time: moment(item.end_time).toString(),
+      });
+    });
+
+    const mindate = moment(
+      dfitems
+        .map((obj) => new Date(obj.start_time ?? ""))
+        .reduce((a, b) => (b < a ? b : a))
+    );
+    return mindate;
+  };
+
+  const handleNextPage = () => {
+    var mindate = moment(selectedMinDate).clone().add(12, "m");
+    setSelMinDate(mindate);
+    var mingriddate = moment(selectedMinGridDate).clone().add(12, "m");
+    setSelMinGridDate(mingriddate);
+  };
+
+  const handlePreviousPage = () => {
+    var mindate = moment(selectedMinDate).clone().subtract(12, "m");
+    setSelMinDate(mindate);
+    var mingriddate = moment(selectedMinGridDate).clone().subtract(12, "m");
+    setSelMinGridDate(mingriddate);
+  };
+
   const [show, setShow] = React.useState(false);
   const [showImageData, setShowImageData] = React.useState(null);
 
@@ -750,6 +788,8 @@ const JsonDataDisplay = forwardRef((props, ref) => {
               trigger={() => <button>Print this</button>}
               content={() => ref.current}
             />
+            <button onClick={handleNextPage}>Next Page</button>
+            <button onClick={handlePreviousPage}>Previous Page</button>
             <div ref={ref}>
               <table className="table table-striped">
                 <thead>
@@ -782,7 +822,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                 <tbody>
                   <tr>
                     <td>
-                      <div style={{ margin: 50 }}>
+                      <div style={{ marginLeft: 50, marginTop: 50 }}>
                         <img
                           src={showImageData}
                           alt="chart"
@@ -797,7 +837,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       <PlotJData
                         headerarray={selHeaderRespData}
                         cellarray={selCellRespData}
-                        tableheight={500}
+                        tableheight={400}
                       />
                     </td>
                   </tr>
@@ -806,7 +846,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       <PlotJData
                         headerarray={selHeaderHemoData}
                         cellarray={selCellHemoData}
-                        tableheight={500}
+                        tableheight={400}
                       />
                     </td>
                   </tr>
@@ -815,7 +855,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
                       <PlotJData
                         headerarray={selHeaderMiscData}
                         cellarray={selCellMiscData}
-                        tableheight={500}
+                        tableheight={400}
                       />
                     </td>
                   </tr>
