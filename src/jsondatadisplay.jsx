@@ -1,11 +1,7 @@
 import React from "react";
 import { forwardRef, Fragment } from "react";
 
-import {
-  Grid,
-  Typography,
-  IconButton,
-} from "@mui/material/";
+import { Grid, Typography, IconButton } from "@mui/material/";
 
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -72,7 +68,7 @@ const JsonDataDisplay = forwardRef((props, ref) => {
         ]}
         config={{
           responsive: true,
-          displayModeBar: true,
+          displayModeBar: false,
           toImageButtonOptions: {
             format: "svg",
             filename: "custom_image",
